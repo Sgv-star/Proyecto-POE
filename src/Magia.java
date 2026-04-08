@@ -1,4 +1,7 @@
+package src;
 import java.util.*;
+
+import Jugador;
 
 public class Magia extends Carta implements Activable{
 

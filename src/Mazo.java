@@ -1,4 +1,11 @@
+package src;
 import java.util.*;
+
+import Carta;
+import Magia;
+import src.Magia;
+
+import src.Carta;
 
 public class Mazo {
 

@@ -4,3 +4,6 @@ public class App {
         duelo.juego();
     }
 }
+//Santiago Gonzalez Villada, 2559994
+// Santiago Palomino,
+// Juan Pablo Pillimue, 

@@ -1,3 +1,4 @@
+package src;
 public class App {
     public static void main(String[] args) {
         Duelo duelo = new Duelo();
@@ -5,5 +6,5 @@ public class App {
     }
 }
 //Santiago Gonzalez Villada, 2559994
-// Santiago Palomino,
-// Juan Pablo Pillimue, 
+// Santiago Palomino, 2477200
+// Juan Pablo Pillimue, 2477332

@@ -1,7 +1,6 @@
 package src;
 import java.util.*;
 
-import Jugador;
 
 public class Monstruo extends Carta {
 

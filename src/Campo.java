@@ -1,5 +1,5 @@
+package src;
 import java.util.*;
-
 public class Campo {
 
     private Monstruo[] monstruosEnCampoJugador1 = new Monstruo[5];
@@ -14,7 +14,7 @@ public class Campo {
     public Campo(Jugador jugador1, Jugador jugador2) {
         this.jugador1 = jugador1;
         this.jugador2 = jugador2;
-    }s
+    }
 
     public Monstruo[] getMonstruosEnCampoJugador1() {
         return monstruosEnCampoJugador1;

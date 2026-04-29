@@ -1,3 +1,4 @@
+package src;
 import java.util.*;
 
 public class Duelo {
@@ -584,7 +585,7 @@ public class Duelo {
                             else if(trampa.getTipoHabilidadEspecialTrampa() == TipoHabilidadEspecialTrampa.MURO_DE_ESPEJO){
                                 if(trampa.getTurnosActiva() > 0){
                                     byte opcionMuroDeEspejo = 0;
-                                    System.out.println("QDefensor, quiere mantener el efecto de Muro de Espejo durante un turno más a cambio de 2000 LP? \n1. Si \2. No");
+                                    System.out.println("Defensor, quiere mantener el efecto de Muro de Espejo durante un turno más a cambio de 2000 LP? \n1. Si \2. No");
                                     System.out.print("Opción: ");
                                     opcionMuroDeEspejo = scaner.nextByte();
                                     scaner.nextLine();

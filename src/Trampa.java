@@ -75,8 +75,10 @@ public class Trampa extends Carta implements Activable{
             magiasYTrampasDefensoras = campo.getMagicasYTrampasEnCampoJugador1();
             cementerioDefensor = campo.getCementerioJugador1();
         }
-        magiasYTrampasDefensoras[cartaAActivar].setVisible(true);
-        if(magiasYTrampasDefensoras[cartaAActivar] != null && magiasYTrampasDefensoras[cartaAActivar].isVisible() && magiasYTrampasDefensoras[cartaAActivar] instanceof Trampa){
+        if(magiasYTrampasDefensoras[cartaAActivar] != null && magiasYTrampasDefensoras[cartaAActivar] instanceof Trampa){
+            magiasYTrampasDefensoras[cartaAActivar].setVisible(true);
+        }
+        if(magiasYTrampasDefensoras[cartaAActivar].isVisible() && magiasYTrampasDefensoras[cartaAActivar] instanceof Trampa){
             Trampa trampa = (Trampa) magiasYTrampasDefensoras[cartaAActivar];
             switch(trampa.getTipoHabilidadEspecialTrampa()){
 

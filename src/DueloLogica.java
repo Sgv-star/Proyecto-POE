@@ -8,7 +8,7 @@ public class DueloLogica {
     String fase;
 
     public DueloLogica() {
-
+        this.campo = new Campo();
     }
 
     public Campo getCampo() {
@@ -36,6 +36,38 @@ public class DueloLogica {
             return campo.getJugador2();
         }
     }
+    public Monstruo[] getMonstruosEnCampoAtacante(){
+        if(turno%2 == 0){
+            return campo.getMonstruosEnCampoJugador1();
+        }
+        else{
+            return campo.getMonstruosEnCampoJugador2();
+        }
+    }
+    public Monstruo[] getMonstruosEnCampoDefensor(){
+        if(turno%2 != 0){
+            return campo.getMonstruosEnCampoJugador1();
+        }
+        else{
+            return campo.getMonstruosEnCampoJugador2();
+        }
+    }
+    public Carta[] getMagicasYTrampasEnCampoAtacante(){
+        if(turno%2 == 0){
+            return campo.getMagicasYTrampasEnCampoJugador1();
+        }
+        else{
+            return campo.getMagicasYTrampasEnCampoJugador2();
+        }
+    }
+    public Carta[] getMagicasYTrampasEnCampoDefensor(){
+        if(turno%2 != 0){
+            return campo.getMagicasYTrampasEnCampoJugador1();
+        }
+        else{
+            return campo.getMagicasYTrampasEnCampoJugador2();
+        }
+    }
 
     protected void setCampo(Campo campo) {
         this.campo = campo;
@@ -53,7 +85,6 @@ public class DueloLogica {
         setTurno((byte) 0);
         setFase("Draw Phase");
         Jugador jugador1 = new Jugador(nombreJugador1, mazo), jugador2 = new Jugador(nombreJugador2, mazo);
-        Jugador atacante = getAtacante(), defensor = getDefensor();
         Campo campo = new Campo(jugador1, jugador2);
         this.setCampo(campo);
     }
@@ -98,7 +129,7 @@ public class DueloLogica {
             for(Carta c : campo.getMagicasYTrampasEnCampoJugador1()){
                 if(c instanceof Trampa){
                     Trampa trampa = (Trampa) c;
-                    if(trampa.getMomentoDeActivacion() == TipoHabilidadEspecialTrampa.INVOCACION){
+                    if(trampa.getMomentoDeActivacion() == TipoHabilidadEspecialTrampa.INVOCACION && !trampa.isVisible()){
                         return true;
                     }
                 }
@@ -109,7 +140,7 @@ public class DueloLogica {
             for(Carta c : campo.getMagicasYTrampasEnCampoJugador2()){
                 if(c instanceof Trampa){
                     Trampa trampa = (Trampa) c;
-                    if(trampa.getMomentoDeActivacion() == TipoHabilidadEspecialTrampa.INVOCACION){
+                    if(trampa.getMomentoDeActivacion() == TipoHabilidadEspecialTrampa.INVOCACION && !trampa.isVisible()){
                         return true;
                     }
                 }
@@ -122,7 +153,7 @@ public class DueloLogica {
             for(Carta c : campo.getMagicasYTrampasEnCampoJugador1()){
                 if(c instanceof Trampa){
                     Trampa trampa = (Trampa) c;
-                    if(trampa.getMomentoDeActivacion() == TipoHabilidadEspecialTrampa.BATALLA){
+                    if(trampa.getMomentoDeActivacion() == TipoHabilidadEspecialTrampa.BATALLA && !trampa.isVisible()){
                         return true;
                     }
                 }
@@ -133,7 +164,7 @@ public class DueloLogica {
             for(Carta c : campo.getMagicasYTrampasEnCampoJugador2()){
                 if(c instanceof Trampa){
                     Trampa trampa = (Trampa) c;
-                    if(trampa.getMomentoDeActivacion() == TipoHabilidadEspecialTrampa.BATALLA){
+                    if(trampa.getMomentoDeActivacion() == TipoHabilidadEspecialTrampa.BATALLA && !trampa.isVisible()){
                         return true;
                     }
                 }
@@ -141,6 +172,39 @@ public class DueloLogica {
             return false;
         }
     }
+    protected boolean isAtacanteTIeneMagoOscuro(){
+        if(turno % 2 == 0){
+            for(Monstruo m : campo.getMonstruosEnCampoJugador1()){
+                if(m != null && m.getNombre().equals("Mago Oscuro")){
+                    return true;
+                }
+            }
+            return false;
+        }
+        else{
+            for(Monstruo m : campo.getMonstruosEnCampoJugador2()){
+                if(m != null && m.getNombre().equals("Mago Oscuro")){
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+    protected byte getCuantosMonstruosTieneAtacante(){
+        byte numeroDeMonstruosEnPosesion = 0;
+        for(Monstruo m : getMonstruosEnCampoAtacante()){
+            if(m != null){
+                numeroDeMonstruosEnPosesion++;
+            }
+        }
+        for(Carta carta : getAtacante().getMano()){
+            if(carta instanceof Monstruo){
+                numeroDeMonstruosEnPosesion++;
+            }
+        }
+        return numeroDeMonstruosEnPosesion;
+    }
+
     //Fases y turnos
     protected boolean robarCarta(){
         if(turno != 0){
@@ -156,17 +220,15 @@ public class DueloLogica {
     }
     protected void resolverEfectosContinuos(){
         List<Monstruo> listaVacia = new ArrayList<> ();
-        if(turno % 2 != 0){
-            for(Carta c : campo.getMagicasYTrampasEnCampoJugador1()){
-                if(c instanceof Trampa && ((Trampa)c).isActivada()){
-                    c.jugar(campo, (byte) 0, (byte) 0, (byte) 0, "", "", "", listaVacia);
-                }
+        for(int i=0; i<5; i++){
+            Carta c = getMagicasYTrampasEnCampoAtacante()[i];
+            if(c instanceof Trampa && ((Trampa)c).isActivada()){
+                c.jugar(campo, getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
             }
-        }
-        else{
-            for(Carta c : campo.getMagicasYTrampasEnCampoJugador2()){
-                if(c instanceof Trampa && ((Trampa)c).isActivada()){
-                    c.jugar(campo, (byte) 0, (byte) 0, (byte) 0, "", "", "", listaVacia);
+            else if(c instanceof Magia && ((Magia) c).isVisible()){
+                Magia mg = (Magia) getMagicasYTrampasEnCampoAtacante()[i];
+                if(mg.getTurnosActiva() > 0){
+                    mg.jugar(campo, getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
                 }
             }
         }
@@ -175,13 +237,13 @@ public class DueloLogica {
         if(getFase().equals("Draw Phase")){
             setFase("Main Phase 1");
         }
-        else if(getFase().equals("Main phase 1")){
+        else if(getFase().equals("Main Phase 1")){
             setFase("Battle Phase");
         }
         else if(getFase().equals("Battle Phase")){
             setFase("Main Phase 2");
         }
-        else if(getFase().equals("Main phase 2")){
+        else if(getFase().equals("Main Phase 2")){
             setFase("End Phase");
         }
         else if(getFase().equals("End Phase")){
@@ -190,10 +252,13 @@ public class DueloLogica {
         }
     }
     protected void saltarFase(){
-        if(getFase().equals("Main phase 1")){
+        if(getFase().equals("Main Phase 1")){
             setFase("Battle Phase");
         }
         else if(getFase().equals("Battle Phase")){
+            setFase("End Phase");
+        }
+        else if(getFase().equals("Main Phase 2")){
             setFase("End Phase");
         }
     }
@@ -214,18 +279,20 @@ public class DueloLogica {
     }
     //Colocar cartas
     protected boolean sacrificarMonstruo(byte indiceEnCampo){
-        for(int i=0; i<5; i++){
-            if(turno % 2 == 0){
-                if(campo.getMonstruosEnCampoJugador1()[i] != null){
-                    campo.getCementerioJugador1().add(campo.getMonstruosEnCampoJugador1()[i]);
-                    campo.getMonstruosEnCampoJugador1()[i] = null;
+        if(turno % 2 == 0){
+            if(indiceEnCampo >= 0 && indiceEnCampo <= 4){
+                if(campo.getMonstruosEnCampoJugador1()[indiceEnCampo] != null){
+                    campo.getCementerioJugador1().add(campo.getMonstruosEnCampoJugador1()[indiceEnCampo]);
+                    campo.getMonstruosEnCampoJugador1()[indiceEnCampo] = null;
                     return true;
                 }
             }
-            else{
-                if(campo.getMonstruosEnCampoJugador2()[i] != null){
-                    campo.getCementerioJugador2().add(campo.getMonstruosEnCampoJugador2()[i]);
-                    campo.getMonstruosEnCampoJugador2()[i] = null;
+        }
+        else{
+            if(indiceEnCampo >= 0 && indiceEnCampo <= 4){
+                if(campo.getMonstruosEnCampoJugador2()[indiceEnCampo] != null){
+                    campo.getCementerioJugador2().add(campo.getMonstruosEnCampoJugador2()[indiceEnCampo]);
+                    campo.getMonstruosEnCampoJugador2()[indiceEnCampo] = null;
                     return true;
                 }
             }
@@ -236,16 +303,17 @@ public class DueloLogica {
         if(turno % 2 == 0){
             if(campo.getJugador1().getMano().get(indiceMano) instanceof Monstruo){
                 Monstruo monstruo = (Monstruo) campo.getJugador1().getMano().get(indiceMano);
-                if(monstruo.getNivel() <= 4 || (monstruo.getNivel() > 4 && sacrificarMonstruo(indiceSacrificio))){
-                    for(Monstruo m : campo.getMonstruosEnCampoJugador1()){
-                        if(m == null){
-                            m = monstruo;
+                for(int i=0; i<5; i++){
+                    if(campo.getMonstruosEnCampoJugador1()[i] == null){
+                        if(monstruo.getNivel() <= 4 || (monstruo.getNivel() > 4 && sacrificarMonstruo(indiceSacrificio))){
+                            campo.getMonstruosEnCampoJugador1()[i] = monstruo;
+                            campo.getJugador1().getMano().remove(indiceMano);
                             if(enPosicionAtaque){
-                                m.setEnPosicionAtaque(true);
+                                campo.getMonstruosEnCampoJugador1()[i].setEnPosicionAtaque(true);
                                 return true;
                             }
                             else{
-                                m.setEnPosicionAtaque(false);
+                                campo.getMonstruosEnCampoJugador1()[i].setEnPosicionAtaque(false);
                                 return true;
                             }
                         }
@@ -257,16 +325,17 @@ public class DueloLogica {
         else{
             if(campo.getJugador2().getMano().get(indiceMano) instanceof Monstruo){
                 Monstruo monstruo = (Monstruo) campo.getJugador2().getMano().get(indiceMano);
-                if(monstruo.getNivel() <= 4 || (monstruo.getNivel() > 4 && sacrificarMonstruo(indiceSacrificio))){
-                    for(Monstruo m : campo.getMonstruosEnCampoJugador2()){
-                        if(m == null){
-                            m = monstruo;
+                for(int i=0; i<5; i++){
+                    if(campo.getMonstruosEnCampoJugador2()[i] == null){
+                        if(monstruo.getNivel() <= 4 || (monstruo.getNivel() > 4 && sacrificarMonstruo(indiceSacrificio))){
+                            campo.getMonstruosEnCampoJugador2()[i] = monstruo;
+                            campo.getJugador2().getMano().remove(indiceMano);
                             if(enPosicionAtaque){
-                                m.setEnPosicionAtaque(true);
+                                campo.getMonstruosEnCampoJugador2()[i].setEnPosicionAtaque(true);
                                 return true;
                             }
                             else{
-                                m.setEnPosicionAtaque(false);
+                                campo.getMonstruosEnCampoJugador2()[i].setEnPosicionAtaque(false);
                                 return true;
                             }
                         }
@@ -279,15 +348,15 @@ public class DueloLogica {
     protected boolean colocarMagia(byte indiceMano, boolean usar){
         if(turno % 2 == 0){
             if(campo.getJugador1().getMano().get(indiceMano) instanceof Magia){
-                for(Carta c : campo.getMagicasYTrampasEnCampoJugador1()){
-                    if(c == null){
-                        c = campo.getJugador1().getMano().get(indiceMano);
+                for(int i=0; i<5; i++){
+                    if(campo.getMagicasYTrampasEnCampoJugador1()[i] == null){
+                        campo.getMagicasYTrampasEnCampoJugador1()[i] = campo.getJugador1().getMano().remove(indiceMano);
                         if(usar){
-                            c.setVisible(true);
+                            campo.getMagicasYTrampasEnCampoJugador1()[i].setVisible(true);
                             return true;
                         }
                         else{
-                            c.setVisible(false);
+                            campo.getMagicasYTrampasEnCampoJugador1()[i].setVisible(false);
                             return true;
                         }
                     }
@@ -297,15 +366,15 @@ public class DueloLogica {
         }
         else{
             if(campo.getJugador2().getMano().get(indiceMano) instanceof Magia){
-                for(Carta c : campo.getMagicasYTrampasEnCampoJugador2()){
-                    if(c == null){
-                        c = campo.getJugador2().getMano().get(indiceMano);
+                for(int i=0; i<5; i++){
+                    if(campo.getMagicasYTrampasEnCampoJugador2()[i] == null){
+                        campo.getMagicasYTrampasEnCampoJugador2()[i] = campo.getJugador2().getMano().remove(indiceMano);
                         if(usar){
-                            c.setVisible(true);
+                            campo.getMagicasYTrampasEnCampoJugador2()[i].setVisible(true);
                             return true;
                         }
                         else{
-                            c.setVisible(false);
+                            campo.getMagicasYTrampasEnCampoJugador2()[i].setVisible(false);
                             return true;
                         }
                     }
@@ -316,11 +385,11 @@ public class DueloLogica {
     }
     protected boolean colocarTrampa(byte indiceMano){
         if(turno % 2 == 0){
-            if(campo.getJugador1().getMano().get(indiceMano) instanceof Magia){
-                for(Carta c : campo.getMagicasYTrampasEnCampoJugador1()){
-                    if(c == null){
-                        c = campo.getJugador1().getMano().get(indiceMano);
-                        c.setVisible(false);
+            if(campo.getJugador1().getMano().get(indiceMano) instanceof Trampa){
+                for(int i=0; i<5; i++){
+                    if(campo.getMagicasYTrampasEnCampoJugador1()[i] == null){
+                        campo.getMagicasYTrampasEnCampoJugador1()[i] = campo.getJugador1().getMano().remove(indiceMano);
+                        campo.getMagicasYTrampasEnCampoJugador1()[i].setVisible(false);
                         return true;
                     }
                 }
@@ -328,11 +397,11 @@ public class DueloLogica {
             return false;
         }
         else{
-            if(campo.getJugador2().getMano().get(indiceMano) instanceof Magia){
-                for(Carta c : campo.getMagicasYTrampasEnCampoJugador2()){
-                    if(c == null){
-                        c = campo.getJugador2().getMano().get(indiceMano);
-                        c.setVisible(false);
+            if(campo.getJugador2().getMano().get(indiceMano) instanceof Trampa){
+                for(int i=0; i<5; i++){
+                    if(campo.getMagicasYTrampasEnCampoJugador2()[i] == null){
+                        campo.getMagicasYTrampasEnCampoJugador2()[i] = campo.getJugador2().getMano().remove(indiceMano);
+                        campo.getMagicasYTrampasEnCampoJugador2()[i].setVisible(false);
                         return true;
                     }
                 }
@@ -344,7 +413,7 @@ public class DueloLogica {
     protected boolean cambiarPosicionDeMonstruo(byte indiceCampo){
         if(turno % 2 == 0){
             if(!campo.getMonstruosEnCampoJugador1()[indiceCampo].isYaCambioPosicionEnEsteTurno()){
-                campo.getMonstruosEnCampoJugador1()[indiceCampo].setEnPosicionAtaque();
+                campo.getMonstruosEnCampoJugador1()[indiceCampo].setEnPosicionAtaque(!campo.getMonstruosEnCampoJugador1()[indiceCampo].isEnPosicionAtaque());
                 return true;
             }
             else{
@@ -353,7 +422,7 @@ public class DueloLogica {
         }
         else{
             if(!campo.getMonstruosEnCampoJugador2()[indiceCampo].isYaCambioPosicionEnEsteTurno()){
-                campo.getMonstruosEnCampoJugador2()[indiceCampo].setEnPosicionAtaque();
+                campo.getMonstruosEnCampoJugador2()[indiceCampo].setEnPosicionAtaque(!campo.getMonstruosEnCampoJugador2()[indiceCampo].isEnPosicionAtaque());
                 return true;
             }
             else{
@@ -411,7 +480,7 @@ public class DueloLogica {
             }
         }
         else{
-            if(campo.getMagicasYTrampasEnCampoJugador2()[cartaAActivar] != null && campo.getMagicasYTrampasEnCampoJugador1()[cartaAActivar] instanceof Magia && campo.getMagicasYTrampasEnCampoJugador2()[cartaAActivar].isVisible()){
+            if(campo.getMagicasYTrampasEnCampoJugador2()[cartaAActivar] != null && campo.getMagicasYTrampasEnCampoJugador2()[cartaAActivar] instanceof Magia && campo.getMagicasYTrampasEnCampoJugador2()[cartaAActivar].isVisible()){
                 campo.getMagicasYTrampasEnCampoJugador2()[cartaAActivar].jugar(campo, turno, cartaAActivar, byteAux, stringAux, stringAux2, stringAux3, lista);
             }
         }
@@ -424,7 +493,7 @@ public class DueloLogica {
             }
         }
         else{
-            if(campo.getMagicasYTrampasEnCampoJugador2()[cartaAActivar] != null && campo.getMagicasYTrampasEnCampoJugador1()[cartaAActivar] instanceof Trampa && campo.getMagicasYTrampasEnCampoJugador2()[cartaAActivar].isVisible()){
+            if(campo.getMagicasYTrampasEnCampoJugador2()[cartaAActivar] != null && campo.getMagicasYTrampasEnCampoJugador2()[cartaAActivar] instanceof Trampa && campo.getMagicasYTrampasEnCampoJugador2()[cartaAActivar].isVisible()){
                 campo.getMagicasYTrampasEnCampoJugador2()[cartaAActivar].jugar(campo, turno, cartaAActivar, byteAux, stringAux, stringAux2, stringAux3, listaVacia);
             }
         }

@@ -1,7 +1,7 @@
 package src;
 import java.util.*;
 
-public class Trampa extends Carta implements ActivableTrampas{
+public class Trampa extends Carta implements Activable{
 
     private TipoHabilidadEspecialTrampa tipoHabilidadEspecial;
     private byte turnosActiva;
@@ -42,7 +42,7 @@ public class Trampa extends Carta implements ActivableTrampas{
     }
 
     @Override
-    public void ActivarEfecto(Campo campo, byte turno, Scanner scaner, byte cartaAActivar, String monstruoADevolver) {
+    public void ActivarEfecto(Campo campo, byte turno, byte cartaAActivar, byte byteAux, String stringAux, String stringAux2, String stringAux3, List<Monstruo> lista) {
         Jugador atacante, defensor;
         Monstruo[] monstruosAtacantes, monstruosDefensores;
         Carta[] magiasYTrampasAtacantes, magiasYTrampasDefensoras;
@@ -85,7 +85,7 @@ public class Trampa extends Carta implements ActivableTrampas{
                 case CILINDRO_MAGICO:
                     if(trampa.getTurnosActiva() < 1){
                         for(Monstruo m : monstruosAtacantes){
-                            if(m.getNombre().equals(monstruoANegar)){
+                            if(m.getNombre().equals(stringAux)){
                                 m.setAtaque((short) 0);
                                 atacante.setLP((short) (atacante.getLP() - m.getAtaqueBase()));
                                 break;
@@ -96,7 +96,7 @@ public class Trampa extends Carta implements ActivableTrampas{
                     else if(trampa.getTurnosActiva() > 0){
                         trampa.setTurnosActiva((byte) 0);
                         for(int j=0; j<5; j++){
-                            monstruosAtacantes[j].setAtaque(monstruosAtacantes.getAtaqueBase());
+                            monstruosAtacantes[j].setAtaque(monstruosAtacantes[j].getAtaqueBase());
                         }
                         cementerioDefensor.add(magiasYTrampasDefensoras[cartaAActivar]);
                         magiasYTrampasDefensoras[cartaAActivar] = null;
@@ -119,9 +119,9 @@ public class Trampa extends Carta implements ActivableTrampas{
                     break;
 
                 case ARMADURA_DE_SAKURETSU:
-                    if(monstruosAtacantes[j] != null){
-                        cementerioAtacante.add(monstruosAtacantes[j]);
-                        monstruosAtacantes[j] = null;
+                    if(monstruosAtacantes[byteAux] != null){
+                        cementerioAtacante.add(monstruosAtacantes[byteAux]);
+                        monstruosAtacantes[byteAux] = null;
                     }
                     cementerioDefensor.add(magiasYTrampasDefensoras[cartaAActivar]);
                     magiasYTrampasDefensoras[cartaAActivar] = null;
@@ -130,7 +130,7 @@ public class Trampa extends Carta implements ActivableTrampas{
                 case LLAMADA_DE_LOS_CONDENADOS:
                     byte indiceMonstruoARevivir=0;
                     for(int j=0; j<cementerioDefensor.size(); j++){
-                        if(cementerioDefensor.get(j).getNombre().equals(monstruoADevolver) && cementerioDefensor.get(j) instanceof Monstruo){
+                        if(cementerioDefensor.get(j).getNombre().equals(stringAux) && cementerioDefensor.get(j) instanceof Monstruo){
                             indiceMonstruoARevivir = (byte) j;
                             break;
                         }
@@ -150,7 +150,7 @@ public class Trampa extends Carta implements ActivableTrampas{
                     if(trampa.getTurnosActiva() < 1){
                         byte indiceMonstruoAOcultar=0;
                         for(int j=0; j<5; j++){
-                            if(monstruosDefensores[j].getNombre().equals(nombreMonstruoAOcultar)){
+                            if(monstruosDefensores[j].getNombre().equals(stringAux)){
                                 indiceMonstruoAOcultar = (byte) j;
                                 break;
                             }
@@ -167,10 +167,10 @@ public class Trampa extends Carta implements ActivableTrampas{
                             }
                         }
                         for(int j=0; j<defensor.getMazo().size(); j++){
-                            if(defensor.getMazo().get(j).getNombre().equals(nombreMagica1AOcultar)){
+                            if(defensor.getMazo().get(j).getNombre().equals(stringAux2)){
                                 cementerioDefensor.add(defensor.getMazo().remove(j));
                             }
-                            else if(defensor.getMazo().get(j).getNombre().equals(nombreMagica2AOcultar)){
+                            else if(defensor.getMazo().get(j).getNombre().equals(stringAux3)){
                                 cementerioDefensor.add(defensor.getMazo().remove(j));
                             }
                         }
@@ -214,10 +214,10 @@ public class Trampa extends Carta implements ActivableTrampas{
                     }
                     else if(trampa.getTurnosActiva() > 0){
                         trampa.setTurnosActiva((byte) 0);
-                        if(opcionMuroDeEspejo == 1){
+                        if(byteAux == 1){
                             atacante.setLP((short) (atacante.getLP()-2000));
                         }
-                        else if(opcionMuroDeEspejo == 2){
+                        else if(byteAux == 2){
                             for(int j=0; j<5; j++){
                                 monstruosAtacantes[j].setAtaque(monstruosAtacantes[j].getAtaqueBase());
                             }
@@ -230,7 +230,7 @@ public class Trampa extends Carta implements ActivableTrampas{
                 case REPRESION:
                     if(trampa.getTurnosActiva() < 1){
                         for(int j=0; j<5; j++){
-                            if(monstruosAtacantes[j] != null && monstruosAtacantes[j].getNombre().equals(monstruoARobar)){
+                            if(monstruosAtacantes[j] != null && monstruosAtacantes[j].getNombre().equals(stringAux)){
                                 for(int k=0; k<5; k++){
                                     if(monstruosDefensores[k] == null){
                                         monstruosDefensores[k] = monstruosAtacantes[j];
@@ -289,8 +289,8 @@ public class Trampa extends Carta implements ActivableTrampas{
     }
 
     @Override
-    public boolean jugar(Campo campo, byte turno, Scanner scaner, byte cartaAActivar) {
-        ActivarEfecto(campo, turno, scaner, cartaAActivar);
+    public boolean jugar(Campo campo, byte turno, byte cartaAActivar, byte byteAux, String stringAux, String stringAux2, String stringAux3, List<Monstruo> lista) {
+        ActivarEfecto(campo, turno, cartaAActivar, byteAux, stringAux, stringAux2, stringAux3, lista);
         return true;
     }
 

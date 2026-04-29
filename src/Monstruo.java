@@ -62,17 +62,11 @@ public class Monstruo extends Carta {
             this.enPosicionAtaque = enPosicionAtaque;
             this.yaCambioPosicionEnEsteTurno = true;
         }
-        else{
-            System.out.println("No se puede cambiar de posición más de una vez por turno.");
-        }
     }
     public void setEnPosicionAtaque() {
         if (!yaCambioPosicionEnEsteTurno){
             this.enPosicionAtaque = !enPosicionAtaque;
             this.yaCambioPosicionEnEsteTurno = true;
-        }
-        else{
-            System.out.println("No se puede cambiar de posición más de una vez por turno.");
         }
     }
     public void setYaCambioPosicionEnEsteTurno(boolean yaCambioPosicionEnEsteTurno){
@@ -83,7 +77,7 @@ public class Monstruo extends Carta {
     }
 
     @Override
-    public boolean jugar(Campo campo, byte turno, Scanner scaner, byte cartaAActivar, byte indiceDelEnemigo){
+    public boolean jugar(Campo campo, byte turno, byte cartaAActivar, byte byteAux, String stringAux, String stringAux2, String stringAux3, List<Monstruo> lista){
         Jugador atacante, defensor;
         Monstruo[] monstruosAtacantes, monstruosDefensores;
         Carta[] magiasYTrampasAtacantes, magiasYTrampasDefensoras;
@@ -137,11 +131,7 @@ public class Monstruo extends Carta {
         }
         if(monstruosAtacantes[cartaAActivar].isEnPosicionAtaque()){
             if(monstruosDefensoresNoEstaVacio){
-                System.out.print("Escoja el número de que carta atacar o digite 6 para no atacar: ");
-                indiceDelEnemigo = scaner.nextByte();
-                scaner.nextLine();
-                System.out.println("");
-                if(indiceDelEnemigo == 6 || monstruosDefensores[indiceDelEnemigo] == null) {
+                if(byteAux == 6 || monstruosDefensores[byteAux] == null) {
                 return false;
                 }
             }
@@ -153,19 +143,19 @@ public class Monstruo extends Carta {
                 monstruosAtacantes[cartaAActivar].setPuedeAtacar(false);
                 return true;
             }
-            if(monstruosDefensoresNoEstaVacio && monstruosDefensores[indiceDelEnemigo].isEnPosicionAtaque()){
-                if(monstruosAtacantes[cartaAActivar].getAtaque() > monstruosDefensores[indiceDelEnemigo].getAtaque()){
-                    defensor.setLP((short) (defensor.getLP() + (monstruosDefensores[indiceDelEnemigo].getAtaque() - monstruosAtacantes[cartaAActivar].getAtaque())));
+            if(monstruosDefensoresNoEstaVacio && monstruosDefensores[byteAux].isEnPosicionAtaque()){
+                if(monstruosAtacantes[cartaAActivar].getAtaque() > monstruosDefensores[byteAux].getAtaque()){
+                    defensor.setLP((short) (defensor.getLP() + (monstruosDefensores[byteAux].getAtaque() - monstruosAtacantes[cartaAActivar].getAtaque())));
                     if(defensor.getLP() < 0){
                         defensor.setLP((short) 0);
                     }
-                    cementerioDefensor.add(monstruosDefensores[indiceDelEnemigo]);
-                    monstruosDefensores[indiceDelEnemigo] = null;
+                    cementerioDefensor.add(monstruosDefensores[byteAux]);
+                    monstruosDefensores[byteAux] = null;
                     monstruosAtacantes[cartaAActivar].setPuedeAtacar(false);
                     return true;
                 }
-                else if(monstruosAtacantes[cartaAActivar].getAtaque() < monstruosDefensores[indiceDelEnemigo].getAtaque()){
-                    atacante.setLP((short) (atacante.getLP() + (monstruosAtacantes[cartaAActivar].getAtaque() - monstruosDefensores[indiceDelEnemigo].getAtaque())));
+                else if(monstruosAtacantes[cartaAActivar].getAtaque() < monstruosDefensores[byteAux].getAtaque()){
+                    atacante.setLP((short) (atacante.getLP() + (monstruosAtacantes[cartaAActivar].getAtaque() - monstruosDefensores[byteAux].getAtaque())));
                     if(atacante.getLP() < 0){
                         atacante.setLP((short) 0);
                     }
@@ -173,23 +163,23 @@ public class Monstruo extends Carta {
                     monstruosAtacantes[cartaAActivar] = null;
                     return true;
                 }
-                else if(monstruosAtacantes[cartaAActivar].getAtaque() == monstruosDefensores[indiceDelEnemigo].getAtaque()){
-                    cementerioDefensor.add(monstruosDefensores[indiceDelEnemigo]);
+                else if(monstruosAtacantes[cartaAActivar].getAtaque() == monstruosDefensores[byteAux].getAtaque()){
+                    cementerioDefensor.add(monstruosDefensores[byteAux]);
                     cementerioAtacante.add(monstruosAtacantes[cartaAActivar]);
-                    monstruosDefensores[indiceDelEnemigo] = null;
+                    monstruosDefensores[byteAux] = null;
                     monstruosAtacantes[cartaAActivar] = null;
                     return true;
                 }
             }
-            else if(monstruosDefensoresNoEstaVacio && !monstruosDefensores[indiceDelEnemigo].isEnPosicionAtaque()){
-                if(monstruosAtacantes[cartaAActivar].getAtaque() > monstruosDefensores[indiceDelEnemigo].getDefensa()){
-                    cementerioDefensor.add(monstruosDefensores[indiceDelEnemigo]);
-                    monstruosDefensores[indiceDelEnemigo] = null;
+            else if(monstruosDefensoresNoEstaVacio && !monstruosDefensores[byteAux].isEnPosicionAtaque()){
+                if(monstruosAtacantes[cartaAActivar].getAtaque() > monstruosDefensores[byteAux].getDefensa()){
+                    cementerioDefensor.add(monstruosDefensores[byteAux]);
+                    monstruosDefensores[byteAux] = null;
                     monstruosAtacantes[cartaAActivar].setPuedeAtacar(false);
                     return true;
                 }
-                else if(monstruosAtacantes[cartaAActivar].getAtaque() < monstruosDefensores[indiceDelEnemigo].getDefensa()){
-                    atacante.setLP((short) (atacante.getLP() + (monstruosAtacantes[cartaAActivar].getAtaque() - monstruosDefensores[indiceDelEnemigo].getDefensa())));
+                else if(monstruosAtacantes[cartaAActivar].getAtaque() < monstruosDefensores[byteAux].getDefensa()){
+                    atacante.setLP((short) (atacante.getLP() + (monstruosAtacantes[cartaAActivar].getAtaque() - monstruosDefensores[byteAux].getDefensa())));
                     if(atacante.getLP() < 0){
                         atacante.setLP((short) 0);
                     }
@@ -199,7 +189,6 @@ public class Monstruo extends Carta {
             }
         }
         else{
-            System.out.println("La carta no puede atacar porque está en posición de defensa");
             return false;
         }
         return false;

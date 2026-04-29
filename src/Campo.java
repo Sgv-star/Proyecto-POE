@@ -16,6 +16,9 @@ public class Campo {
         this.jugador1 = jugador1;
         this.jugador2 = jugador2;
     }
+    public Campo(){
+        
+    }
 
     public Monstruo[] getMonstruosEnCampoJugador1() {
         return monstruosEnCampoJugador1;

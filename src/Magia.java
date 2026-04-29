@@ -223,8 +223,8 @@ public class Magia extends Carta implements Activable{
                 Monstruo monstruoFusion = new Monstruo("Monstruo de Fusión", "Un monstruo creado a partir de Polimerización.", (byte) 0, (short) 0, (short) 0);
                 for(int j=0; j<lista.size(); j++){
                     monstruoFusion.setNivel((byte) (monstruoFusion.getNivel() + lista.get(j).getNivel()));
-                    monstruoFusion.setAtaque((short) (monstruoFusion.getAtaque() + lista.get(j).getAtaque()));
-                    monstruoFusion.setDefensa((short) (monstruoFusion.getDefensa() + lista.get(j).getDefensa()));
+                    monstruoFusion.setAtaqueBase((short) (monstruoFusion.getAtaqueBase() + lista.get(j).getAtaque()));
+                    monstruoFusion.setDefensaBase((short) (monstruoFusion.getDefensaBase() + lista.get(j).getDefensa()));
                     cementerioAtacante.add(lista.get(j));
                 }
                 for(int j=0; j<5; j++){

@@ -47,14 +47,14 @@ public class Duelo {
             if(campo.getMonstruosEnCampoJugador1()[i] != null){
                 Monstruo monstruo = (Monstruo) campo.getMonstruosEnCampoJugador1()[i];
                 if(monstruo.isEnPosicionAtaque()){
-                    System.out.println(i + ". " + monstruo.getNombre() + " | ATK: " + monstruo.getAtaque() + " | DEF: " + monstruo.getDefensa() + " | En posición de ataque");
+                    System.out.println(i + ". " + monstruo.getNombre() +  " | LVL: " + monstruo.getNivel() + " | ATK: " + monstruo.getAtaque() + " | DEF: " + monstruo.getDefensa() + " | En posición de ataque");
                 }
                 else{
-                    System.out.println(i + ". " + monstruo.getNombre() + " | ATK: " + monstruo.getAtaque() + " | DEF: " + monstruo.getDefensa() + " | En posición de defensa");
+                   System.out.println(i + ". " + monstruo.getNombre() +  " | LVL: " + monstruo.getNivel() + " | ATK: " + monstruo.getAtaque() + " | DEF: " + monstruo.getDefensa() + " | En posición de defensa");
                 }
             }
             else{
-                System.out.println("Espacio vacío");
+                System.out.println("Espacio vacio");
             }
         }
         System.out.println("");
@@ -77,10 +77,10 @@ public class Duelo {
             if(campo.getMonstruosEnCampoJugador2()[i] != null){
                 Monstruo monstruo = (Monstruo) campo.getMonstruosEnCampoJugador2()[i];
                 if(monstruo.isEnPosicionAtaque()){
-                    System.out.println(i + ". " + monstruo.getNombre() + " | ATK: " + monstruo.getAtaque() + " | DEF: " + monstruo.getDefensa() + " | En posición de ataque");
+                    System.out.println(i + ". " + monstruo.getNombre() + " | LVL: " + monstruo.getNivel() + " | ATK: " + monstruo.getAtaque() + " | DEF: " + monstruo.getDefensa() + " | En posición de ataque");
                 }
                 else{
-                    System.out.println(i + ". " + monstruo.getNombre() + " | ATK: " + monstruo.getAtaque() + " | DEF: " + monstruo.getDefensa() + " | En posición de defensa");
+                    System.out.println(i + ". " + monstruo.getNombre() + " | LVL: " + monstruo.getNivel() + " | ATK: " + monstruo.getAtaque() + " | DEF: " + monstruo.getDefensa() + " | En posición de defensa");
                 }
             }
             else{
@@ -108,7 +108,7 @@ public class Duelo {
         for(int j=0; j<atacante.getMano().size(); j++){
             if(atacante.getMano().get(j) instanceof Monstruo){
                 Monstruo monstruo = (Monstruo) atacante.getMano().get(j);
-                System.out.println(j + ". " + monstruo.getNombre() + " | ATK: " + monstruo.getAtaque() + " | DEF: " + monstruo.getDefensa());
+                 System.out.println(j + ". " + monstruo.getNombre() + " | LVL: " + monstruo.getNivel() + " | ATK: " + monstruo.getAtaque() + " | DEF: " + monstruo.getDefensa());
             }
             else if(atacante.getMano().get(j) instanceof Magia){
                 Magia magica = (Magia) atacante.getMano().get(j);
@@ -119,7 +119,7 @@ public class Duelo {
         for(Carta carta : cementerioAtacante){
             if(carta instanceof Monstruo){
                 Monstruo m = (Monstruo) carta;
-                System.out.println(i + ". " + m.getNombre() + " | ATK: " + m.getAtaque() + " | DEF: " + m.getDefensa());
+                System.out.println(i + ". " + m.getNombre() + " | LVL: " + m.getNivel() + " | ATK: " + m.getAtaque() + " | DEF: " + m.getDefensa());
                 i++;
             }
             else if(carta instanceof Magia){
@@ -226,24 +226,50 @@ public class Duelo {
                             System.out.println("");
                         } while(indiceCartaAColocar >= atacante.getMano().size() || indiceCartaAColocar < 0);
                         if(opcionCartaAColocar == 1){
-                            do{
-                                System.out.println("Escoja la posición en la que quiere colocar al monstruo: \n1. Ataque. \n2. Defensa.");
-                                System.out.print("Opción: ");
-                                posicionCartaAColocar = scaner.nextByte();
-                                scaner.nextLine();
-                                System.out.println("");
-                            } while(posicionCartaAColocar != 1 && posicionCartaAColocar != 2);
-                            for(int i=0; i<5; i++){
-                                if(monstruosAtacantes[i] == null && atacante.getMano().get(indiceCartaAColocar) instanceof Monstruo){
-                                    monstruosAtacantes[i] = (Monstruo) atacante.getMano().get(indiceCartaAColocar);
-                                    atacante.getMano().remove(indiceCartaAColocar);
-                                    if(posicionCartaAColocar == 1){
-                                        monstruosAtacantes[i].setEnPosicionAtaque(true);
+                            boolean posibleColocar=false;
+                            Monstruo m = (Monstruo) atacante.getMano().get(indiceCartaAColocar);
+                            if(m.getNivel() > 4){
+                                byte monstruoASacrificar = 0;
+                                 do{
+                                    do{
+                                        System.out.println("Debe sacrificar un monstruo en campo para invocar a este monstruo.");
+                                        System.out.println("Ingrese el indice del monstruo en campo a sacrificar o escriba 6 para cancelar.");
+                                        System.out.print("Opción: ");
+                                        monstruoASacrificar = scaner.nextByte();
+                                        scaner.nextLine();
+                                        System.out.println("");
+                                    } while(monstruoASacrificar<0 || monstruoASacrificar >6);
+                                    if(monstruoASacrificar<6 && monstruosAtacantes[monstruoASacrificar] != null){
+                                        cementerioAtacante.add(monstruosAtacantes[monstruoASacrificar]);
+                                        monstruosAtacantes[monstruoASacrificar] = null;
+                                        posibleColocar = true;
                                         break;
                                     }
-                                    else if(posicionCartaAColocar == 2){
-                                        monstruosAtacantes[i].setEnPosicionAtaque(false);
-                                        break;
+                                } while(monstruoASacrificar != 6 );
+                            }
+                            else{
+                                posibleColocar = true;;
+                            }
+                            if(posibleColocar){
+                                do{
+                                    System.out.println("Escoja la posición en la que quiere colocar al monstruo: \n1. Ataque. \n2. Defensa.");
+                                    System.out.print("Opción: ");
+                                    posicionCartaAColocar = scaner.nextByte();
+                                    scaner.nextLine();
+                                    System.out.println("");
+                                } while(posicionCartaAColocar != 1 && posicionCartaAColocar != 2);
+                                for(int i=0; i<5; i++){
+                                    if(monstruosAtacantes[i] == null && atacante.getMano().get(indiceCartaAColocar) instanceof Monstruo){
+                                        monstruosAtacantes[i] = (Monstruo) atacante.getMano().get(indiceCartaAColocar);
+                                        atacante.getMano().remove(indiceCartaAColocar);
+                                        if(posicionCartaAColocar == 1){
+                                            monstruosAtacantes[i].setEnPosicionAtaque(true);
+                                            break;
+                                        }
+                                        else if(posicionCartaAColocar == 2){
+                                            monstruosAtacantes[i].setEnPosicionAtaque(false);
+                                            break;
+                                        }
                                     }
                                 }
                             }

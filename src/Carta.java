@@ -27,6 +27,6 @@ public abstract class Carta {
         this.visible = visible;
     }
 
-    public abstract boolean jugar(Campo campo, byte turno, Scanner scaner, byte cartaAActivar);
+    public abstract boolean jugar(Campo campo, byte turno, byte cartaAActivar, byte byteAux, String stringAux, String stringAux2, String stringAux3, List<Monstruo> lista);
 
 }

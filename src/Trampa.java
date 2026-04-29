@@ -1,18 +1,20 @@
 package src;
 import java.util.*;
 
-public class Trampa extends Carta implements ActivableTrampas{
+public class Trampa extends Carta implements Activable{
 
     private TipoHabilidadEspecialTrampa tipoHabilidadEspecial;
     private byte turnosActiva;
     private String monstruoARobarPorUnTurno;
     private TipoHabilidadEspecialTrampa momentoDeActivacion;
+    private boolean activada;
 
     public Trampa(String nombre, String cuadroDeTexto, TipoHabilidadEspecialTrampa tipoHabilidadEspecial, TipoHabilidadEspecialTrampa momentoDeActivacion) {
         super(nombre, cuadroDeTexto, false);
         this.tipoHabilidadEspecial = tipoHabilidadEspecial;
         this.turnosActiva = 0;
         this.momentoDeActivacion = momentoDeActivacion;
+        this.activada = false;
     }
 
     public TipoHabilidadEspecialTrampa getTipoHabilidadEspecialTrampa() {
@@ -27,6 +29,9 @@ public class Trampa extends Carta implements ActivableTrampas{
     public TipoHabilidadEspecialTrampa getMomentoDeActivacion() {
         return momentoDeActivacion;
     }
+    public boolean isActivada() {
+        return activada;
+    }
 
     protected void setTipoHabilidadEspecialTrampa(TipoHabilidadEspecialTrampa tipoHabilidadEspecial) {
         this.tipoHabilidadEspecial = tipoHabilidadEspecial;
@@ -40,9 +45,12 @@ public class Trampa extends Carta implements ActivableTrampas{
     protected void setMomentoDeActivacion(TipoHabilidadEspecialTrampa momentoDeActivacion) {
         this.momentoDeActivacion = momentoDeActivacion;
     }
+    protected void setActivada(boolean activada){
+        this.activada= activada;
+    }
 
     @Override
-    public void ActivarEfecto(Campo campo, byte turno, Scanner scaner, byte cartaAActivar, String monstruoADevolver) {
+    public void ActivarEfecto(Campo campo, byte turno, byte cartaAActivar, byte byteAux, String stringAux, String stringAux2, String stringAux3, List<Monstruo> lista) {
         Jugador atacante, defensor;
         Monstruo[] monstruosAtacantes, monstruosDefensores;
         Carta[] magiasYTrampasAtacantes, magiasYTrampasDefensoras;
@@ -67,9 +75,9 @@ public class Trampa extends Carta implements ActivableTrampas{
             magiasYTrampasDefensoras = campo.getMagicasYTrampasEnCampoJugador1();
             cementerioDefensor = campo.getCementerioJugador1();
         }
-        magiasYTrampasAtacantes[cartaAActivar].setVisible(true);
-        if(magiasYTrampasAtacantes[cartaAActivar] != null && magiasYTrampasAtacantes[cartaAActivar].isVisible() && magiasYTrampasAtacantes[cartaAActivar] instanceof Trampa){
-            Trampa trampa = (Trampa) magiasYTrampasAtacantes[cartaAActivar];
+        magiasYTrampasDefensoras[cartaAActivar].setVisible(true);
+        if(magiasYTrampasDefensoras[cartaAActivar] != null && magiasYTrampasDefensoras[cartaAActivar].isVisible() && magiasYTrampasDefensoras[cartaAActivar] instanceof Trampa){
+            Trampa trampa = (Trampa) magiasYTrampasDefensoras[cartaAActivar];
             switch(trampa.getTipoHabilidadEspecialTrampa()){
 
                 case FUERZA_DE_ESPEJO:
@@ -78,6 +86,7 @@ public class Trampa extends Carta implements ActivableTrampas{
                             monstruosAtacantes[j] = null;
                         }
                     }
+                    setActivada(false);
                     cementerioDefensor.add(magiasYTrampasDefensoras[cartaAActivar]);
                     magiasYTrampasDefensoras[cartaAActivar] = null;
                     break;
@@ -85,19 +94,23 @@ public class Trampa extends Carta implements ActivableTrampas{
                 case CILINDRO_MAGICO:
                     if(trampa.getTurnosActiva() < 1){
                         for(Monstruo m : monstruosAtacantes){
-                            if(m.getNombre().equals(monstruoANegar)){
+                            if(m != null && m.getNombre().equals(stringAux)){
                                 m.setAtaque((short) 0);
                                 atacante.setLP((short) (atacante.getLP() - m.getAtaqueBase()));
                                 break;
                             }
                         }
                         trampa.setTurnosActiva((byte) (trampa.getTurnosActiva()+1));
+                        setActivada(true);
                     }
                     else if(trampa.getTurnosActiva() > 0){
                         trampa.setTurnosActiva((byte) 0);
                         for(int j=0; j<5; j++){
-                            monstruosAtacantes[j].setAtaque(monstruosAtacantes.getAtaqueBase());
+                            if(monstruosAtacantes[j] != null){
+                                monstruosAtacantes[j].setAtaque(monstruosAtacantes[j].getAtaqueBase());
+                            }
                         }
+                        setActivada(false);
                         cementerioDefensor.add(magiasYTrampasDefensoras[cartaAActivar]);
                         magiasYTrampasDefensoras[cartaAActivar] = null;
                     }
@@ -114,15 +127,17 @@ public class Trampa extends Carta implements ActivableTrampas{
                             monstruosDefensores[j] = null;
                         }
                     }
+                    setActivada(false);
                     cementerioDefensor.add(magiasYTrampasDefensoras[cartaAActivar]);
                     magiasYTrampasDefensoras[cartaAActivar] = null;
                     break;
 
                 case ARMADURA_DE_SAKURETSU:
-                    if(monstruosAtacantes[j] != null){
-                        cementerioAtacante.add(monstruosAtacantes[j]);
-                        monstruosAtacantes[j] = null;
+                    if(monstruosAtacantes[byteAux] != null){
+                        cementerioAtacante.add(monstruosAtacantes[byteAux]);
+                        monstruosAtacantes[byteAux] = null;
                     }
+                    setActivada(false);
                     cementerioDefensor.add(magiasYTrampasDefensoras[cartaAActivar]);
                     magiasYTrampasDefensoras[cartaAActivar] = null;
                     break;
@@ -130,18 +145,19 @@ public class Trampa extends Carta implements ActivableTrampas{
                 case LLAMADA_DE_LOS_CONDENADOS:
                     byte indiceMonstruoARevivir=0;
                     for(int j=0; j<cementerioDefensor.size(); j++){
-                        if(cementerioDefensor.get(j).getNombre().equals(monstruoADevolver) && cementerioDefensor.get(j) instanceof Monstruo){
+                        if(cementerioDefensor.get(j).getNombre().equals(stringAux) && cementerioDefensor.get(j) instanceof Monstruo){
                             indiceMonstruoARevivir = (byte) j;
                             break;
                         }
                     }
                     for(int j=0; j<5; j++){
-                        if(monstruosDefensores[j] != null && cementerioDefensor.get(indiceMonstruoARevivir) instanceof Monstruo){
+                        if(monstruosDefensores[j] == null && cementerioDefensor.get(indiceMonstruoARevivir) instanceof Monstruo){
                             monstruosDefensores[j] = (Monstruo) cementerioDefensor.remove(indiceMonstruoARevivir);
                             monstruosDefensores[j].setEnPosicionAtaque(true);
                             break;
                         }
                     }
+                    setActivada(false);
                     cementerioDefensor.add(magiasYTrampasDefensoras[cartaAActivar]);
                     magiasYTrampasDefensoras[cartaAActivar] = null;
                     break;
@@ -150,9 +166,11 @@ public class Trampa extends Carta implements ActivableTrampas{
                     if(trampa.getTurnosActiva() < 1){
                         byte indiceMonstruoAOcultar=0;
                         for(int j=0; j<5; j++){
-                            if(monstruosDefensores[j].getNombre().equals(nombreMonstruoAOcultar)){
-                                indiceMonstruoAOcultar = (byte) j;
-                                break;
+                            if(monstruosDefensores[j] != null){
+                                if(monstruosDefensores[j].getNombre().equals(stringAux)){
+                                    indiceMonstruoAOcultar = (byte) j;
+                                    break;
+                                }
                             }
                         }
                         List<Monstruo> cartasAOcultar = new ArrayList<> ();
@@ -162,27 +180,31 @@ public class Trampa extends Carta implements ActivableTrampas{
                         Collections.shuffle(cartasAOcultar);
                         monstruosDefensores[indiceMonstruoAOcultar] = null;
                         for(int j=0; j<5; j++){
-                            if(monstruosDefensores[j] != null && cartasAOcultar.size() > 0){
+                            if(monstruosDefensores[j] == null && cartasAOcultar.size() > 0){
                                 monstruosDefensores[j] = cartasAOcultar.remove(0);
                             }
                         }
                         for(int j=0; j<defensor.getMazo().size(); j++){
-                            if(defensor.getMazo().get(j).getNombre().equals(nombreMagica1AOcultar)){
+                            if(defensor.getMazo().get(j).getNombre().equals(stringAux2)){
                                 cementerioDefensor.add(defensor.getMazo().remove(j));
                             }
-                            else if(defensor.getMazo().get(j).getNombre().equals(nombreMagica2AOcultar)){
+                            else if(defensor.getMazo().get(j).getNombre().equals(stringAux3)){
                                 cementerioDefensor.add(defensor.getMazo().remove(j));
                             }
                         }
                         trampa.setTurnosActiva((byte) (trampa.getTurnosActiva()+1));
+                        setActivada(true);
                     }
                     else if(trampa.getTurnosActiva() > 0){
                         trampa.setTurnosActiva((byte) 0);
                         for(int j=0; j<5; j++){
-                            if(monstruosDefensores[j].getNombre().equals("Sombrero 1") || monstruosDefensores[j].getNombre().equals("Sombrero 2")){
-                                monstruosDefensores[j] = null;
+                            if(monstruosDefensores[j] != null){
+                                if(monstruosDefensores[j].getNombre().equals("Sombrero 1") || monstruosDefensores[j].getNombre().equals("Sombrero 2")){
+                                    monstruosDefensores[j] = null;
+                                }
                             }
                         }
+                        setActivada(false);
                         cementerioDefensor.add(magiasYTrampasDefensoras[cartaAActivar]);
                         magiasYTrampasDefensoras[cartaAActivar] = null;
                     }
@@ -191,15 +213,21 @@ public class Trampa extends Carta implements ActivableTrampas{
                 case WABOKU:
                     if(trampa.getTurnosActiva() < 1){
                         for(int j=0; j<5; j++){
-                            monstruosDefensores[j].setAtaque((short) 0);
+                            if(monstruosAtacantes[j] != null){
+                                monstruosAtacantes[j].setAtaque((short) 0);
+                            }
                         }
                         trampa.setTurnosActiva((byte) (trampa.getTurnosActiva()+1));
+                        setActivada(true);
                     }
                     else if(trampa.getTurnosActiva() > 0){
                         trampa.setTurnosActiva((byte) 0);
                         for(int j=0; j<5; j++){
-                            monstruosDefensores[j].setAtaque(monstruosDefensores[j].getAtaqueBase());
+                            if(monstruosAtacantes[j] != null){
+                                monstruosAtacantes[j].setAtaque(monstruosAtacantes[j].getAtaqueBase());
+                            }
                         }
+                        setActivada(false);
                         cementerioDefensor.add(magiasYTrampasDefensoras[cartaAActivar]);
                         magiasYTrampasDefensoras[cartaAActivar] = null;
                     }
@@ -208,19 +236,25 @@ public class Trampa extends Carta implements ActivableTrampas{
                 case MURO_DE_ESPEJO:
                     if(trampa.getTurnosActiva() < 1){
                         for(int j=0; j<5; j++){
-                            monstruosAtacantes[j].setAtaque((short) (monstruosAtacantes[j].getAtaque() / 2));
+                            if(monstruosAtacantes[j] != null){
+                                monstruosAtacantes[j].setAtaque((short) (monstruosAtacantes[j].getAtaque() / 2));
+                            }
                         }
                         trampa.setTurnosActiva((byte) (trampa.getTurnosActiva()+1));
+                        setActivada(true);
                     }
                     else if(trampa.getTurnosActiva() > 0){
                         trampa.setTurnosActiva((byte) 0);
-                        if(opcionMuroDeEspejo == 1){
+                        if(byteAux == 1){
                             atacante.setLP((short) (atacante.getLP()-2000));
                         }
-                        else if(opcionMuroDeEspejo == 2){
+                        else if(byteAux == 2){
                             for(int j=0; j<5; j++){
-                                monstruosAtacantes[j].setAtaque(monstruosAtacantes[j].getAtaqueBase());
+                                if(monstruosAtacantes[j] != null){
+                                    monstruosAtacantes[j].setAtaque(monstruosAtacantes[j].getAtaqueBase());
+                                }
                             }
+                            setActivada(false);
                             cementerioDefensor.add(magiasYTrampasDefensoras[cartaAActivar]);
                             magiasYTrampasDefensoras[cartaAActivar] = null;
                         }
@@ -230,7 +264,7 @@ public class Trampa extends Carta implements ActivableTrampas{
                 case REPRESION:
                     if(trampa.getTurnosActiva() < 1){
                         for(int j=0; j<5; j++){
-                            if(monstruosAtacantes[j] != null && monstruosAtacantes[j].getNombre().equals(monstruoARobar)){
+                            if(monstruosAtacantes[j] != null && monstruosAtacantes[j].getNombre().equals(stringAux)){
                                 for(int k=0; k<5; k++){
                                     if(monstruosDefensores[k] == null){
                                         monstruosDefensores[k] = monstruosAtacantes[j];
@@ -243,6 +277,7 @@ public class Trampa extends Carta implements ActivableTrampas{
                             
                         }
                         trampa.setTurnosActiva((byte) (trampa.getTurnosActiva()+1));
+                        setActivada(true);
                     }
                     else if(trampa.getTurnosActiva() > 0){
                         for(int j=0; j<5; j++){
@@ -257,26 +292,33 @@ public class Trampa extends Carta implements ActivableTrampas{
                                 break;
                             }
                         }
-                        trampa.setTurnosActiva((byte) 0);
-                        trampa.setMonstruoARobarPorUnTurno("");
+                        setActivada(false);
+                        setTurnosActiva((byte) 0);
+                        setMonstruoARobarPorUnTurno("");
                         cementerioDefensor.add(magiasYTrampasDefensoras[cartaAActivar]);
                         magiasYTrampasDefensoras[cartaAActivar] = null;
                     }
                     break;
 
                 case DRENAJE_DE_HABILIDAD:
-                    atacante.setLP((short) (defensor.getLP()-1000));
+                    defensor.setLP((short) (defensor.getLP()-1000));
                     if(trampa.getTurnosActiva() < 1){
                         for(int j=0; j<5; j++){
-                            monstruosAtacantes[j].setAtaque((short) (0));
+                            if(monstruosAtacantes[j] != null){
+                                monstruosAtacantes[j].setAtaque((short) (0));
+                            }
                         }
                         trampa.setTurnosActiva((byte) (trampa.getTurnosActiva()+1));
+                        setActivada(true);
                     }
                     else if(trampa.getTurnosActiva() > 0){
                         for(int j=0; j<5; j++){
-                            monstruosAtacantes[j].setAtaque(monstruosAtacantes[j].getAtaqueBase());
+                            if(monstruosAtacantes[j] != null){
+                                monstruosAtacantes[j].setAtaque(monstruosAtacantes[j].getAtaqueBase());
+                            }
                         }
-                        trampa.setTurnosActiva((byte) 0);
+                        setActivada(false);
+                        setTurnosActiva((byte) 0);
                         cementerioDefensor.add(magiasYTrampasDefensoras[cartaAActivar]);
                         magiasYTrampasDefensoras[cartaAActivar] = null;
                     }
@@ -289,8 +331,8 @@ public class Trampa extends Carta implements ActivableTrampas{
     }
 
     @Override
-    public boolean jugar(Campo campo, byte turno, Scanner scaner, byte cartaAActivar) {
-        ActivarEfecto(campo, turno, scaner, cartaAActivar);
+    public boolean jugar(Campo campo, byte turno, byte cartaAActivar, byte byteAux, String stringAux, String stringAux2, String stringAux3, List<Monstruo> lista) {
+        ActivarEfecto(campo, turno, cartaAActivar, byteAux, stringAux, stringAux2, stringAux3, lista);
         return true;
     }
 

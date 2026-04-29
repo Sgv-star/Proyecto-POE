@@ -1,8 +1,6 @@
 package src;
 import java.util.*;
 
-import java.util.*;
-
 public class Campo {
 
     private Monstruo[] monstruosEnCampoJugador1 = new Monstruo[5];

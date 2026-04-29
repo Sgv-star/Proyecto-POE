@@ -1,7 +1,12 @@
+package src;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
+
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -166,7 +171,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 "#", "Tipo", "Nombre", "Ataque", "Defensa", "Descripción"
             }
         ));
-        tablaCementerio.setVisible(false);
+        jScrollPane4.setVisible(false);
         jScrollPane4.setViewportView(tablaCementerio);
         if (tablaCementerio.getColumnModel().getColumnCount() > 0) {
             tablaCementerio.getColumnModel().getColumn(0).setPreferredWidth(8);
@@ -183,6 +188,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jDialog1.getContentPane().add(jScrollPane4);
         jScrollPane4.setBounds(20, 160, 500, 90);
+        jScrollPane2.setVisible(false);
 
         tablaMano.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -195,7 +201,6 @@ public class NewJFrame extends javax.swing.JFrame {
                 "#", "Tipo", "Nombre", "Ataque", "Defensa", "Descripción"
             }
         ));
-        tablaMano.setVisible(false);
         jScrollPane2.setViewportView(tablaMano);
         if (tablaMano.getColumnModel().getColumnCount() > 0) {
             tablaMano.getColumnModel().getColumn(0).setPreferredWidth(8);
@@ -212,6 +217,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jDialog1.getContentPane().add(jScrollPane2);
         jScrollPane2.setBounds(20, 30, 500, 90);
+        jScrollPane2.setVisible(false);
 
         etiquetaCementerio.setFont(new java.awt.Font("Algerian", 0, 12)); // NOI18N
         etiquetaCementerio.setForeground(new java.awt.Color(255, 255, 255));
@@ -739,7 +745,229 @@ public class NewJFrame extends javax.swing.JFrame {
 
     //AQUÍ EMPIEZAN LOS METODOS AÑADIDOS PARA REL FLUJO DEL JUEGO
 
-    
+    private void imprimirMonstruo(JLabel etiqueta, Monstruo[] monstruos, byte i, String nombre, byte nivel, short ataque, short defensa){
+        if(monstruos[i].isVisible()){
+            if(monstruos[i].isEnPosicionAtaque()){
+                etiqueta.setText(nombre + "\n" + nivel + "\n" + ataque + "\n" + defensa + "\n" + "En posición  de ataque");
+            }
+            else{
+                etiqueta.setText(nombre + "\n" + nivel + "\n" + ataque + "\n" + defensa + "\n" + "En posición de defensa");
+            }
+        }
+        else{
+            etiqueta.setText("Carta no visible");
+        }
+    }
+    private void imprimirMagiasYTrampas(JLabel etiqueta, Carta[] magicasOTrampas, byte i){
+        if(magicasOTrampas[i] instanceof Magia){
+            etiqueta.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 0)));
+        }
+        else{
+            etiqueta.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 0, 102)));
+        }
+        if(magicasOTrampas[i].isVisible()){
+            etiqueta.setText(magicasOTrampas[i].getNombre() + "\n" + magicasOTrampas[i].getCuadroDeTexto());
+        }
+        else{
+            etiqueta.setText("Carta no visible");
+        }
+    }
+    private void imprimirCampo(Duelo duelo){
+        JLabel[] etiquetasMonstruosJugador1 = {monstruo0Jugador1EnCampo, monstruo1Jugador1EnCampo, monstruo2Jugador1EnCampo, monstruo3Jugador1EnCampo, monstruo4Jugador1EnCampo};
+        JLabel[] etiquetasMonstruosJugador2 = {monstruo0Jugador2EnCampo, monstruo1Jugador2EnCampo, monstruo2Jugador2EnCampo, monstruo3Jugador2EnCampo, monstruo4Jugador2EnCampo};
+        JLabel[] etiquetasMagiasYTrampasJugador1 = {magiaOTrampa0Jugador1EnCampo, magiaOTrampa1Jugador1EnCampo, magiaOTrampa2Jugador1EnCampo, magiaOTrampa3Jugador1EnCampo, magiaOTrampa4Jugador1EnCampo};
+        JLabel[] etiquetasMagiasYTrampasJugador2 = {magiaOTrampa0Jugador2EnCampo, magiaOTrampa1Jugador2EnCampo, magiaOTrampa2Jugador2EnCampo, magiaOTrampa3Jugador2EnCampo, magiaOTrampa4Jugador2EnCampo};
+        etiquetaJugador1EnCampo.setText(duelo.getCampo().getJugador1().getNombre() + ": ❤ " + duelo.getCampo().getJugador1().getLP() + " LP");
+        etiquetaJugador2EnCampo.setText(duelo.getCampo().getJugador2().getNombre() + ": ❤ " + duelo.getCampo().getJugador2().getLP() + " LP");
+        etiquetaTurnoEnCurso.setText("Turno: " + duelo.getTurno());
+        etiquetaFaseEnCurso.setText(duelo.getFase());
+        for(int i=0; i<5; i++){
+            if(duelo.getCampo().getMonstruosEnCampoJugador1()[i] != null){
+                String nombre = duelo.getCampo().getMonstruosEnCampoJugador1()[i].getNombre();
+                byte nivel = duelo.getCampo().getMonstruosEnCampoJugador1()[i].getNivel();
+                short ataque = duelo.getCampo().getMonstruosEnCampoJugador1()[i].getAtaque();
+                short defensa = duelo.getCampo().getMonstruosEnCampoJugador1()[i].getDefensa();
+                imprimirMonstruo(etiquetasMonstruosJugador1[i], duelo.getCampo().getMonstruosEnCampoJugador1(),(byte) i, nombre, nivel, ataque, defensa);
+            }
+            else{
+                etiquetasMonstruosJugador1[i].setText("Posición vacía");
+            }
+            if(duelo.getCampo().getMagicasYTrampasEnCampoJugador1()[i] != null){
+                imprimirMagiasYTrampas(etiquetasMagiasYTrampasJugador1[i], duelo.getCampo().getMagicasYTrampasEnCampoJugador1(), (byte) i);
+            }
+            else{
+                etiquetasMagiasYTrampasJugador1[i].setText("Posición vacía");
+            }
+            if(duelo.getCampo().getMonstruosEnCampoJugador2()[i] != null){
+                String nombre = duelo.getCampo().getMonstruosEnCampoJugador2()[i].getNombre();
+                byte nivel = duelo.getCampo().getMonstruosEnCampoJugador2()[i].getNivel();
+                short ataque = duelo.getCampo().getMonstruosEnCampoJugador2()[i].getAtaque();
+                short defensa = duelo.getCampo().getMonstruosEnCampoJugador2()[i].getDefensa();
+                imprimirMonstruo(etiquetasMonstruosJugador2[i], duelo.getCampo().getMonstruosEnCampoJugador2(), (byte) i, nombre, nivel, ataque, defensa);
+            }
+            else{
+                etiquetasMonstruosJugador2[i].setText("Posición vacía");
+            }
+            if(duelo.getCampo().getMagicasYTrampasEnCampoJugador2()[i] != null){
+                imprimirMagiasYTrampas(etiquetasMagiasYTrampasJugador2[i], duelo.getCampo().getMagicasYTrampasEnCampoJugador2(), (byte) i);
+            }
+            else{
+                etiquetasMagiasYTrampasJugador2[i].setText("Posición vacía");
+            }
+        }
+    }
+
+    private void resetearDialogWindow() {
+        etiquetaMano.setVisible(false);
+        etiquetaMano.setText("Mano: ");
+        etiquetaCementerio.setVisible(false);
+        jScrollPane2.setVisible(false);
+        jScrollPane4.setVisible(false);
+        etiquetaMultifuncion.setVisible(false);
+        inputMultifuncion.setVisible(false);
+        jLabel2.setVisible(false);
+        botonCerrar.setVisible(false);
+        botonOpcion1.setVisible(false);
+        botonOpcion2.setVisible(false);
+    }
+    private void imprimirMano(Jugador jugador){
+        DefaultTableModel modelo = (DefaultTableModel) tablaMano.getModel();
+        modelo.setRowCount(0);
+        byte i = 0;
+        for (Carta carta : jugador.getMano()) {
+            String tipo = "", ataque = "", defensa = "", descripcion = carta.getCuadroDeTexto();
+            if (carta instanceof Monstruo) {
+                tipo = "MON";
+                Monstruo m = (Monstruo) carta;
+                ataque = String.valueOf(m.getAtaque());
+                defensa = String.valueOf(m.getDefensa());
+            } else if (carta instanceof Magia) {
+                tipo = "MAG";
+            } else if (carta instanceof Trampa) {
+                tipo = "TRA";
+            }
+            
+            modelo.addRow(new Object[]{i, tipo, carta.getNombre(), ataque, defensa, descripcion});
+            i++;
+        }
+    }
+    private void imprimirCementerio(Jugador jugador){
+        DefaultTableModel modelo = (DefaultTableModel) tablaCementerio.getModel();
+        modelo.setRowCount(0);
+        byte i = 0;
+        for (Carta carta : jugador.getCementerio()) {
+            String tipo = "", ataque = "", defensa = "", descripcion = carta.getCuadroDeTexto();
+            if (carta instanceof Monstruo) {
+                tipo = "MON";
+                Monstruo m = (Monstruo) carta;
+                ataque = String.valueOf(m.getAtaque());
+                defensa = String.valueOf(m.getDefensa());
+            } else if (carta instanceof Magia) {
+                tipo = "MAG";
+            } else if (carta instanceof Trampa) {
+                tipo = "TRA";
+            }
+            
+            modelo.addRow(new Object[]{i, tipo, carta.getNombre(), ataque, defensa, descripcion});
+            i++;
+        }
+    }
+    private void imprimirMazo(Jugador jugador){
+        DefaultTableModel modelo = (DefaultTableModel) tablaMano.getModel();
+        modelo.setRowCount(0);
+        byte i = 0;
+        for (Carta carta : jugador.getMazo()) {
+            String tipo = "", ataque = "", defensa = "", descripcion = carta.getCuadroDeTexto();
+            if (carta instanceof Monstruo) {
+                tipo = "MON";
+                Monstruo m = (Monstruo) carta;
+                ataque = String.valueOf(m.getAtaque());
+                defensa = String.valueOf(m.getDefensa());
+            } else if (carta instanceof Magia) {
+                tipo = "MAG";
+            } else if (carta instanceof Trampa) {
+                tipo = "TRA";
+            }
+            
+            modelo.addRow(new Object[]{i, tipo, carta.getNombre(), ataque, defensa, descripcion});
+            i++;
+        }
+    }
+    private void imprimirManoYCementerioAtacante(Duelo duelo){
+        resetearDialogWindow();
+        jDialog1.setTitle("Mano Y Cementerio");
+        Jugador atacante;
+        if(duelo.getTurno()%2==0){
+            atacante = duelo.getCampo().getJugador1();
+        }
+        else{
+            atacante = duelo.getCampo().getJugador2();
+        }
+        etiquetaMano.setVisible(true);
+        etiquetaCementerio.setVisible(true);
+        jScrollPane2.setVisible(true);
+        jScrollPane4.setVisible(true);
+        imprimirMano(atacante);
+        imprimirCementerio(atacante);
+    }
+    private void imprimirManoYCementerioAtacanteYCementerioDefensor(Duelo duelo){
+        resetearDialogWindow();
+        jDialog1.setTitle("Mano Y Cementerio");
+        Jugador atacante, defensor;
+        if(duelo.getTurno()%2==0){
+            atacante = duelo.getCampo().getJugador1();
+            defensor = duelo.getCampo().getJugador2();
+        }
+        else{
+            atacante = duelo.getCampo().getJugador2();
+            defensor = duelo.getCampo().getJugador1();
+        }
+        etiquetaMano.setVisible(true);
+        etiquetaCementerio.setVisible(true);
+        jScrollPane2.setVisible(true);
+        jScrollPane4.setVisible(true);
+        imprimirMano(atacante);
+        imprimirCementerio(atacante);
+        DefaultTableModel modelo = (DefaultTableModel) tablaCementerio.getModel();
+        byte i = 0;
+        for (Carta carta : defensor.getCementerio()) {
+            String tipo = "", ataque = "", defensa = "", descripcion = carta.getCuadroDeTexto();
+            if (carta instanceof Monstruo) {
+                tipo = "MON";
+                Monstruo m = (Monstruo) carta;
+                ataque = String.valueOf(m.getAtaque());
+                defensa = String.valueOf(m.getDefensa());
+            } else if (carta instanceof Magia) {
+                tipo = "MAG";
+            } else if (carta instanceof Trampa) {
+                tipo = "TRA";
+            }
+            
+            modelo.addRow(new Object[]{i, tipo, carta.getNombre(), ataque, defensa, descripcion});
+            i++;
+        }
+    }
+    private void imprimirMazo(Duelo duelo, Jugador jugador){
+        resetearDialogWindow();
+        jDialog1.setTitle("Mazo");
+        etiquetaMano.setText("Mazo: ");
+        jScrollPane2.setVisible(true);
+        etiquetaMano.setVisible(true);
+        imprimirMazo(jugador);
+    }
+
+    private void setearNombresDeJugadores(Duelo duelo){ 
+        String nombreJugador1 = ingresoNombreJugador1.getText().trim(); 
+        String nombreJugador2 = ingresoNombreJugador2.getText().trim(); 
+        if (nombreJugador1.isEmpty() || nombreJugador2.isEmpty()){ 
+            javax.swing.JOptionPane.showMessageDialog(this, "Ambos nombres son obligatorios"); 
+            return; 
+        }
+        else{
+            duelo.getCampo().getJugador1().setNombre(nombreJugador1);
+            duelo.getCampo().getJugador2().setNombre(nombreJugador2);
+        }
+    }
 
     //AQUÍ TERMINAN LOS METODOS AÑADIDOS PARA EL FLUJO DEL JUEGO
 

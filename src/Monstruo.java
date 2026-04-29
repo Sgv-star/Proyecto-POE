@@ -114,7 +114,7 @@ public class Monstruo extends Carta {
         for(Monstruo m : monstruosAtacantes){
             if(m != null){
                 for(Magia cm : magiasDefensoras){
-                    if(cm != null && cm.getTipoHabilidadEspecial() == TipoHabilidadEspecial.ESPADAS_DE_LA_LUZ_REVELADORA && cm.isVisible()){
+                    if(cm != null && cm.getTipoHabilidadEspecial() == TipoHabilidadEspecialMagia.ESPADAS_DE_LA_LUZ_REVELADORA && cm.isVisible()){
                         m.setPuedeAtacar(false);
                         break;
                     }

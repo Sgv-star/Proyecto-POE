@@ -5,7 +5,6 @@ package src;
  */
 
 import javax.swing.JLabel;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -34,12 +33,12 @@ public class NewJFrame extends javax.swing.JFrame {
         botonCerrar = new javax.swing.JButton();
         botonOpcion1 = new javax.swing.JButton();
         botonOpcion2 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
+        etiquetaDeInputMultifuncion = new javax.swing.JLabel();
         inputMultifuncion = new javax.swing.JTextField();
         etiquetaMultifuncion = new javax.swing.JLabel();
-        jScrollPane4 = new javax.swing.JScrollPane();
+        scrollCementerio = new javax.swing.JScrollPane();
         tablaCementerio = new javax.swing.JTable();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        scrollMano = new javax.swing.JScrollPane();
         tablaMano = new javax.swing.JTable();
         etiquetaCementerio = new javax.swing.JLabel();
         etiquetaMano = new javax.swing.JLabel();
@@ -73,13 +72,20 @@ public class NewJFrame extends javax.swing.JFrame {
         monstruo2Jugador2EnCampo = new javax.swing.JLabel();
         monstruo1Jugador2EnCampo = new javax.swing.JLabel();
         monstruo0Jugador2EnCampo = new javax.swing.JLabel();
+        botonTerminarMainPhase1 = new javax.swing.JButton();
+        botonTerminarBattlePhase = new javax.swing.JButton();
+        botonTerminarMainPhase2 = new javax.swing.JButton();
         botonSaltarMainPhase1 = new javax.swing.JButton();
         botonSaltarBattlePhase = new javax.swing.JButton();
         botonSaltarMainPhase2 = new javax.swing.JButton();
         botonPonerCarta = new javax.swing.JButton();
         botonPonerTrampa = new javax.swing.JButton();
         botonPonerMagia = new javax.swing.JButton();
+        botonPonerMagiaSinUsar = new javax.swing.JButton();
+        botonPonerMagiaUsandola = new javax.swing.JButton();
         botonPonerMonstruo = new javax.swing.JButton();
+        botonPonerMonstruoEnDefensa = new javax.swing.JButton();
+        botonPonerMonstruoEnAtaque = new javax.swing.JButton();
         monstruo0Jugador1EnCampo = new javax.swing.JLabel();
         monstruo1Jugador1EnCampo = new javax.swing.JLabel();
         monstruo2Jugador1EnCampo = new javax.swing.JLabel();
@@ -141,16 +147,17 @@ public class NewJFrame extends javax.swing.JFrame {
         jDialog1.getContentPane().add(botonOpcion2);
         botonOpcion2.setBounds(290, 280, 50, 21);
 
-        jLabel2.setFont(new java.awt.Font("Algerian", 0, 12)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Etiqueta:");
-        jDialog1.getContentPane().add(jLabel2);
-        jLabel2.setBounds(50, 280, 60, 17);
+        etiquetaDeInputMultifuncion.setFont(new java.awt.Font("Algerian", 0, 12)); // NOI18N
+        etiquetaDeInputMultifuncion.setForeground(new java.awt.Color(255, 255, 255));
+        etiquetaDeInputMultifuncion.setText("Etiqueta:");
+        etiquetaDeInputMultifuncion.setVisible(false);
+        jDialog1.getContentPane().add(etiquetaDeInputMultifuncion);
+        etiquetaDeInputMultifuncion.setBounds(10, 280, 90, 17);
 
         inputMultifuncion.setText("Su texto aquí");
         inputMultifuncion.setVisible(false);
         jDialog1.getContentPane().add(inputMultifuncion);
-        inputMultifuncion.setBounds(110, 280, 130, 22);
+        inputMultifuncion.setBounds(110, 280, 150, 22);
 
         etiquetaMultifuncion.setFont(new java.awt.Font("Algerian", 0, 12)); // NOI18N
         etiquetaMultifuncion.setForeground(new java.awt.Color(255, 255, 255));
@@ -159,6 +166,8 @@ public class NewJFrame extends javax.swing.JFrame {
         etiquetaMultifuncion.setVisible(false);
         jDialog1.getContentPane().add(etiquetaMultifuncion);
         etiquetaMultifuncion.setBounds(20, 130, 470, 17);
+
+        scrollCementerio.setVisible(false);
 
         tablaCementerio.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -171,8 +180,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 "#", "Tipo", "Nombre", "Ataque", "Defensa", "Descripción"
             }
         ));
-        jScrollPane4.setVisible(false);
-        jScrollPane4.setViewportView(tablaCementerio);
+        scrollCementerio.setViewportView(tablaCementerio);
         if (tablaCementerio.getColumnModel().getColumnCount() > 0) {
             tablaCementerio.getColumnModel().getColumn(0).setPreferredWidth(8);
             tablaCementerio.getColumnModel().getColumn(0).setMaxWidth(8);
@@ -186,9 +194,10 @@ public class NewJFrame extends javax.swing.JFrame {
             tablaCementerio.getColumnModel().getColumn(4).setMaxWidth(50);
         }
 
-        jDialog1.getContentPane().add(jScrollPane4);
-        jScrollPane4.setBounds(20, 160, 500, 90);
-        jScrollPane2.setVisible(false);
+        jDialog1.getContentPane().add(scrollCementerio);
+        scrollCementerio.setBounds(20, 160, 500, 90);
+
+        scrollMano.setVisible(false);
 
         tablaMano.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -201,7 +210,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 "#", "Tipo", "Nombre", "Ataque", "Defensa", "Descripción"
             }
         ));
-        jScrollPane2.setViewportView(tablaMano);
+        scrollMano.setViewportView(tablaMano);
         if (tablaMano.getColumnModel().getColumnCount() > 0) {
             tablaMano.getColumnModel().getColumn(0).setPreferredWidth(8);
             tablaMano.getColumnModel().getColumn(0).setMaxWidth(8);
@@ -215,9 +224,8 @@ public class NewJFrame extends javax.swing.JFrame {
             tablaMano.getColumnModel().getColumn(4).setMaxWidth(50);
         }
 
-        jDialog1.getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(20, 30, 500, 90);
-        jScrollPane2.setVisible(false);
+        jDialog1.getContentPane().add(scrollMano);
+        scrollMano.setBounds(20, 30, 500, 90);
 
         etiquetaCementerio.setFont(new java.awt.Font("Algerian", 0, 12)); // NOI18N
         etiquetaCementerio.setForeground(new java.awt.Color(255, 255, 255));
@@ -335,7 +343,7 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
         cardDesarrollo.add(botonCambiarPosicionDeCarta);
-        botonCambiarPosicionDeCarta.setBounds(390, 610, 140, 23);
+        botonCambiarPosicionDeCarta.setBounds(350, 610, 140, 23);
 
         botonCambiarPosicionDeMagia.setBackground(new java.awt.Color(204, 204, 204));
         botonCambiarPosicionDeMagia.setFont(new java.awt.Font("Algerian", 0, 14)); // NOI18N
@@ -350,13 +358,12 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
         cardDesarrollo.add(botonCambiarPosicionDeMagia);
-        botonCambiarPosicionDeMagia.setBounds(490, 610, 60, 23);
+        botonCambiarPosicionDeMagia.setBounds(440, 610, 60, 23);
 
         botonCambiarPosicionDeMonstruo.setBackground(new java.awt.Color(204, 204, 204));
         botonCambiarPosicionDeMonstruo.setFont(new java.awt.Font("Algerian", 0, 14)); // NOI18N
         botonCambiarPosicionDeMonstruo.setText("Monstruo");
         botonCambiarPosicionDeMonstruo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        botonCambiarPosicionDeMonstruo.setBorderPainted(false);
         botonCambiarPosicionDeMonstruo.setMaximumSize(new java.awt.Dimension(90, 35));
         botonCambiarPosicionDeMonstruo.setMinimumSize(new java.awt.Dimension(90, 35));
         botonCambiarPosicionDeMonstruo.setVisible(false);
@@ -366,7 +373,7 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
         cardDesarrollo.add(botonCambiarPosicionDeMonstruo);
-        botonCambiarPosicionDeMonstruo.setBounds(380, 610, 80, 23);
+        botonCambiarPosicionDeMonstruo.setBounds(340, 610, 80, 23);
 
         etiquetaDivisoraDelCampo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         etiquetaDivisoraDelCampo.setText("______________________________________________________________________________________________");
@@ -458,6 +465,36 @@ public class NewJFrame extends javax.swing.JFrame {
         cardDesarrollo.add(monstruo0Jugador2EnCampo);
         monstruo0Jugador2EnCampo.setBounds(40, 360, 110, 80);
 
+        botonTerminarMainPhase1.setBackground(new java.awt.Color(204, 204, 204));
+        botonTerminarMainPhase1.setFont(new java.awt.Font("Algerian", 0, 14)); // NOI18N
+        botonTerminarMainPhase1.setText("Terminar fase");
+        botonTerminarMainPhase1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        botonTerminarMainPhase1.setMaximumSize(new java.awt.Dimension(90, 35));
+        botonTerminarMainPhase1.setMinimumSize(new java.awt.Dimension(90, 35));
+        botonTerminarMainPhase1.setVisible(false);
+        cardDesarrollo.add(botonTerminarMainPhase1);
+        botonTerminarMainPhase1.setBounds(560, 610, 120, 23);
+
+        botonTerminarBattlePhase.setBackground(new java.awt.Color(204, 204, 204));
+        botonTerminarBattlePhase.setFont(new java.awt.Font("Algerian", 0, 14)); // NOI18N
+        botonTerminarBattlePhase.setText("Terminar fase");
+        botonTerminarBattlePhase.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        botonTerminarBattlePhase.setMaximumSize(new java.awt.Dimension(90, 35));
+        botonTerminarBattlePhase.setMinimumSize(new java.awt.Dimension(90, 35));
+        botonTerminarBattlePhase.setVisible(false);
+        cardDesarrollo.add(botonTerminarBattlePhase);
+        botonTerminarBattlePhase.setBounds(560, 610, 120, 23);
+
+        botonTerminarMainPhase2.setBackground(new java.awt.Color(204, 204, 204));
+        botonTerminarMainPhase2.setFont(new java.awt.Font("Algerian", 0, 14)); // NOI18N
+        botonTerminarMainPhase2.setText("Terminar fase");
+        botonTerminarMainPhase2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        botonTerminarMainPhase2.setMaximumSize(new java.awt.Dimension(90, 35));
+        botonTerminarMainPhase2.setMinimumSize(new java.awt.Dimension(90, 35));
+        botonTerminarMainPhase2.setVisible(false);
+        cardDesarrollo.add(botonTerminarMainPhase2);
+        botonTerminarMainPhase2.setBounds(560, 610, 120, 23);
+
         botonSaltarMainPhase1.setBackground(new java.awt.Color(204, 204, 204));
         botonSaltarMainPhase1.setFont(new java.awt.Font("Algerian", 0, 14)); // NOI18N
         botonSaltarMainPhase1.setText("Saltar fase");
@@ -466,7 +503,7 @@ public class NewJFrame extends javax.swing.JFrame {
         botonSaltarMainPhase1.setMinimumSize(new java.awt.Dimension(90, 35));
         botonSaltarMainPhase1.setVisible(false);
         cardDesarrollo.add(botonSaltarMainPhase1);
-        botonSaltarMainPhase1.setBounds(620, 610, 99, 23);
+        botonSaltarMainPhase1.setBounds(690, 610, 99, 23);
 
         botonSaltarBattlePhase.setBackground(new java.awt.Color(204, 204, 204));
         botonSaltarBattlePhase.setFont(new java.awt.Font("Algerian", 0, 14)); // NOI18N
@@ -476,7 +513,7 @@ public class NewJFrame extends javax.swing.JFrame {
         botonSaltarBattlePhase.setMinimumSize(new java.awt.Dimension(90, 35));
         botonSaltarBattlePhase.setVisible(false);
         cardDesarrollo.add(botonSaltarBattlePhase);
-        botonSaltarBattlePhase.setBounds(620, 610, 99, 23);
+        botonSaltarBattlePhase.setBounds(690, 610, 99, 23);
 
         botonSaltarMainPhase2.setBackground(new java.awt.Color(204, 204, 204));
         botonSaltarMainPhase2.setFont(new java.awt.Font("Algerian", 0, 14)); // NOI18N
@@ -486,7 +523,7 @@ public class NewJFrame extends javax.swing.JFrame {
         botonSaltarMainPhase2.setMinimumSize(new java.awt.Dimension(90, 35));
         botonSaltarMainPhase2.setVisible(false);
         cardDesarrollo.add(botonSaltarMainPhase2);
-        botonSaltarMainPhase2.setBounds(620, 610, 99, 23);
+        botonSaltarMainPhase2.setBounds(690, 610, 99, 23);
 
         botonPonerCarta.setBackground(new java.awt.Color(204, 204, 204));
         botonPonerCarta.setFont(new java.awt.Font("Algerian", 0, 14)); // NOI18N
@@ -511,7 +548,7 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
         cardDesarrollo.add(botonPonerTrampa);
-        botonPonerTrampa.setBounds(240, 610, 70, 23);
+        botonPonerTrampa.setBounds(140, 610, 70, 23);
 
         botonPonerMagia.setBackground(new java.awt.Color(204, 204, 204));
         botonPonerMagia.setFont(new java.awt.Font("Algerian", 0, 14)); // NOI18N
@@ -526,13 +563,42 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
         cardDesarrollo.add(botonPonerMagia);
-        botonPonerMagia.setBounds(150, 610, 60, 23);
+        botonPonerMagia.setBounds(240, 610, 60, 23);
+
+        botonPonerMagiaSinUsar.setBackground(new java.awt.Color(204, 204, 204));
+        botonPonerMagiaSinUsar.setFont(new java.awt.Font("Algerian", 0, 14)); // NOI18N
+        botonPonerMagiaSinUsar.setText("Colocar");
+        botonPonerMagiaSinUsar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        botonPonerMagiaSinUsar.setMaximumSize(new java.awt.Dimension(90, 35));
+        botonPonerMagiaSinUsar.setMinimumSize(new java.awt.Dimension(90, 35));
+        botonPonerMagiaSinUsar.setVisible(false);
+        botonPonerMagiaSinUsar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonPonerMagiaSinUsarActionPerformed(evt);
+            }
+        });
+        cardDesarrollo.add(botonPonerMagiaSinUsar);
+        botonPonerMagiaSinUsar.setBounds(210, 610, 70, 23);
+
+        botonPonerMagiaUsandola.setBackground(new java.awt.Color(204, 204, 204));
+        botonPonerMagiaUsandola.setFont(new java.awt.Font("Algerian", 0, 14)); // NOI18N
+        botonPonerMagiaUsandola.setText("Usar");
+        botonPonerMagiaUsandola.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        botonPonerMagiaUsandola.setMaximumSize(new java.awt.Dimension(90, 35));
+        botonPonerMagiaUsandola.setMinimumSize(new java.awt.Dimension(90, 35));
+        botonPonerMagiaUsandola.setVisible(false);
+        botonPonerMagiaUsandola.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonPonerMagiaUsandolaActionPerformed(evt);
+            }
+        });
+        cardDesarrollo.add(botonPonerMagiaUsandola);
+        botonPonerMagiaUsandola.setBounds(290, 610, 70, 23);
 
         botonPonerMonstruo.setBackground(new java.awt.Color(204, 204, 204));
         botonPonerMonstruo.setFont(new java.awt.Font("Algerian", 0, 14)); // NOI18N
         botonPonerMonstruo.setText("Monstruo");
         botonPonerMonstruo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        botonPonerMonstruo.setBorderPainted(false);
         botonPonerMonstruo.setMaximumSize(new java.awt.Dimension(90, 35));
         botonPonerMonstruo.setMinimumSize(new java.awt.Dimension(90, 35));
         botonPonerMonstruo.setVisible(false);
@@ -543,6 +609,36 @@ public class NewJFrame extends javax.swing.JFrame {
         });
         cardDesarrollo.add(botonPonerMonstruo);
         botonPonerMonstruo.setBounds(40, 610, 74, 23);
+
+        botonPonerMonstruoEnDefensa.setBackground(new java.awt.Color(204, 204, 204));
+        botonPonerMonstruoEnDefensa.setFont(new java.awt.Font("Algerian", 0, 14)); // NOI18N
+        botonPonerMonstruoEnDefensa.setText("Defensa");
+        botonPonerMonstruoEnDefensa.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        botonPonerMonstruoEnDefensa.setMaximumSize(new java.awt.Dimension(90, 35));
+        botonPonerMonstruoEnDefensa.setMinimumSize(new java.awt.Dimension(90, 35));
+        botonPonerMonstruoEnDefensa.setVisible(false);
+        botonPonerMonstruoEnDefensa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonPonerMonstruoEnDefensaActionPerformed(evt);
+            }
+        });
+        cardDesarrollo.add(botonPonerMonstruoEnDefensa);
+        botonPonerMonstruoEnDefensa.setBounds(90, 610, 70, 23);
+
+        botonPonerMonstruoEnAtaque.setBackground(new java.awt.Color(204, 204, 204));
+        botonPonerMonstruoEnAtaque.setFont(new java.awt.Font("Algerian", 0, 14)); // NOI18N
+        botonPonerMonstruoEnAtaque.setText("Ataque");
+        botonPonerMonstruoEnAtaque.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        botonPonerMonstruoEnAtaque.setMaximumSize(new java.awt.Dimension(90, 35));
+        botonPonerMonstruoEnAtaque.setMinimumSize(new java.awt.Dimension(90, 35));
+        botonPonerMonstruoEnAtaque.setVisible(false);
+        botonPonerMonstruoEnAtaque.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonPonerMonstruoEnAtaqueActionPerformed(evt);
+            }
+        });
+        cardDesarrollo.add(botonPonerMonstruoEnAtaque);
+        botonPonerMonstruoEnAtaque.setBounds(10, 610, 70, 23);
 
         monstruo0Jugador1EnCampo.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
         monstruo0Jugador1EnCampo.setForeground(new java.awt.Color(255, 255, 255));
@@ -741,6 +837,22 @@ public class NewJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_botonCerrarActionPerformed
 
+    private void botonPonerMonstruoEnAtaqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPonerMonstruoEnAtaqueActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botonPonerMonstruoEnAtaqueActionPerformed
+
+    private void botonPonerMonstruoEnDefensaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPonerMonstruoEnDefensaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botonPonerMonstruoEnDefensaActionPerformed
+
+    private void botonPonerMagiaSinUsarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPonerMagiaSinUsarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botonPonerMagiaSinUsarActionPerformed
+
+    private void botonPonerMagiaUsandolaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPonerMagiaUsandolaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botonPonerMagiaUsandolaActionPerformed
+
 
 
     //AQUÍ EMPIEZAN LOS METODOS AÑADIDOS PARA REL FLUJO DEL JUEGO
@@ -821,11 +933,11 @@ public class NewJFrame extends javax.swing.JFrame {
         etiquetaMano.setVisible(false);
         etiquetaMano.setText("Mano: ");
         etiquetaCementerio.setVisible(false);
-        jScrollPane2.setVisible(false);
-        jScrollPane4.setVisible(false);
+        scrollMano.setVisible(false);
+        scrollCementerio.setVisible(false);
         etiquetaMultifuncion.setVisible(false);
         inputMultifuncion.setVisible(false);
-        jLabel2.setVisible(false);
+        etiquetaDeInputMultifuncion.setVisible(false);
         botonCerrar.setVisible(false);
         botonOpcion1.setVisible(false);
         botonOpcion2.setVisible(false);
@@ -905,8 +1017,8 @@ public class NewJFrame extends javax.swing.JFrame {
         }
         etiquetaMano.setVisible(true);
         etiquetaCementerio.setVisible(true);
-        jScrollPane2.setVisible(true);
-        jScrollPane4.setVisible(true);
+        scrollMano.setVisible(true);
+        scrollCementerio.setVisible(true);
         imprimirMano(atacante);
         imprimirCementerio(atacante);
     }
@@ -924,8 +1036,8 @@ public class NewJFrame extends javax.swing.JFrame {
         }
         etiquetaMano.setVisible(true);
         etiquetaCementerio.setVisible(true);
-        jScrollPane2.setVisible(true);
-        jScrollPane4.setVisible(true);
+        scrollMano.setVisible(true);
+        scrollCementerio.setVisible(true);
         imprimirMano(atacante);
         imprimirCementerio(atacante);
         DefaultTableModel modelo = (DefaultTableModel) tablaCementerio.getModel();
@@ -951,7 +1063,7 @@ public class NewJFrame extends javax.swing.JFrame {
         resetearDialogWindow();
         jDialog1.setTitle("Mazo");
         etiquetaMano.setText("Mazo: ");
-        jScrollPane2.setVisible(true);
+        scrollMano.setVisible(true);
         etiquetaMano.setVisible(true);
         imprimirMazo(jugador);
     }
@@ -1019,17 +1131,25 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JButton botonOpcion2;
     private javax.swing.JButton botonPonerCarta;
     private javax.swing.JButton botonPonerMagia;
+    private javax.swing.JButton botonPonerMagiaSinUsar;
+    private javax.swing.JButton botonPonerMagiaUsandola;
     private javax.swing.JButton botonPonerMonstruo;
+    private javax.swing.JButton botonPonerMonstruoEnAtaque;
+    private javax.swing.JButton botonPonerMonstruoEnDefensa;
     private javax.swing.JButton botonPonerTrampa;
     private javax.swing.JButton botonSaltarBattlePhase;
     private javax.swing.JButton botonSaltarMainPhase1;
     private javax.swing.JButton botonSaltarMainPhase2;
+    private javax.swing.JButton botonTerminarBattlePhase;
+    private javax.swing.JButton botonTerminarMainPhase1;
+    private javax.swing.JButton botonTerminarMainPhase2;
     private javax.swing.JButton botonVolverAJugar;
     private javax.swing.JPanel cardDesarrollo;
     private javax.swing.JPanel cardFinal;
     private javax.swing.JPanel cardInicio;
     private javax.swing.JPanel contenedorDeCards;
     private javax.swing.JLabel etiquetaCementerio;
+    private javax.swing.JLabel etiquetaDeInputMultifuncion;
     private javax.swing.JLabel etiquetaDivisoraDelCampo;
     private javax.swing.JLabel etiquetaFaseEnCurso;
     private javax.swing.JLabel etiquetaHasGanado;
@@ -1048,9 +1168,6 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField inputMultifuncion;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel logoInicio;
     private javax.swing.JLabel magiaOTrampa0Jugador1EnCampo;
     private javax.swing.JLabel magiaOTrampa0Jugador2EnCampo;
@@ -1072,6 +1189,8 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel monstruo3Jugador2EnCampo;
     private javax.swing.JLabel monstruo4Jugador1EnCampo;
     private javax.swing.JLabel monstruo4Jugador2EnCampo;
+    private javax.swing.JScrollPane scrollCementerio;
+    private javax.swing.JScrollPane scrollMano;
     private javax.swing.JTable tablaCementerio;
     private javax.swing.JTable tablaMano;
     // End of variables declaration//GEN-END:variables

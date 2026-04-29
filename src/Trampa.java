@@ -1,4 +1,4 @@
-package src;
+
 import java.util.*;
 
 public class Trampa extends Carta implements Activable{

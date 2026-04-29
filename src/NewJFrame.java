@@ -1,4 +1,4 @@
-package src;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -9,8 +9,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.CardLayout;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.Timer;
 
 /**
  *
@@ -256,8 +254,8 @@ public class NewJFrame extends javax.swing.JFrame {
         jDialog1.getContentPane().add(jLabel17);
         jLabel17.setBounds(-120, -140, 800, 810);
 
-        jDialog1.setSize(690, 400);           // tamaño fijo
-        jDialog1.setResizable(false);         // opcional, para que no se deforme
+        jDialog1.setSize(690, 400);           
+        jDialog1.setResizable(false);       
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Yu-Gi-Oh!");

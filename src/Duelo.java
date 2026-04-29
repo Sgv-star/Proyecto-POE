@@ -5,6 +5,7 @@ public class Duelo {
     
     Campo campo;
     byte turno;
+    String fase;
 
     public Duelo() {
 
@@ -16,12 +17,18 @@ public class Duelo {
     public byte getTurno() {
         return turno;
     }
+    public String getFase(){
+        return fase;
+    }
 
     protected void setCampo(Campo campo) {
         this.campo = campo;
     }
     protected void setTurno(byte turno) {
         this.turno = turno;
+    }
+    protected void setFase(String fase){
+        this.fase = fase;
     }
 
     public void imprimirCampo(){
@@ -324,6 +331,7 @@ public class Duelo {
                 System.out.println("Turno: " + turno);
 
                 //Draw Phase (Fase de Robo)
+                setFase("Draw Phase");
                 System.out.println("");
                 System.out.println("------Draw Phase------");
                 System.out.println("");
@@ -339,6 +347,7 @@ public class Duelo {
                 this.imprimirMano();
 
                 //Standby Phase (Fase de Espera)
+                setFase("Standby Phase");
                 System.out.println("\n");
                 System.out.println("------Standby Phase------");
                 if(defensorTieneTrampaDeInvocacion || defensorTieneTrampaDeAtaque){
@@ -353,6 +362,7 @@ public class Duelo {
                 }
 
                 //Main Phase 1 (Fase Principal 1)
+                setFase("Main Phase 1");
                 System.out.println("\n");
                 System.out.println("------Main Phase 1------");
                 System.out.println("");
@@ -628,6 +638,7 @@ public class Duelo {
                 }
 
                 //Battle Phase (Fase de Batalla)
+                setFase("Battle Phase");
                 boolean entroAFaseDeBatalla = false;
                 byte opcionFaseDeBatalla = 0;
                 if(turno != 0){
@@ -894,6 +905,7 @@ public class Duelo {
                 }
 
                 //Main Phase 2 (Fase Principal 2)
+                setFase("Main Phase 2");
                 System.out.println("\n");
                 System.out.println("------Main Phase 2------");
                 System.out.println("");
@@ -1189,6 +1201,7 @@ public class Duelo {
                 }
 
                 //End Phase (Fase Final)
+                setFase("End Phase");
                 System.out.println("\n");
                 System.out.println("------End Phase------");
                 System.out.println("");

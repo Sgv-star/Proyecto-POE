@@ -51,6 +51,12 @@ public class Monstruo extends Carta {
     protected void setNivel(byte nivel) {
         this.nivel = nivel;
     }
+    protected void setAtaqueBase(short ataqueBase){
+        this.ataqueBase = ataqueBase;
+    }
+    protected void setDefensaBase(short defensaBase){
+        this.defensaBase = defensaBase;
+    }
     protected void setAtaque(short ataque) {
         this.ataque = ataque;
     }
@@ -116,7 +122,7 @@ public class Monstruo extends Carta {
             monstruosAtacantesNoEstaVacio = true;
         }
         if(monstruosAtacantesNoEstaVacio){
-            if(monstruosAtacantes[cartaAActivar] == null && !puedeAtacar){
+            if(!puedeAtacar){
                 return false;
             }
         }

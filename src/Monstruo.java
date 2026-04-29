@@ -1,6 +1,5 @@
-
+package src;
 import java.util.*;
-
 
 public class Monstruo extends Carta {
 
@@ -84,50 +83,46 @@ public class Monstruo extends Carta {
     }
 
     @Override
-    public boolean jugar(Campo campo, byte turno, Scanner scaner){
+    public boolean jugar(Campo campo, byte turno, Scanner scaner, byte cartaAActivar, byte indiceDelEnemigo){
         Jugador atacante, defensor;
         Monstruo[] monstruosAtacantes, monstruosDefensores;
-        Magia[] magiasAtacantes, magiasDefensoras;
+        Carta[] magiasYTrampasAtacantes, magiasYTrampasDefensoras;
         List<Carta> cementerioAtacante, cementerioDefensor; 
-        byte indiceDelAtacante = 0, indiceDelEnemigo = 0;
         boolean monstruosAtacantesNoEstaVacio = false, monstruosDefensoresNoEstaVacio = false;
         if(turno%2==0){
             atacante = campo.getJugador1();
             defensor = campo.getJugador2();
             monstruosAtacantes = campo.getMonstruosEnCampoJugador1();
-            magiasAtacantes = campo.getMagicasEnCampoJugador1();
+            magiasYTrampasAtacantes = campo.getMagicasYTrampasEnCampoJugador1();
             cementerioAtacante = campo.getCementerioJugador1();
             monstruosDefensores = campo.getMonstruosEnCampoJugador2();
-            magiasDefensoras = campo.getMagicasEnCampoJugador2();
+            magiasYTrampasDefensoras = campo.getMagicasYTrampasEnCampoJugador2();
             cementerioDefensor = campo.getCementerioJugador2();
         }
         else{
             atacante = campo.getJugador2();
             defensor = campo.getJugador1();
             monstruosAtacantes = campo.getMonstruosEnCampoJugador2();
-            magiasAtacantes = campo.getMagicasEnCampoJugador2();
+            magiasYTrampasAtacantes = campo.getMagicasYTrampasEnCampoJugador2();
             cementerioAtacante = campo.getCementerioJugador2();
             monstruosDefensores = campo.getMonstruosEnCampoJugador1();
-            magiasDefensoras = campo.getMagicasEnCampoJugador1();
+            magiasYTrampasDefensoras = campo.getMagicasYTrampasEnCampoJugador1();
             cementerioDefensor = campo.getCementerioJugador1();
         }
-        for(Monstruo m : monstruosAtacantes){
-            if(m != null){
-                for(Magia cm : magiasDefensoras){
-                    if(cm != null && cm.getTipoHabilidadEspecial() == TipoHabilidadEspecialMagia.ESPADAS_DE_LA_LUZ_REVELADORA && cm.isVisible()){
-                        m.setPuedeAtacar(false);
+        if(monstruosAtacantes[cartaAActivar] != null){
+            for(Carta carta : magiasYTrampasDefensoras){
+                if(carta instanceof Magia){
+                    Magia mg = (Magia) carta;
+                    if(mg != null && mg.getTipoHabilidadEspecialMagia() == TipoHabilidadEspecialMagia.ESPADAS_DE_LA_LUZ_REVELADORA && mg.isVisible()){
+                        monstruosAtacantes[cartaAActivar].setPuedeAtacar(false);
                         break;
                     }
                 }
-                monstruosAtacantesNoEstaVacio = true;
             }
+            monstruosAtacantesNoEstaVacio = true;
         }
         if(monstruosAtacantesNoEstaVacio){
-            System.out.print("Escoja el número de su carta atacante: ");
-            indiceDelAtacante = scaner.nextByte();
-            scaner.nextLine();
-            System.out.println("");
-            if(monstruosAtacantes[indiceDelAtacante] == null && !puedeAtacar){
+            if(monstruosAtacantes[cartaAActivar] == null && !puedeAtacar){
                 return false;
             }
         }
@@ -139,11 +134,8 @@ public class Monstruo extends Carta {
                 monstruosDefensoresNoEstaVacio = true;
                 break;
             }
-            else{
-                monstruosDefensoresNoEstaVacio = false;
-            }
         }
-        if(monstruosAtacantes[indiceDelAtacante].isEnPosicionAtaque()){
+        if(monstruosAtacantes[cartaAActivar].isEnPosicionAtaque()){
             if(monstruosDefensoresNoEstaVacio){
                 System.out.print("Escoja el número de que carta atacar o digite 6 para no atacar: ");
                 indiceDelEnemigo = scaner.nextByte();
@@ -154,54 +146,54 @@ public class Monstruo extends Carta {
                 }
             }
             else{
-                defensor.setLP((short) (defensor.getLP() - monstruosAtacantes[indiceDelAtacante].getAtaque()));
+                defensor.setLP((short) (defensor.getLP() - monstruosAtacantes[cartaAActivar].getAtaque()));
                 if(defensor.getLP() < 0){
                     defensor.setLP((short) 0);
                 }
-                monstruosAtacantes[indiceDelAtacante].setPuedeAtacar(false);
+                monstruosAtacantes[cartaAActivar].setPuedeAtacar(false);
                 return true;
             }
             if(monstruosDefensoresNoEstaVacio && monstruosDefensores[indiceDelEnemigo].isEnPosicionAtaque()){
-                if(monstruosAtacantes[indiceDelAtacante].getAtaque() > monstruosDefensores[indiceDelEnemigo].getAtaque()){
-                    defensor.setLP((short) (defensor.getLP() + (monstruosDefensores[indiceDelEnemigo].getAtaque() - monstruosAtacantes[indiceDelAtacante].getAtaque())));
+                if(monstruosAtacantes[cartaAActivar].getAtaque() > monstruosDefensores[indiceDelEnemigo].getAtaque()){
+                    defensor.setLP((short) (defensor.getLP() + (monstruosDefensores[indiceDelEnemigo].getAtaque() - monstruosAtacantes[cartaAActivar].getAtaque())));
                     if(defensor.getLP() < 0){
                         defensor.setLP((short) 0);
                     }
                     cementerioDefensor.add(monstruosDefensores[indiceDelEnemigo]);
                     monstruosDefensores[indiceDelEnemigo] = null;
-                    monstruosAtacantes[indiceDelAtacante].setPuedeAtacar(false);
+                    monstruosAtacantes[cartaAActivar].setPuedeAtacar(false);
                     return true;
                 }
-                else if(monstruosAtacantes[indiceDelAtacante].getAtaque() < monstruosDefensores[indiceDelEnemigo].getAtaque()){
-                    atacante.setLP((short) (atacante.getLP() + (monstruosAtacantes[indiceDelAtacante].getAtaque() - monstruosDefensores[indiceDelEnemigo].getAtaque())));
+                else if(monstruosAtacantes[cartaAActivar].getAtaque() < monstruosDefensores[indiceDelEnemigo].getAtaque()){
+                    atacante.setLP((short) (atacante.getLP() + (monstruosAtacantes[cartaAActivar].getAtaque() - monstruosDefensores[indiceDelEnemigo].getAtaque())));
                     if(atacante.getLP() < 0){
                         atacante.setLP((short) 0);
                     }
-                    cementerioAtacante.add(monstruosAtacantes[indiceDelAtacante]);
-                    monstruosAtacantes[indiceDelAtacante] = null;
+                    cementerioAtacante.add(monstruosAtacantes[cartaAActivar]);
+                    monstruosAtacantes[cartaAActivar] = null;
                     return true;
                 }
-                else if(monstruosAtacantes[indiceDelAtacante].getAtaque() == monstruosDefensores[indiceDelEnemigo].getAtaque()){
+                else if(monstruosAtacantes[cartaAActivar].getAtaque() == monstruosDefensores[indiceDelEnemigo].getAtaque()){
                     cementerioDefensor.add(monstruosDefensores[indiceDelEnemigo]);
-                    cementerioAtacante.add(monstruosAtacantes[indiceDelAtacante]);
+                    cementerioAtacante.add(monstruosAtacantes[cartaAActivar]);
                     monstruosDefensores[indiceDelEnemigo] = null;
-                    monstruosAtacantes[indiceDelAtacante] = null;
+                    monstruosAtacantes[cartaAActivar] = null;
                     return true;
                 }
             }
             else if(monstruosDefensoresNoEstaVacio && !monstruosDefensores[indiceDelEnemigo].isEnPosicionAtaque()){
-                if(monstruosAtacantes[indiceDelAtacante].getAtaque() > monstruosDefensores[indiceDelEnemigo].getDefensa()){
+                if(monstruosAtacantes[cartaAActivar].getAtaque() > monstruosDefensores[indiceDelEnemigo].getDefensa()){
                     cementerioDefensor.add(monstruosDefensores[indiceDelEnemigo]);
                     monstruosDefensores[indiceDelEnemigo] = null;
-                    monstruosAtacantes[indiceDelAtacante].setPuedeAtacar(false);
+                    monstruosAtacantes[cartaAActivar].setPuedeAtacar(false);
                     return true;
                 }
-                else if(monstruosAtacantes[indiceDelAtacante].getAtaque() < monstruosDefensores[indiceDelEnemigo].getDefensa()){
-                    atacante.setLP((short) (atacante.getLP() + (monstruosAtacantes[indiceDelAtacante].getAtaque() - monstruosDefensores[indiceDelEnemigo].getDefensa())));
+                else if(monstruosAtacantes[cartaAActivar].getAtaque() < monstruosDefensores[indiceDelEnemigo].getDefensa()){
+                    atacante.setLP((short) (atacante.getLP() + (monstruosAtacantes[cartaAActivar].getAtaque() - monstruosDefensores[indiceDelEnemigo].getDefensa())));
                     if(atacante.getLP() < 0){
                         atacante.setLP((short) 0);
                     }
-                    monstruosAtacantes[indiceDelAtacante].setPuedeAtacar(false);
+                    monstruosAtacantes[cartaAActivar].setPuedeAtacar(false);
                     return true;
                 }
             }

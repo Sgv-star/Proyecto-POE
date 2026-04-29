@@ -43,7 +43,8 @@ public class Jugador {
         LP = lP;
     }
     public void setMazo(Mazo mazoGeneral) {
-        for(byte i=0; i<20; i++){
+        for(byte i=0; i<25
+            ; i++){
             this.mazo.add(mazoGeneral.getMazoGeneral().remove(0));
         }
     }

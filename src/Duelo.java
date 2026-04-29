@@ -30,13 +30,24 @@ public class Duelo {
         System.out.println("");
         System.out.println("Jugador: " + campo.getJugador1().getNombre());
         for(int i=0; i<5; i++){
-            if(campo.getMagicasEnCampoJugador1()[i] != null){
-                Magia magica = (Magia) campo.getMagicasEnCampoJugador1()[i];
-                if(magica.isVisible()){
-                    System.out.println(i + ". " + magica.getNombre() + " | HAB: " + magica.getCuadroDeTexto() + " | Se está usando");
+            if(campo.getMagicasYTrampasEnCampoJugador1()[i] != null){
+                if(campo.getMagicasYTrampasEnCampoJugador1()[i] instanceof Magia){
+                    Magia magica = (Magia) campo.getMagicasYTrampasEnCampoJugador1()[i];
+                    if(magica.isVisible()){
+                        System.out.println(i + ". " + magica.getNombre() + " | HAB: " + magica.getCuadroDeTexto() + " | Se está usando");
+                    }
+                    else{
+                        System.out.println(i + ". " + magica.getNombre() + " | HAB: " + magica.getCuadroDeTexto() + " | Colocada (sin usar)");
+                    }
                 }
-                else{
-                    System.out.println(i + ". " + magica.getNombre() + " | HAB: " + magica.getCuadroDeTexto() + " | Colocada (sin usar)");
+                else if(campo.getMagicasYTrampasEnCampoJugador1()[i] instanceof Trampa){
+                    Trampa trampa = (Trampa) campo.getMagicasYTrampasEnCampoJugador1()[i];
+                    if(trampa.isVisible()){
+                        System.out.println(i + ". " + trampa.getNombre() + " | HAB: " + trampa.getCuadroDeTexto() + " | Se está usando");
+                    }
+                    else{
+                        System.out.println(i + ". " + trampa.getNombre() + " | HAB: " + trampa.getCuadroDeTexto() + " | Colocada (sin usar)");
+                    }
                 }
             }
             else{
@@ -50,23 +61,34 @@ public class Duelo {
                     System.out.println(i + ". " + monstruo.getNombre() +  " | LVL: " + monstruo.getNivel() + " | ATK: " + monstruo.getAtaque() + " | DEF: " + monstruo.getDefensa() + " | En posición de ataque");
                 }
                 else{
-                   System.out.println(i + ". " + monstruo.getNombre() +  " | LVL: " + monstruo.getNivel() + " | ATK: " + monstruo.getAtaque() + " | DEF: " + monstruo.getDefensa() + " | En posición de defensa");
+                    System.out.println(i + ". " + monstruo.getNombre() +  " | LVL: " + monstruo.getNivel() + " | ATK: " + monstruo.getAtaque() + " | DEF: " + monstruo.getDefensa() + " | En posición de defensa");
                 }
             }
             else{
-                System.out.println("Espacio vacio");
+                System.out.println("Espacio vacío");
             }
         }
         System.out.println("");
         System.out.println("Jugador: " + campo.getJugador2().getNombre());
         for(int i=0; i<5; i++){
-            if(campo.getMagicasEnCampoJugador2()[i] != null){
-                Magia magica = (Magia) campo.getMagicasEnCampoJugador2()[i];
-                if(magica.isVisible()){
-                    System.out.println(i + ". " + magica.getNombre() + " | HAB: " + magica.getCuadroDeTexto() + " | Se está usando");
+            if(campo.getMagicasYTrampasEnCampoJugador2()[i] != null){
+                if(campo.getMagicasYTrampasEnCampoJugador2()[i] instanceof Magia){
+                    Magia magica = (Magia) campo.getMagicasYTrampasEnCampoJugador2()[i];
+                    if(magica.isVisible()){
+                        System.out.println(i + ". " + magica.getNombre() + " | HAB: " + magica.getCuadroDeTexto() + " | Se está usando");
+                    }
+                    else{
+                        System.out.println(i + ". " + magica.getNombre() + " | HAB: " + magica.getCuadroDeTexto() + " | Colocada (sin usar)");
+                    }
                 }
-                else{
-                    System.out.println(i + ". " + magica.getNombre() + " | HAB: " + magica.getCuadroDeTexto() + " | Colocada (sin usar)");
+                else if(campo.getMagicasYTrampasEnCampoJugador2()[i] instanceof Trampa){
+                    Trampa trampa = (Trampa) campo.getMagicasYTrampasEnCampoJugador2()[i];
+                    if(trampa.isVisible()){
+                        System.out.println(i + ". " + trampa.getNombre() + " | HAB: " + trampa.getCuadroDeTexto() + " | Se está usando");
+                    }
+                    else{
+                        System.out.println(i + ". " + trampa.getNombre() + " | HAB: " + trampa.getCuadroDeTexto() + " | Colocada (sin usar)");
+                    }
                 }
             }
             else{
@@ -91,6 +113,31 @@ public class Duelo {
         System.out.println("_____________________________________________________________________________");
     }
 
+    public void imprimirMazo(){
+        Jugador atacante;
+        if(turno%2==0){
+            atacante = campo.getJugador1();
+        }
+        else{
+            atacante = campo.getJugador2();
+        }
+        System.out.println("----------Tu Mazo----------");
+        for(int j=0; j<atacante.getMazo().size(); j++){
+            if(atacante.getMazo().get(j) instanceof Monstruo){
+                Monstruo monstruo = (Monstruo) atacante.getMazo().get(j);
+                System.out.println(monstruo.getNombre() + " | LVL: " + monstruo.getNivel() + " | ATK: " + monstruo.getAtaque() + " | DEF: " + monstruo.getDefensa());
+            }
+            else if(atacante.getMazo().get(j) instanceof Magia){
+                Magia magica = (Magia) atacante.getMazo().get(j);
+                System.out.println(magica.getNombre() + " | HAB: " + magica.getCuadroDeTexto());
+            }
+            else if(atacante.getMazo().get(j) instanceof Trampa){
+                Trampa trampaImprimir = (Trampa) atacante.getMazo().get(j);
+                System.out.println(trampaImprimir.getNombre() + " | HAB: " + trampaImprimir.getCuadroDeTexto());
+            }
+        }
+    }
+
     public void imprimirMano(){
         byte i = 0;
         Jugador atacante;
@@ -108,11 +155,15 @@ public class Duelo {
         for(int j=0; j<atacante.getMano().size(); j++){
             if(atacante.getMano().get(j) instanceof Monstruo){
                 Monstruo monstruo = (Monstruo) atacante.getMano().get(j);
-                 System.out.println(j + ". " + monstruo.getNombre() + " | LVL: " + monstruo.getNivel() + " | ATK: " + monstruo.getAtaque() + " | DEF: " + monstruo.getDefensa());
+                System.out.println(j + ". " + monstruo.getNombre() + " | LVL: " + monstruo.getNivel() + " | ATK: " + monstruo.getAtaque() + " | DEF: " + monstruo.getDefensa());
             }
             else if(atacante.getMano().get(j) instanceof Magia){
                 Magia magica = (Magia) atacante.getMano().get(j);
                 System.out.println(j + ". " + magica.getNombre() + " | HAB: " + magica.getCuadroDeTexto());
+            }
+            else if(atacante.getMano().get(j) instanceof Trampa){
+                Trampa trampa = (Trampa) atacante.getMano().get(j);
+                System.out.println(j + ". " + trampa.getNombre() + " | HAB: " + trampa.getCuadroDeTexto());
             }
         }
         System.out.println("----------------Cementerio----------------");
@@ -127,16 +178,20 @@ public class Duelo {
                 System.out.println(i + ". " + mg.getNombre() + " | HAB: " + mg.getCuadroDeTexto());
                 i++;
             }
+            else if(carta instanceof Trampa){
+                Trampa t = (Trampa) carta;
+                System.out.println(i + ". " + t.getNombre() + " | HAB: " + t.getCuadroDeTexto());
+            }
         }
     }
 
     public void juego(){
         Scanner scaner = new Scanner(System.in);
-        boolean hayUnGanador = false;
+        boolean hayUnGanador = false, defensorTieneTrampaDeInvocacion = false, DefensorTieneTrampaDeAtaque = false;
         Mazo mazo = new Mazo();
         Jugador atacante = new Jugador(), defensor = new Jugador();
         Monstruo[] monstruosAtacantes, monstruosDefensores;
-        Magia[] magiasAtacantes, magiasDefensoras;
+        Carta[] magiasYTrampasAtacantes, magiasYTrampasDefensoras;
         List<Carta> cementerioAtacante, cementerioDefensor;
 
         //Seteo de objetos iniciales 
@@ -158,21 +213,33 @@ public class Duelo {
                 atacante = campo.getJugador1();
                 defensor = campo.getJugador2();
                 monstruosAtacantes = campo.getMonstruosEnCampoJugador1();
-                magiasAtacantes = campo.getMagicasEnCampoJugador1();
+                magiasYTrampasAtacantes = campo.getMagicasYTrampasEnCampoJugador1();
                 cementerioAtacante = campo.getCementerioJugador1();
                 monstruosDefensores = campo.getMonstruosEnCampoJugador2();
-                magiasDefensoras = campo.getMagicasEnCampoJugador2();
+                magiasYTrampasDefensoras = campo.getMagicasYTrampasEnCampoJugador2();
                 cementerioDefensor = campo.getCementerioJugador2();
             }
             else{
                 atacante = campo.getJugador2();
                 defensor = campo.getJugador1();
                 monstruosAtacantes = campo.getMonstruosEnCampoJugador2();
-                magiasAtacantes = campo.getMagicasEnCampoJugador2();
+                magiasYTrampasAtacantes = campo.getMagicasYTrampasEnCampoJugador2();
                 cementerioAtacante = campo.getCementerioJugador2();
                 monstruosDefensores = campo.getMonstruosEnCampoJugador1();
-                magiasDefensoras = campo.getMagicasEnCampoJugador1();
+                magiasYTrampasDefensoras = campo.getMagicasYTrampasEnCampoJugador1();
                 cementerioDefensor = campo.getCementerioJugador1();
+            }
+            for(int i=0; i<5; i++){
+                if(magiasYTrampasDefensoras[i] != null && magiasYTrampasDefensoras[i] instanceof Trampa){
+                    Trampa trampa = (Trampa) magiasYTrampasDefensoras[i];
+                    TipoHabilidadEspecialTrampa tipo = trampa.getTipoHabilidadEspecialTrampa();
+                    if(tipo == TipoHabilidadEspecialTrampa.FUERZA_DE_ESPEJO || tipo == TipoHabilidadEspecialTrampa.CILINDRO_MAGICO || tipo == TipoHabilidadEspecialTrampa.ARMADURA_DE_SAKURETSU){
+                        DefensorTieneTrampaDeAtaque = true;
+                    }
+                    else{
+                        defensorTieneTrampaDeInvocacion = true;
+                    }
+                }
             }
             if(atacante.getLP() != 0 || defensor.getLP() != 0){
                 System.out.println("\n");
@@ -201,6 +268,14 @@ public class Duelo {
                 System.out.println("\n");
                 System.out.println("------Main Phase 1------");
                 System.out.println("");
+                byte activarTrampa = 0;
+                if(defensorTieneTrampaDeInvocacion){
+                    System.out.println("Defensor, tiene trampas que puede usar en la Main Phase 1, quiere activar una trampa? \n1. Si \n2. No");
+                    System.out.print("Opción: ");
+                    activarTrampa = scaner.nextByte();
+                    scaner.nextLine();
+                    System.out.println("");
+                }
                 byte opcionMainPhase1 = 0, opcionCartaAColocar = 0, indiceCartaAColocar = 0, posicionCartaAColocar = 0;
                 do{
                     do{
@@ -212,12 +287,12 @@ public class Duelo {
                     } while(opcionMainPhase1 != 1 && opcionMainPhase1 != 2 && opcionMainPhase1 != 3);
                     if(opcionMainPhase1 == 1){
                         do{
-                            System.out.println("Qué tipo de carta quiere colocar: \n1. Monstruo. \n2. Mágica.");
+                            System.out.println("Qué tipo de carta quiere colocar: \n1. Monstruo. \n2. Mágica. \n3. Trampa");
                             System.out.print("Opción: ");
                             opcionCartaAColocar = scaner.nextByte();
                             scaner.nextLine();
                             System.out.println("");
-                        } while(opcionCartaAColocar != 1 && opcionCartaAColocar != 2);
+                        } while(opcionCartaAColocar != 1 && opcionCartaAColocar != 2 && opcionCartaAColocar != 3);
                         do{
                             System.out.println("Escriba el número que ocupa en su mano la carta que quiere colocar: ");
                             System.out.print("Opción: ");
@@ -226,11 +301,11 @@ public class Duelo {
                             System.out.println("");
                         } while(indiceCartaAColocar >= atacante.getMano().size() || indiceCartaAColocar < 0);
                         if(opcionCartaAColocar == 1){
-                            boolean posibleColocar=false;
+                            boolean posibleColocar = false;
                             Monstruo m = (Monstruo) atacante.getMano().get(indiceCartaAColocar);
                             if(m.getNivel() > 4){
                                 byte monstruoASacrificar = 0;
-                                 do{
+                                do{
                                     do{
                                         System.out.println("Debe sacrificar un monstruo en campo para invocar a este monstruo.");
                                         System.out.println("Ingrese el indice del monstruo en campo a sacrificar o escriba 6 para cancelar.");
@@ -272,6 +347,24 @@ public class Duelo {
                                         }
                                     }
                                 }
+                                if(defensorTieneTrampaDeInvocacion && activarTrampa == 1){
+                                    for(int i=0; i<5; i++){
+                                        if(magiasYTrampasDefensoras[i] instanceof Trampa){
+                                            byte activarTrampaInvocacion = 0;
+                                            Trampa trampa = (Trampa) magiasYTrampasDefensoras[i];
+                                            if(trampa.getTipoHabilidadEspecialTrampa() == TipoHabilidadEspecialTrampa.TRIBUTO_TORRENCIAL){
+                                                System.out.println("Defensor, quiere activar la trampa Tributo Torrencial? \n1. Si \n2. No");
+                                                System.out.print("Opción: ");
+                                                activarTrampaInvocacion = scaner.nextByte();
+                                                scaner.nextLine();
+                                                System.out.println("");
+                                                if(activarTrampaInvocacion == 1){
+                                                    trampa.jugar(campo, this.getTurno(), scaner, (byte) i);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                         else if(opcionCartaAColocar == 2){
@@ -283,15 +376,38 @@ public class Duelo {
                                 System.out.println("");
                             } while(posicionCartaAColocar != 1 && posicionCartaAColocar != 2);
                             for(int i=0; i<5; i++){
-                                if(magiasAtacantes[i] == null && atacante.getMano().get(indiceCartaAColocar) instanceof Magia){
-                                    magiasAtacantes[i] = (Magia) atacante.getMano().get(indiceCartaAColocar);
+                                if(magiasYTrampasAtacantes[i] == null && atacante.getMano().get(indiceCartaAColocar) instanceof Magia){
+                                    magiasYTrampasAtacantes[i] = atacante.getMano().get(indiceCartaAColocar);
                                     atacante.getMano().remove(indiceCartaAColocar);
                                     if(posicionCartaAColocar == 1){
-                                        magiasAtacantes[i].setVisible(false);
+                                        magiasYTrampasAtacantes[i].setVisible(false);
                                         break;
                                     }
                                     else if(posicionCartaAColocar == 2){
-                                        magiasAtacantes[i].setVisible(true);
+                                        magiasYTrampasAtacantes[i].setVisible(true);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        else if(opcionCartaAColocar == 3){
+                            do{
+                                System.out.println("Escoja que quiere hacer con la carta trampa: \n1. Colocar. \n2. Usar.");
+                                System.out.print("Opción: ");
+                                posicionCartaAColocar = scaner.nextByte();
+                                scaner.nextLine();
+                                System.out.println("");
+                            } while(posicionCartaAColocar != 1 && posicionCartaAColocar != 2);
+                            for(int i=0; i<5; i++){
+                                if(magiasYTrampasAtacantes[i] == null && atacante.getMano().get(indiceCartaAColocar) instanceof Trampa){
+                                    magiasYTrampasAtacantes[i] = atacante.getMano().get(indiceCartaAColocar);
+                                    atacante.getMano().remove(indiceCartaAColocar);
+                                    if(posicionCartaAColocar == 1){
+                                        magiasYTrampasAtacantes[i].setVisible(false);
+                                        break;
+                                    }
+                                    else if(posicionCartaAColocar == 2){
+                                        magiasYTrampasAtacantes[i].setVisible(true);
                                         break;
                                     }
                                 }
@@ -299,7 +415,7 @@ public class Duelo {
                         }
                     }
                     else if(opcionMainPhase1 == 2){
-                        System.out.println("Escoja que tipo de carta quiere cambiar de posición: \n1. Mágica. \n2. Monstruo.");
+                        System.out.println("Escoja que tipo de carta quiere cambiar de posición: \n1. Mágica. \n2. Monstruo. \n3. Trampa");
                         System.out.print("Opción: ");
                         opcionCartaAColocar = scaner.nextByte();
                         scaner.nextLine();
@@ -309,9 +425,9 @@ public class Duelo {
                         indiceCartaAColocar = scaner.nextByte();
                         scaner.nextLine();
                         System.out.println("");
-                        if(opcionCartaAColocar == 1){
-                            if(magiasAtacantes[indiceCartaAColocar] != null && !magiasAtacantes[indiceCartaAColocar].isVisible()){
-                                magiasAtacantes[indiceCartaAColocar].setVisible(true);
+                        if(opcionCartaAColocar == 1 || opcionCartaAColocar == 3){
+                            if(magiasYTrampasAtacantes[indiceCartaAColocar] != null && !magiasYTrampasAtacantes[indiceCartaAColocar].isVisible()){
+                                magiasYTrampasAtacantes[indiceCartaAColocar].setVisible(true);
                             }
                         }
                         else if(opcionCartaAColocar == 2){
@@ -329,6 +445,107 @@ public class Duelo {
                     this.imprimirMano();
                 } while(opcionMainPhase1 != 3);
                 this.imprimirCampo();
+                if(defensorTieneTrampaDeInvocacion && activarTrampa == 1){
+                    for(int i=0; i<5; i++){
+                        if(magiasYTrampasDefensoras[i] instanceof Trampa){
+                            byte activarTrampaInvocacion = 0;
+                            Trampa trampa = (Trampa) magiasYTrampasDefensoras[i];
+                            if(trampa.getTipoHabilidadEspecialTrampa() == TipoHabilidadEspecialTrampa.LLAMADA_DE_LOS_CONDENADOS){
+                                System.out.println("Defensor, quiere activar la trampa Llamada de los Condenados? \n1. Si \n2. No");
+                                System.out.print("Opción: ");
+                                activarTrampaInvocacion = scaner.nextByte();
+                                scaner.nextLine();
+                                System.out.println("");
+                                if(activarTrampaInvocacion == 1){
+                                    System.out.println("Ingrese el nombre del monstruo en su cementerio que quiere devolver al campo");
+                                    System.out.print("Nombre: ");
+                                    String monstruoADevolver = scaner.nextLine();
+                                    System.out.println("");
+                                    trampa.jugar(campo, this.getTurno(), scaner, (byte) i, monstruoADevolver);
+                                }
+                            }
+                            else if(trampa.getTipoHabilidadEspecialTrampa() == TipoHabilidadEspecialTrampa.SOMBREROS_MAGICOS){
+                                System.out.println("Defensor, quiere activar la trampa Sombreros Mágicos? \n1. Si \n2. No");
+                                System.out.print("Opción: ");
+                                activarTrampaInvocacion = scaner.nextByte();
+                                scaner.nextLine();
+                                System.out.println("");
+                                if(activarTrampaInvocacion == 1){
+                                    imprimirMazo();
+                                    System.out.println("Ingrese el nombre del monstruo en campo que quiere ocultar");
+                                    System.out.print("Nombre: ");
+                                    String nombreMonstruoAOcultar = scaner.nextLine();
+                                    System.out.println("");
+                                    System.out.println("Ingrese los nombres de las cartas magicas o de trampa de su mazo que se usaran para ocultar al monstruo");
+                                    System.out.print("Carta 1: ");
+                                    String nombreMagica1AOcultar = scaner.nextLine();
+                                    System.out.println("");
+                                    System.out.print("Carta 2: ");
+                                    String nombreMagica2AOcultar = scaner.nextLine();
+                                    System.out.println("");
+                                    trampa.jugar(campo, this.getTurno(), scaner, (byte) i, nombreMonstruoAOcultar, nombreMagica1AOcultar, nombreMagica2AOcultar);
+                                }
+                            }
+                            else if(trampa.getTipoHabilidadEspecialTrampa() == TipoHabilidadEspecialTrampa.WABOKU){
+                                System.out.println("Defensor, quiere activar la trampa Waboku? \n1. Si \n2. No");
+                                System.out.print("Opción: ");
+                                activarTrampaInvocacion = scaner.nextByte();
+                                scaner.nextLine();
+                                System.out.println("");
+                                if(activarTrampaInvocacion == 1){
+                                    trampa.jugar(campo, this.getTurno(), scaner, (byte) i, nombreMonstruoAOcultar, nombreMagica1AOcultar, nombreMagica2AOcultar);
+                                }
+                            }
+                            else if(trampa.getTipoHabilidadEspecialTrampa() == TipoHabilidadEspecialTrampa.MURO_DE_ESPEJO){
+                                System.out.println("Defensor, quiere activar la trampa Muro de Espejo? \n1. Si \n2. No");
+                                System.out.print("Opción: ");
+                                activarTrampaInvocacion = scaner.nextByte();
+                                scaner.nextLine();
+                                System.out.println("");
+                                if(trampa.getTurnosActiva() > 0){
+                                    byte opcionMuroDeEspejo = 0;
+                                    System.out.println("Quiere mantener el efecto de Muro de Espejo durante un turno más a cambio de 2000 LP \n1. Si \2. No");
+                                    System.out.print("Opción: ");
+                                    opcionMuroDeEspejo = scaner.nextByte();
+                                    scaner.nextLine();
+                                    System.out.println("");
+                                    trampa.jugar(campo, this.getTurno(), scaner, (byte) i, nombreMonstruoAOcultar, nombreMagica1AOcultar, nombreMagica2AOcultar, opcionMuroDeEspejo);
+                                }
+                                else if(activarTrampaInvocacion == 1){
+                                    trampa.jugar(campo, this.getTurno(), scaner, (byte) i, nombreMonstruoAOcultar, nombreMagica1AOcultar, nombreMagica2AOcultar);
+                                }
+                            }
+                            else if(trampa.getTipoHabilidadEspecialTrampa() == TipoHabilidadEspecialTrampa.REPRESION){
+                                System.out.println("Defensor, quiere activar la trampa Represión? \n1. Si \n2. No");
+                                System.out.print("Opción: ");
+                                activarTrampaInvocacion = scaner.nextByte();
+                                scaner.nextLine();
+                                System.out.println("");
+                                if(trampa.getTurnosActiva() < 1){
+                                    System.out.println("Escriba el nombre del monstruo que robará por un turno");
+                                    System.out.print("Nombre: ");
+                                    String monstruoARobar = scaner.nextLine();
+                                    trampa.setMonstruoARobarPorUnTurno(monstruoARobar);
+                                    System.out.println("");
+                                    trampa.jugar(campo, this.getTurno(), scaner, (byte) i, nombreMonstruoAOcultar, nombreMagica1AOcultar, nombreMagica2AOcultar, opcionMuroDeEspejo, monstruoARobar);
+                                }
+                                else if(activarTrampaInvocacion > 0){
+                                    trampa.jugar(campo, this.getTurno(), scaner, (byte) i, nombreMonstruoAOcultar, nombreMagica1AOcultar, nombreMagica2AOcultar);
+                                }
+                            }
+                            else if(trampa.getTipoHabilidadEspecialTrampa() == TipoHabilidadEspecialTrampa.DRENAJE_DE_HABILIDAD){
+                                System.out.println("Defensor, quiere activar la trampa Drenaje de Habilidad? \n1. Si \n2. No");
+                                System.out.print("Opción: ");
+                                activarTrampaInvocacion = scaner.nextByte();
+                                scaner.nextLine();
+                                System.out.println("");
+                                if(activarTrampaInvocacion == 1){
+                                    trampa.jugar(campo, this.getTurno(), scaner, (byte) i, monstruoADevolver);
+                                }
+                            }
+                        }
+                    }
+                }
 
                 //Battle Phase (Fase de Batalla)
                 boolean entroAFaseDeBatalla = false;
@@ -336,6 +553,13 @@ public class Duelo {
                 if(turno != 0){
                     System.out.println("\n");
                     System.out.println("------Battle Phase------");
+                    if(DefensorTieneTrampaDeAtaque){
+                        System.out.println("Defensor, tiene trampas que puede usar en la Fase de Batalla, quiere activar una trampa? \n1. Si \n2. No");
+                        System.out.print("Opción: ");
+                        activarTrampa = scaner.nextByte();
+                        scaner.nextLine();
+                        System.out.println("");
+                    }
                     while(opcionFaseDeBatalla != 2){
                         System.out.println("");
                         System.out.println("Quiere entrar a fase de batalla?, escoja una opción: \n1. Sí. \n2. No.");
@@ -346,14 +570,102 @@ public class Duelo {
                         if(opcionFaseDeBatalla == 1){
                             entroAFaseDeBatalla = true;
                             for(int i=0; i<5; i++){
-                                if(magiasAtacantes[i] != null){
-                                    magiasAtacantes[i].jugar(campo, turno, scaner);
+                                if(magiasYTrampasAtacantes[i] != null && magiasYTrampasAtacantes[i] instanceof Magia){
+                                    Magia magia = (Magia) magiasYTrampasAtacantes[i];
+                                    magia.jugar(campo, turno, scaner, (byte) 0);
                                     break;
                                 }
                             }
-                            for(int i=0; i<5; i++){
-                                if(monstruosAtacantes[i] != null && monstruosAtacantes[i].isPuedeAtacar()){
-                                    monstruosAtacantes[i].jugar(campo, turno, scaner);
+                            boolean monstruosDefensoresNoEstaVacio = false, monstruosAtacantesNoEstaVacio = false;
+                            for(Monstruo m : monstruosAtacantes){
+                                if(m != null){
+                                    monstruosAtacantesNoEstaVacio = true;
+                                    break;
+                                }
+                            }
+                            for(Monstruo m : monstruosDefensores){
+                                if(m != null){
+                                    monstruosDefensoresNoEstaVacio = true;
+                                    break;
+                                }
+                            }
+                            if(monstruosAtacantesNoEstaVacio){
+                                boolean monstruoAtaco = false;
+                                for(int i=0; i<5; i++){
+                                    System.out.println("Ingrese el indice del monstruo que va a atacar");
+                                    System.out.print("Numero: ");
+                                    byte monstruoAAtacar = scaner.nextByte();
+                                    scaner.nextLine();
+                                    if(monstruosDefensoresNoEstaVacio){
+                                        System.out.print("Escoja el número de que carta atacar o digite 6 para no atacar: ");
+                                        byte indiceDelEnemigo = scaner.nextByte();
+                                        scaner.nextLine();
+                                        System.out.println("");
+                                        byte activarTrampaAtaque = 0;
+                                        if(indiceDelEnemigo != 6){
+                                            monstruosAtacantes[monstruoAAtacar].jugar(campo, turno, scaner, monstruoAAtacar, indiceDelEnemigo);
+                                            if(trampa.getTipoHabilidadEspecialTrampa() == TipoHabilidadEspecialTrampa.ARMADURA_DE_SAKURETSU){
+                                                System.out.println("Defensor, quiere activar la trampa Armadura De Sakuretsu? \n1. Si \n2. No");
+                                                System.out.print("Opción: ");
+                                                activarTrampaAtaque = scaner.nextByte();
+                                                scaner.nextLine();
+                                                System.out.println("");
+                                                if(activarTrampaAtaque == 1){
+                                                    trampa.jugar(campo, this.getTurno(), scaner, 0, monstruoAAtacar);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else if(monstruosAtacantes[monstruoAAtacar] != null && monstruosAtacantes[monstruoAAtacar].isPuedeAtacar() && !monstruosDefensoresNoEstaVacio){
+                                        monstruosAtacantes[monstruoAAtacar].jugar(campo, turno, scaner, monstruoAAtacar, 0);
+                                        if(trampa.getTipoHabilidadEspecialTrampa() == TipoHabilidadEspecialTrampa.ARMADURA_DE_SAKURETSU){
+                                            System.out.println("Defensor, quiere activar la trampa Armadura De Sakuretsu? \n1. Si \n2. No");
+                                            System.out.print("Opción: ");
+                                            activarTrampaAtaque = scaner.nextByte();
+                                            scaner.nextLine();
+                                            System.out.println("");
+                                            if(activarTrampaAtaque == 1){
+                                                trampa.jugar(campo, this.getTurno(), scaner, 0, monstruoAAtacar);
+                                            }
+                                        }
+                                    }
+                                    if(DefensorTieneTrampaDeAtaque && activarTrampa == 1){
+                                        for(int j=0; j<5; j++){
+                                            if(magiasYTrampasDefensoras[j] instanceof Trampa){
+                                                byte activarTrampaAtaque = 0;
+                                                Trampa trampa = (Trampa) magiasYTrampasDefensoras[j];
+                                                if(trampa.getTipoHabilidadEspecialTrampa() == TipoHabilidadEspecialTrampa.FUERZA_DE_ESPEJO){
+                                                    System.out.println("Defensor, quiere activar la trampa Fuerza de Espejo? \n1. Si \n2. No");
+                                                    System.out.print("Opción: ");
+                                                    activarTrampaAtaque = scaner.nextByte();
+                                                    scaner.nextLine();
+                                                    System.out.println("");
+                                                    if(activarTrampaAtaque == 1){
+                                                        trampa.jugar(campo, this.getTurno(), scaner, 0);
+                                                    }
+                                                }
+                                                else if(trampa.getTipoHabilidadEspecialTrampa() == TipoHabilidadEspecialTrampa.CILINDRO_MAGICO){
+                                                    System.out.println("Defensor, quiere activar la trampa Cilindro Mágico? \n1. Si \n2. No");
+                                                    System.out.print("Opción: ");
+                                                    activarTrampaAtaque = scaner.nextByte();
+                                                    scaner.nextLine();
+                                                    System.out.println("");
+                                                    if(activarTrampaAtaque == 1){
+                                                        if(trampa.getTurnosActiva() < 1){
+                                                            System.out.println("Escriba el nombre exacto del monstruo cuyo ataque quiere negar");
+                                                            System.out.print("Nombre: ");
+                                                            String monstruoANegar = scaner.nextLine();
+                                                            System.out.println("");
+                                                            trampa.jugar(campo, this.getTurno(), scaner, 0, monstruoANegar);
+                                                        }
+                                                        else if(trampa.getTurnosActiva() > 0){
+                                                            trampa.jugar(campo, monstruoAAtacar, scaner, activarTrampaAtaque)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -386,12 +698,12 @@ public class Duelo {
                         } while(opcionMainPhase1 != 1 && opcionMainPhase1 != 2 && opcionMainPhase1 != 3);
                         if(opcionMainPhase1 == 1){
                             do{
-                                System.out.println("Qué tipo de carta quiere colocar: \n1. Monstruo. \n2. Mágica.");
+                                System.out.println("Qué tipo de carta quiere colocar: \n1. Monstruo. \n2. Mágica. \n3. Trampa");
                                 System.out.print("Opción: ");
                                 opcionCartaAColocar = scaner.nextByte();
                                 scaner.nextLine();
                                 System.out.println("");
-                            } while(opcionCartaAColocar != 1 && opcionCartaAColocar != 2);
+                            } while(opcionCartaAColocar != 1 && opcionCartaAColocar != 2 && opcionCartaAColocar != 3);
                             do{
                                 System.out.println("Escriba el número que ocupa en su mano la carta que quiere colocar: ");
                                 System.out.print("Opción: ");
@@ -400,24 +712,50 @@ public class Duelo {
                                 System.out.println("");
                             } while(indiceCartaAColocar >= atacante.getMano().size() || indiceCartaAColocar < 0);
                             if(opcionCartaAColocar == 1){
-                                do{
-                                    System.out.println("Escoja la posición en la que quiere colocar al monstruo: \n1. Ataque. \n2. Defensa.");
-                                    System.out.print("Opción: ");
-                                    posicionCartaAColocar = scaner.nextByte();
-                                    scaner.nextLine();
-                                    System.out.println("");
-                                } while(posicionCartaAColocar != 1 && posicionCartaAColocar != 2);
-                                for(int i=0; i<5; i++){
-                                    if(monstruosAtacantes[i] == null && atacante.getMano().get(indiceCartaAColocar) instanceof Monstruo){
-                                        monstruosAtacantes[i] = (Monstruo) atacante.getMano().get(indiceCartaAColocar);
-                                        atacante.getMano().remove(indiceCartaAColocar);
-                                        if(posicionCartaAColocar == 1){
-                                            monstruosAtacantes[i].setEnPosicionAtaque(true);
+                                boolean posibleColocar = false;
+                                Monstruo m = (Monstruo) atacante.getMano().get(indiceCartaAColocar);
+                                if(m.getNivel() > 4){
+                                    byte monstruoASacrificar = 0;
+                                    do{
+                                        do{
+                                            System.out.println("Debe sacrificar un monstruo en campo para invocar a este monstruo.");
+                                            System.out.println("Ingrese el indice del monstruo en campo a sacrificar o escriba 6 para cancelar.");
+                                            System.out.print("Opción: ");
+                                            monstruoASacrificar = scaner.nextByte();
+                                            scaner.nextLine();
+                                            System.out.println("");
+                                        } while(monstruoASacrificar<0 || monstruoASacrificar >6);
+                                        if(monstruoASacrificar<6 && monstruosAtacantes[monstruoASacrificar] != null){
+                                            cementerioAtacante.add(monstruosAtacantes[monstruoASacrificar]);
+                                            monstruosAtacantes[monstruoASacrificar] = null;
+                                            posibleColocar = true;
                                             break;
                                         }
-                                        else if(posicionCartaAColocar == 2){
-                                            monstruosAtacantes[i].setEnPosicionAtaque(false);
-                                            break;
+                                    } while(monstruoASacrificar != 6 );
+                                }
+                                else{
+                                    posibleColocar = true;;
+                                }
+                                if(posibleColocar){
+                                    do{
+                                        System.out.println("Escoja la posición en la que quiere colocar al monstruo: \n1. Ataque. \n2. Defensa.");
+                                        System.out.print("Opción: ");
+                                        posicionCartaAColocar = scaner.nextByte();
+                                        scaner.nextLine();
+                                        System.out.println("");
+                                    } while(posicionCartaAColocar != 1 && posicionCartaAColocar != 2);
+                                    for(int i=0; i<5; i++){
+                                        if(monstruosAtacantes[i] == null && atacante.getMano().get(indiceCartaAColocar) instanceof Monstruo){
+                                            monstruosAtacantes[i] = (Monstruo) atacante.getMano().get(indiceCartaAColocar);
+                                            atacante.getMano().remove(indiceCartaAColocar);
+                                            if(posicionCartaAColocar == 1){
+                                                monstruosAtacantes[i].setEnPosicionAtaque(true);
+                                                break;
+                                            }
+                                            else if(posicionCartaAColocar == 2){
+                                                monstruosAtacantes[i].setEnPosicionAtaque(false);
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -431,15 +769,38 @@ public class Duelo {
                                     System.out.println("");
                                 } while(posicionCartaAColocar != 1 && posicionCartaAColocar != 2);
                                 for(int i=0; i<5; i++){
-                                    if(magiasAtacantes[i] == null && atacante.getMano().get(indiceCartaAColocar) instanceof Magia){
-                                        magiasAtacantes[i] = (Magia) atacante.getMano().get(indiceCartaAColocar);
+                                    if(magiasYTrampasAtacantes[i] == null && atacante.getMano().get(indiceCartaAColocar) instanceof Magia){
+                                        magiasYTrampasAtacantes[i] = atacante.getMano().get(indiceCartaAColocar);
                                         atacante.getMano().remove(indiceCartaAColocar);
                                         if(posicionCartaAColocar == 1){
-                                            magiasAtacantes[i].setVisible(false);
+                                            magiasYTrampasAtacantes[i].setVisible(false);
                                             break;
                                         }
                                         else if(posicionCartaAColocar == 2){
-                                            magiasAtacantes[i].setVisible(true);
+                                            magiasYTrampasAtacantes[i].setVisible(true);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            else if(opcionCartaAColocar == 3){
+                                do{
+                                System.out.println("Escoja que quiere hacer con la carta trampa: \n1. Colocar. \n2. Usar.");
+                                System.out.print("Opción: ");
+                                posicionCartaAColocar = scaner.nextByte();
+                                scaner.nextLine();
+                                System.out.println("");
+                                } while(posicionCartaAColocar != 1 && posicionCartaAColocar != 2);
+                                for(int i=0; i<5; i++){
+                                    if(magiasYTrampasAtacantes[i] == null && atacante.getMano().get(indiceCartaAColocar) instanceof Trampa){
+                                        magiasYTrampasAtacantes[i] = atacante.getMano().get(indiceCartaAColocar);
+                                        atacante.getMano().remove(indiceCartaAColocar);
+                                        if(posicionCartaAColocar == 1){
+                                            magiasYTrampasAtacantes[i].setVisible(false);
+                                            break;
+                                        }
+                                        else if(posicionCartaAColocar == 2){
+                                            magiasYTrampasAtacantes[i].setVisible(true);
                                             break;
                                         }
                                     }
@@ -458,8 +819,8 @@ public class Duelo {
                             scaner.nextLine();
                             System.out.println("");
                             if(opcionCartaAColocar == 1){
-                                if(magiasAtacantes[indiceCartaAColocar] != null && !magiasAtacantes[indiceCartaAColocar].isVisible()){
-                                    magiasAtacantes[indiceCartaAColocar].setVisible(true);
+                                if(magiasYTrampasAtacantes[indiceCartaAColocar] != null && !magiasYTrampasAtacantes[indiceCartaAColocar].isVisible()){
+                                    magiasYTrampasAtacantes[indiceCartaAColocar].setVisible(true);
                                 }
                             }
                             else if(opcionCartaAColocar == 2){
@@ -512,7 +873,6 @@ public class Duelo {
             System.out.println("FELICIDADES, " + atacante.getNombre() + ", HAS GANADO!!!");
         }
         else if(atacante.getLP() == 0 || atacante.getMazo().size() == 0){
-
             System.out.println("FELICIDADES, " + defensor.getNombre() + ", HAS GANADO!!!");
         }
     }

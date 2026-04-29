@@ -1,11 +1,12 @@
 package src;
 import java.util.*;
+
 public class Campo {
 
     private Monstruo[] monstruosEnCampoJugador1 = new Monstruo[5];
     private Monstruo[] monstruosEnCampoJugador2 = new Monstruo[5];
-    private Magia[] magicasEnCampoJugador1 = new Magia[5];
-    private Magia[] magicasEnCampoJugador2 = new Magia[5];
+    private Carta[] magicasYTrampasEnCampoJugador1 = new Carta[5];
+    private Carta[] magicasYTrampasEnCampoJugador2 = new Carta[5];
     private List<Carta> cementerioJugador1 = new ArrayList<> ();
     private List<Carta> cementerioJugador2 = new ArrayList<> ();
     Jugador jugador1;
@@ -22,11 +23,11 @@ public class Campo {
     public Monstruo[] getMonstruosEnCampoJugador2() {
         return monstruosEnCampoJugador2;
     }
-    public Magia[] getMagicasEnCampoJugador1() {
-        return magicasEnCampoJugador1;
+    public Carta[] getMagicasYTrampasEnCampoJugador1() {
+        return magicasYTrampasEnCampoJugador1;
     }
-    public Magia[] getMagicasEnCampoJugador2() {
-        return magicasEnCampoJugador2;
+    public Carta[] getMagicasYTrampasEnCampoJugador2() {
+        return magicasYTrampasEnCampoJugador2;
     }
     public List<Carta> getCementerioJugador1() {
         return cementerioJugador1;
@@ -41,6 +42,13 @@ public class Campo {
         return jugador2;
     }
 
+    public void setJugador1(Jugador jugador1) {
+        this.jugador1 = jugador1;
+    }
+    public void setJugador2(Jugador jugador2) {
+        this.jugador2 = jugador2;
+    }
+    
     public boolean colocarCarta(Carta carta, byte turno, byte posicion){
         if(carta instanceof Monstruo){
             if(turno%2==0 && monstruosEnCampoJugador1[posicion]==null){
@@ -56,12 +64,25 @@ public class Campo {
             }
         }
         else if(carta instanceof Magia){
-            if(turno%2==0 && magicasEnCampoJugador1[posicion]==null){
-                magicasEnCampoJugador1[posicion] = (Magia) carta;
+            if(turno%2==0 && magicasYTrampasEnCampoJugador1[posicion]==null){
+                magicasYTrampasEnCampoJugador1[posicion] = carta;
                 return true;
             }
-            else if(turno%2!=0 && magicasEnCampoJugador2[posicion]==null){
-                magicasEnCampoJugador2[posicion] = (Magia) carta;
+            else if(turno%2!=0 && magicasYTrampasEnCampoJugador2[posicion]==null){
+                magicasYTrampasEnCampoJugador2[posicion] = carta;
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else if(carta instanceof Trampa){
+            if(turno%2==0 && magicasYTrampasEnCampoJugador1[posicion]==null){
+                magicasYTrampasEnCampoJugador1[posicion] = carta;
+                return true;
+            }
+            else if(turno%2!=0 && magicasYTrampasEnCampoJugador2[posicion]==null){
+                magicasYTrampasEnCampoJugador2[posicion] = carta;
                 return true;
             }
             else{
@@ -72,11 +93,4 @@ public class Campo {
             return false;
         }
     }
-    public void setJugador1(Jugador jugador1) {
-        this.jugador1 = jugador1;
-    }
-    public void setJugador2(Jugador jugador2) {
-        this.jugador2 = jugador2;
-    }
-    
 }

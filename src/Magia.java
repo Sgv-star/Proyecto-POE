@@ -1,29 +1,28 @@
 package src;
 import java.util.*;
 
+public class Magia extends Carta implements ActivableMagias{
 
-public class Magia extends Carta implements Activable{
-
-    private TipoHabilidadEspecial tipoHabilidadEspecial;
+    private TipoHabilidadEspecialMagia tipoHabilidadEspecial;
     private byte turnosActiva;
 
-    public Magia(String nombre, String cuadroDeTexto, TipoHabilidadEspecial tipoHabilidadEspecial) {
+    public Magia(String nombre, String cuadroDeTexto, TipoHabilidadEspecialMagia tipoHabilidadEspecial) {
         super(nombre, cuadroDeTexto, true);
         this.tipoHabilidadEspecial = tipoHabilidadEspecial;
         this.turnosActiva = 0;
     }
 
-    public TipoHabilidadEspecial getTipoHabilidadEspecial() {
+    public TipoHabilidadEspecialMagia getTipoHabilidadEspecialMagia() {
         return tipoHabilidadEspecial;
     }
     public byte getTurnosActiva(){
         return turnosActiva;
     }
 
-    public void setTipoHabilidadEspecial(TipoHabilidadEspecial tipoHabilidadEspecial) {
+    protected void setTipoHabilidadEspecialMagia(TipoHabilidadEspecialMagia tipoHabilidadEspecial) {
         this.tipoHabilidadEspecial = tipoHabilidadEspecial;
     }
-    public void setTurnosActiva(byte turnosActiva){
+    protected void setTurnosActiva(byte turnosActiva){
         this.turnosActiva = turnosActiva;
     }
 
@@ -31,31 +30,32 @@ public class Magia extends Carta implements Activable{
     public void ActivarEfecto(Campo campo, byte turno, Scanner scaner){
         Jugador atacante, defensor;
         Monstruo[] monstruosAtacantes, monstruosDefensores;
-        Magia[] magiasAtacantes, magiasDefensoras;
+        Carta[] magiasYTrampasAtacantes, magiasYTrampasDefensoras;
         List<Carta> cementerioAtacante, cementerioDefensor;
         if(turno%2==0){
             atacante = campo.getJugador1();
             defensor = campo.getJugador2();
             monstruosAtacantes = campo.getMonstruosEnCampoJugador1();
-            magiasAtacantes = campo.getMagicasEnCampoJugador1();
+            magiasYTrampasAtacantes = campo.getMagicasYTrampasEnCampoJugador1();
             cementerioAtacante = campo.getCementerioJugador1();
             monstruosDefensores = campo.getMonstruosEnCampoJugador2();
-            magiasDefensoras = campo.getMagicasEnCampoJugador2();
+            magiasYTrampasDefensoras = campo.getMagicasYTrampasEnCampoJugador2();
             cementerioDefensor = campo.getCementerioJugador2();
         }
         else{
             atacante = campo.getJugador2();
             defensor = campo.getJugador1();
             monstruosAtacantes = campo.getMonstruosEnCampoJugador2();
-            magiasAtacantes = campo.getMagicasEnCampoJugador2();
+            magiasYTrampasAtacantes = campo.getMagicasYTrampasEnCampoJugador2();
             cementerioAtacante = campo.getCementerioJugador2();
             monstruosDefensores = campo.getMonstruosEnCampoJugador1();
-            magiasDefensoras = campo.getMagicasEnCampoJugador1();
+            magiasYTrampasDefensoras = campo.getMagicasYTrampasEnCampoJugador1();
             cementerioDefensor = campo.getCementerioJugador1();
         }
         for(int i=0; i<5; i++){
-            if(magiasAtacantes[i] != null && magiasAtacantes[i].isVisible()){
-                switch(magiasAtacantes[i].getTipoHabilidadEspecial()){
+            if(magiasYTrampasAtacantes[i] != null && magiasYTrampasAtacantes[i].isVisible() && magiasYTrampasAtacantes[i] instanceof Magia){
+                Magia magia = (Magia) magiasYTrampasAtacantes[i];
+                switch(magia.getTipoHabilidadEspecialMagia()){
 
                     case MONSTRUO_RENACIDO:
                         System.out.print("Escriba el nombre exacto del monstruo que quiere devolver al campo: ");
@@ -83,8 +83,8 @@ public class Magia extends Carta implements Activable{
                                 }
                             }
                         }
-                        cementerioAtacante.add(magiasAtacantes[i]);
-                        magiasAtacantes[i] = null;
+                        cementerioAtacante.add(magiasYTrampasAtacantes[i]);
+                        magiasYTrampasAtacantes[i] = null;
                         break;
 
                     case AGUJERO_NEGRO:
@@ -98,27 +98,27 @@ public class Magia extends Carta implements Activable{
                             monstruosAtacantes[j] = null;
                             monstruosDefensores[j] = null;
                         }
-                        cementerioAtacante.add(magiasAtacantes[i]);
-                        magiasAtacantes[i] = null;
+                        cementerioAtacante.add(magiasYTrampasAtacantes[i]);
+                        magiasYTrampasAtacantes[i] = null;
                         break;
 
                     case TIFON_DEL_ESPACIO_MISTICO:
-                        System.out.print("Escriba el nombre exacto de la carta mágica de su oponente que quiere destruir: ");
-                        String magicaADestruir = scaner.nextLine();
+                        System.out.print("Escriba el nombre exacto de la carta mágica o trampa de su oponente que quiere destruir: ");
+                        String magicaOTrampaADestruir = scaner.nextLine();
                         System.out.println("");
                         for(int j=0; j<5; j++){
-                            if(magiasDefensoras[j] != null && magiasDefensoras[j].getNombre().equals(magicaADestruir)){
-                                cementerioDefensor.add(magiasDefensoras[j]);
-                                magiasDefensoras[j] = null;
+                            if(magiasYTrampasDefensoras[j] != null && magiasYTrampasDefensoras[j].getNombre().equals(magicaOTrampaADestruir)){
+                                cementerioDefensor.add(magiasYTrampasDefensoras[j]);
+                                magiasYTrampasDefensoras[j] = null;
                                 break;
                             }
                         }
-                        cementerioAtacante.add(magiasAtacantes[i]);
-                        magiasAtacantes[i] = null;
+                        cementerioAtacante.add(magiasYTrampasAtacantes[i]);
+                        magiasYTrampasAtacantes[i] = null;
                         break;
 
                     case ESPADAS_DE_LA_LUZ_REVELADORA:
-                        if(magiasAtacantes[i].getTurnosActiva() < 3){
+                        if(magia.getTurnosActiva() < 3){
                             for(int j=0; j<5; j++){
                                 if(monstruosDefensores[j] != null){
                                     if(monstruosDefensores[j].isPuedeAtacar()){
@@ -129,13 +129,13 @@ public class Magia extends Carta implements Activable{
                                     }
                                 }
                             }
-                            magiasAtacantes[i].setTurnosActiva((byte) (magiasAtacantes[i].getTurnosActiva()+1));
+                            magia.setTurnosActiva((byte) (magia.getTurnosActiva()+1));
                             break;
                         }
                         else{
-                            magiasAtacantes[i].setTurnosActiva((byte) 0);
-                            cementerioAtacante.add(magiasAtacantes[i]);
-                            magiasAtacantes[i] = null;
+                            magia.setTurnosActiva((byte) 0);
+                            cementerioAtacante.add(magiasYTrampasAtacantes[i]);
+                            magiasYTrampasAtacantes[i] = null;
                             for(int j = 0; j<5; j++){
                                 if(monstruosDefensores[j] != null){
                                     if(!monstruosDefensores[j].isPuedeAtacar()){
@@ -157,8 +157,8 @@ public class Magia extends Carta implements Activable{
                         else{
                             System.out.println("No hay cartas disponibles en el mazo.");
                         }
-                        cementerioAtacante.add(magiasAtacantes[i]);
-                        magiasAtacantes[i] = null;
+                        cementerioAtacante.add(magiasYTrampasAtacantes[i]);
+                        magiasYTrampasAtacantes[i] = null;
                         break;
 
                     case ENTIERRO_INSENSATO:
@@ -166,11 +166,15 @@ public class Magia extends Carta implements Activable{
                         for(int j=0; j<atacante.getMazo().size(); j++){
                             if(atacante.getMazo().get(j) instanceof Monstruo){
                                 Monstruo monstruo = (Monstruo) atacante.getMazo().get(j);
-                                System.out.println(monstruo.getNombre() + " | ATK: " + monstruo.getAtaque() + " | DEF: " + monstruo.getDefensa());
+                                System.out.println(monstruo.getNombre() + " | LVL: " + monstruo.getNivel() + " | ATK: " + monstruo.getAtaque() + " | DEF: " + monstruo.getDefensa());
                             }
                             else if(atacante.getMazo().get(j) instanceof Magia){
                                 Magia magica = (Magia) atacante.getMazo().get(j);
                                 System.out.println(magica.getNombre() + " | HAB: " + magica.getCuadroDeTexto());
+                            }
+                            else if(atacante.getMazo().get(j) instanceof Trampa){
+                                Trampa trampaImprimir = (Trampa) atacante.getMazo().get(j);
+                                System.out.println(trampaImprimir.getNombre() + " | HAB: " + trampaImprimir.getCuadroDeTexto());
                             }
                         }
                         System.out.print("Escriba el nombre exacto de la carta de su mazo que quiere enviar al cementerio: ");
@@ -182,8 +186,8 @@ public class Magia extends Carta implements Activable{
                                 break;
                             }
                         }
-                        cementerioAtacante.add(magiasAtacantes[i]);
-                        magiasAtacantes[i] = null;
+                        cementerioAtacante.add(magiasYTrampasAtacantes[i]);
+                        magiasYTrampasAtacantes[i] = null;
                         break;
 
                     case RAIGEKI:
@@ -193,8 +197,8 @@ public class Magia extends Carta implements Activable{
                                 monstruosDefensores[j] = null;
                             }
                         }
-                        cementerioAtacante.add(magiasAtacantes[i]);
-                        magiasAtacantes[i] = null;
+                        cementerioAtacante.add(magiasYTrampasAtacantes[i]);
+                        magiasYTrampasAtacantes[i] = null;
                         break;
 
                     case MIL_CUCHILLOS:
@@ -220,12 +224,12 @@ public class Magia extends Carta implements Activable{
                         else{
                             System.out.println("No tiene al Mago Oscuro");
                         }
-                        cementerioAtacante.add(magiasAtacantes[i]);
-                        magiasAtacantes[i] = null;
+                        cementerioAtacante.add(magiasYTrampasAtacantes[i]);
+                        magiasYTrampasAtacantes[i] = null;
                         break;
 
                     case UNIDAD:
-                        if(magiasAtacantes[i].getTurnosActiva() == (byte) 0){
+                        if(magia.getTurnosActiva() == (byte) 0){
                             short sumaDeDefensa = 0;
                             System.out.print("Escriba exactamente el nombre del monstruo cuya defensa quiere aumentar: ");
                             String monstruoAFortalecer = scaner.nextLine();
@@ -240,17 +244,17 @@ public class Magia extends Carta implements Activable{
                                     monstruosAtacantes[j].setDefensa(sumaDeDefensa);
                                 }
                             }
-                            magiasAtacantes[i].setTurnosActiva((byte) (magiasAtacantes[i].getTurnosActiva()+1));
+                            magia.setTurnosActiva((byte) (magia.getTurnosActiva()+1));
                         }
-                        else if(magiasAtacantes[i].getTurnosActiva() == (byte) 1){
+                        else if(magia.getTurnosActiva() == (byte) 1){
                             for(Monstruo m : monstruosAtacantes){
                                 if(m != null){
                                     m.setDefensa(m.getDefensaBase());
                                 }
                             }
-                            magiasAtacantes[i].setTurnosActiva((byte) 0);
-                            cementerioAtacante.add(magiasAtacantes[i]);
-                            magiasAtacantes[i] = null;
+                            magia.setTurnosActiva((byte) 0);
+                            cementerioAtacante.add(magiasYTrampasAtacantes[i]);
+                            magiasYTrampasAtacantes[i] = null;
                         }
                         break;
 
@@ -308,8 +312,8 @@ public class Magia extends Carta implements Activable{
                                 break;
                             }
                         }
-                        cementerioAtacante.add(magiasAtacantes[i]);
-                        magiasAtacantes[i] = null;
+                        cementerioAtacante.add(magiasYTrampasAtacantes[i]);
+                        magiasYTrampasAtacantes[i] = null;
                         break;
 
                 }
@@ -318,7 +322,7 @@ public class Magia extends Carta implements Activable{
     }
 
     @Override
-    public boolean jugar(Campo campo, byte turno, Scanner scaner){
+    public boolean jugar(Campo campo, byte turno, Scanner scaner, byte cartaAActivar){
         ActivarEfecto(campo, turno, scaner);
         return true;
     }

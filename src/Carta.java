@@ -1,8 +1,6 @@
 package src;
 import java.util.*;
 
-
-
 public abstract class Carta {
 
     private String nombre;
@@ -29,6 +27,6 @@ public abstract class Carta {
         this.visible = visible;
     }
 
-    public abstract boolean jugar(Campo campo, byte turno, Scanner scaner);
+    public abstract boolean jugar(Campo campo, byte turno, Scanner scaner, byte cartaAActivar);
 
 }

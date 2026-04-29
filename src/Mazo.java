@@ -1,7 +1,6 @@
 package src;
 import java.util.*;
 
-
 public class Mazo {
 
     private List<Carta> mazoGeneral = new ArrayList<>();
@@ -37,16 +36,26 @@ public class Mazo {
         this.mazoGeneral.add(new Monstruo("Zaborg, el Monarca del Trueno", "Al ser invocado por sacrificio, destruye un monstruo.", (byte) 5, (short) 2400, (short) 1000));
         this.mazoGeneral.add(new Monstruo("Gran Escudo Gardna", "Un muro masivo que niega magias que lo seleccionen.", (byte) 4, (short) 100, (short) 2600));
         this.mazoGeneral.add(new Monstruo("Gilaaurus", "Se invoca especial pero deja al rival revivir algo.", (byte) 3, (short) 1400, (short) 800));
-        this.mazoGeneral.add(new Magia("Monstruo Renacido", "Elige un monstruo en cualquier cementerio e invócalo en tu campo.", TipoHabilidadEspecial.MONSTRUO_RENACIDO));
-        this.mazoGeneral.add(new Magia("Agujero Negro", "Destruye a todos los monstruos que estén en el campo de batalla.", TipoHabilidadEspecial.AGUJERO_NEGRO));
-        this.mazoGeneral.add(new Magia("Tifón del Espacio Místico", "Destruye una carta mágica o de trampa en el campo.", TipoHabilidadEspecial.TIFON_DEL_ESPACIO_MISTICO));
-        this.mazoGeneral.add(new Magia("Espadas de la Luz Reveladora", "Impide que los monstruos del oponente ataquen durante 3 turnos.", TipoHabilidadEspecial.ESPADAS_DE_LA_LUZ_REVELADORA));
-        this.mazoGeneral.add(new Magia("Olla de la Codicia", "Roba 2 cartas de tu mazo.", TipoHabilidadEspecial.OLLA_DE_LA_CODICIA));
-        this.mazoGeneral.add(new Magia("Entierro Insensato", "Envía un monstruo de tu mazo directamente al cementerio.", TipoHabilidadEspecial.ENTIERRO_INSENSATO));
-        this.mazoGeneral.add(new Magia("Raigeki", "Destruye todos los monstruos que controle tu oponente.", TipoHabilidadEspecial.RAIGEKI));
-        this.mazoGeneral.add(new Magia("Cuchillo de Cazador", "Si controlas al Mago Oscuro, destruye un monstruo del rival.", TipoHabilidadEspecial.MIL_CUCHILLOS));
-        this.mazoGeneral.add(new Magia("Unidad", "Suma la defensa de todos tus monstruos para crear un muro gigante.", TipoHabilidadEspecial.UNIDAD));
-        this.mazoGeneral.add(new Magia("Polimerización", "Fusiona dos o más monstruos para invocar un monstruo de Fusión.", TipoHabilidadEspecial.POLIMERIZACION));
+        this.mazoGeneral.add(new Magia("Monstruo Renacido", "Elige un monstruo en cualquier cementerio e invócalo en tu campo.", TipoHabilidadEspecialMagia.MONSTRUO_RENACIDO));
+        this.mazoGeneral.add(new Magia("Agujero Negro", "Destruye a todos los monstruos que estén en el campo de batalla.", TipoHabilidadEspecialMagia.AGUJERO_NEGRO));
+        this.mazoGeneral.add(new Magia("Tifón del Espacio Místico", "Destruye una carta mágica o de trampa en el campo.", TipoHabilidadEspecialMagia.TIFON_DEL_ESPACIO_MISTICO));
+        this.mazoGeneral.add(new Magia("Espadas de la Luz Reveladora", "Impide que los monstruos del oponente ataquen durante 3 turnos.", TipoHabilidadEspecialMagia.ESPADAS_DE_LA_LUZ_REVELADORA));
+        this.mazoGeneral.add(new Magia("Olla de la Codicia", "Roba 2 cartas de tu mazo.", TipoHabilidadEspecialMagia.OLLA_DE_LA_CODICIA));
+        this.mazoGeneral.add(new Magia("Entierro Insensato", "Envía un monstruo de tu mazo directamente al cementerio.", TipoHabilidadEspecialMagia.ENTIERRO_INSENSATO));
+        this.mazoGeneral.add(new Magia("Raigeki", "Destruye todos los monstruos que controle tu oponente.", TipoHabilidadEspecialMagia.RAIGEKI));
+        this.mazoGeneral.add(new Magia("Cuchillo de Cazador", "Si controlas al Mago Oscuro, destruye un monstruo del rival.", TipoHabilidadEspecialMagia.MIL_CUCHILLOS));
+        this.mazoGeneral.add(new Magia("Unidad", "Suma la defensa de todos tus monstruos para crear un muro gigante.", TipoHabilidadEspecialMagia.UNIDAD));
+        this.mazoGeneral.add(new Magia("Polimerización", "Fusiona dos o más monstruos para invocar un monstruo de Fusión.", TipoHabilidadEspecialMagia.POLIMERIZACION));
+        this.mazoGeneral.add(new Trampa("Fuerza de Espejo", "Cuando un monstruo del oponente ataca, destruye todos sus monstruos en posición de ataque.", TipoHabilidadEspecialTrampa.FUERZA_DE_ESPEJO, TipoHabilidadEspecialTrampa.BATALLA));
+        this.mazoGeneral.add(new Trampa("Cilindro Mágico", "Niega el ataque de un monstruo enemigo e inflige daño a sus LP igual a su ataque.", TipoHabilidadEspecialTrampa.CILINDRO_MAGICO, TipoHabilidadEspecialTrampa.BATALLA));
+        this.mazoGeneral.add(new Trampa("Armadura de Sakuretsu", "Cuando un monstruo del oponente ataca, destruye al monstruo atacante.", TipoHabilidadEspecialTrampa.ARMADURA_DE_SAKURETSU, TipoHabilidadEspecialTrampa.BATALLA));
+        this.mazoGeneral.add(new Trampa("Tributo Torrencial", "Cuando un monstruo es invocado, destruye todos los monstruos en el campo.", TipoHabilidadEspecialTrampa.TRIBUTO_TORRENCIAL, TipoHabilidadEspecialTrampa.INVOCACION));
+        this.mazoGeneral.add(new Trampa("Llamada de los Condenados", "Elige un monstruo de tu cementerio e invócalo en posición de ataque.", TipoHabilidadEspecialTrampa.LLAMADA_DE_LOS_CONDENADOS, TipoHabilidadEspecialTrampa.INVOCACION));
+        this.mazoGeneral.add(new Trampa("Sombreros Mágicos", "Elige dos cartas mágicas de tu mazo y escóndelas con un monstruo para confundir al rival.", TipoHabilidadEspecialTrampa.SOMBREROS_MAGICOS, TipoHabilidadEspecialTrampa.INVOCACION));
+        this.mazoGeneral.add(new Trampa("Waboku", "Cualquier daño que recibas de los monstruos del oponente este turno se convierte en 0.", TipoHabilidadEspecialTrampa.WABOKU, TipoHabilidadEspecialTrampa.INVOCACION));
+        this.mazoGeneral.add(new Trampa("Muro de Espejo", "Reduce el ataque de todos los monstruos enemigos a la mitad.", TipoHabilidadEspecialTrampa.MURO_DE_ESPEJO, TipoHabilidadEspecialTrampa.INVOCACION));
+        this.mazoGeneral.add(new Trampa("Represión", "Toma el control de un monstruo del oponente hasta el final de este turno.", TipoHabilidadEspecialTrampa.REPRESION, TipoHabilidadEspecialTrampa.INVOCACION));
+        this.mazoGeneral.add(new Trampa("Drenaje de Habilidad", "Paga 1000 LP para negar todos los efectos de los monstruos en el campo.", TipoHabilidadEspecialTrampa.DRENAJE_DE_HABILIDAD, TipoHabilidadEspecialTrampa.INVOCACION));
 
         Collections.shuffle(mazoGeneral);
     }

@@ -1250,10 +1250,10 @@ public class DueloTerminal implements DueloInterfaz {
     }
 
     @Override
-    public void actualizarDuelo(DueloLogica duelo) {
-        this.campo = duelo.getCampo();
-        this.turno = duelo.getTurno();
-        this.fase = duelo.getFase();
+    public void actualizarControlador(DueloControlador controlador) {
+        this.campo = controlador.getDuelo().getCampo();
+        this.turno = controlador.getDuelo().getTurno();
+        this.fase = controlador.getDuelo().getFase();
     }
 
     @Override

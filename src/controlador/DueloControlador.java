@@ -18,7 +18,7 @@ public class DueloControlador {
         duelo = new DueloLogica();
         duelo.setearElementosInicialesDePartida(nombreJugador1, nombreJugador2);
         duelo.setFase("Main Phase 1");
-        vista.actualizarDuelo(duelo);
+        vista.actualizarControlador(this);
         vista.mostrarPanelJuego();
         vista.actualizarCampo();
     }
@@ -395,7 +395,7 @@ public class DueloControlador {
 
     private boolean preguntarUsarTrampa(String nombreTrampa) {
         return vista.pedirConfirmacion("Usar Trampa",
-            "¿Desea usar la trampa: " + nombreTrampa + "?");
+            "Quiere usar la trampa: " + nombreTrampa + "?");
     }
 
     public DueloLogica getDuelo() {

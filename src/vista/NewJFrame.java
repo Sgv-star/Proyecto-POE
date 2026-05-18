@@ -19,7 +19,6 @@ import controlador.*;
  * @author Usuario
  */
 public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
-    private DueloLogica duelo;
     private boolean usarTrampas;
     private DueloControlador controlador;
 
@@ -927,7 +926,7 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
             resetearBotones();
             botonPonerCarta.setVisible(true);
             botonCambiarPosicionDeCarta.setVisible(true);
-            if(duelo.getFase() == "Main Phase 1"){
+            if(controlador.getDuelo().getFase() == "Main Phase 1"){
                 botonTerminarMainPhase1.setVisible(true);
             }
             else{
@@ -937,14 +936,14 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
         }
         try{
             byte indiceCartaEnMano = Byte.parseByte(entrada.trim());
-            if(duelo.getMonstruosEnCampoAtacante()[indiceCartaEnMano] != null && duelo.cambiarPosicionDeMonstruo(indiceCartaEnMano)){
+            if(controlador.getDuelo().getMonstruosEnCampoAtacante()[indiceCartaEnMano] != null && controlador.getDuelo().cambiarPosicionDeMonstruo(indiceCartaEnMano)){
                 imprimirCampo();
             }
             else{
                 resetearBotones();
                 botonPonerCarta.setVisible(true);
                 botonCambiarPosicionDeCarta.setVisible(true);
-                if(duelo.getFase() == "Main Phase 1"){
+                if(controlador.getDuelo().getFase() == "Main Phase 1"){
                 botonTerminarMainPhase1.setVisible(true);
                 }
                 else{
@@ -957,7 +956,7 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
             resetearBotones();
             botonPonerCarta.setVisible(true);
             botonCambiarPosicionDeCarta.setVisible(true);
-            if(duelo.getFase() == "Main Phase 1"){
+            if(controlador.getDuelo().getFase() == "Main Phase 1"){
                 botonTerminarMainPhase1.setVisible(true);
             }
             else{
@@ -967,7 +966,7 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
         }
         botonPonerCarta.setVisible(true);
         botonCambiarPosicionDeCarta.setVisible(true);
-        if(duelo.getFase() == "Main Phase 1"){
+        if(controlador.getDuelo().getFase() == "Main Phase 1"){
                 botonTerminarMainPhase1.setVisible(true);
         }
         else{
@@ -977,9 +976,9 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
     }//GEN-LAST:event_botonCambiarPosicionDeMonstruoActionPerformed
 
     private void botonTerminarMainPhase1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonTerminarMainPhase1ActionPerformed
-        if(duelo.getTurno() != 0){
+        if(controlador.getDuelo().getTurno() != 0){
             resetearBotones();
-            duelo.saltarFase();
+            controlador.getDuelo().saltarFase();
             botonAtacar.setVisible(true);
             botonTerminarBattlePhase.setVisible(true);
             botonSaltarBattlePhase.setVisible(true);
@@ -988,17 +987,17 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
         }
         else{
             resetearBotones();
-            duelo.terminarTurno();
-            duelo.setFase("Draw Phase");
+            controlador.getDuelo().terminarTurno();
+            controlador.getDuelo().setFase("Draw Phase");
             imprimirCampo();
-            if(duelo.getTurno() != 0 && controlador.robarCarta()){
-                javax.swing.JOptionPane.showMessageDialog(this, "Ha robado:" + duelo.getAtacante().getMano().get(duelo.getAtacante().getMano().size()-1).getNombre(), "Robo",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            if(controlador.getDuelo().getTurno() != 0 && controlador.getDuelo().robarCarta()){
+                javax.swing.JOptionPane.showMessageDialog(this, "Ha robado:" + controlador.getDuelo().getAtacante().getMano().get(controlador.getDuelo().getAtacante().getMano().size()-1).getNombre(), "Robo",javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
-            duelo.setFase("Standby Phase");
+            controlador.getDuelo().setFase("Standby Phase");
             imprimirCampo();
-            duelo.resolverEfectosContinuos();
+            controlador.getDuelo().resolverEfectosContinuos();
             imprimirCampo();
-            duelo.setFase("Main Phase 1");
+            controlador.getDuelo().setFase("Main Phase 1");
             preguntarUsarTrampasDeInvocacion("Main Phase 1");
             botonPonerCarta.setVisible(true);
             botonCambiarPosicionDeCarta.setVisible(true);
@@ -1012,7 +1011,7 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
 
     private void botonTerminarBattlePhaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonTerminarBattlePhaseActionPerformed
         resetearBotones();
-        duelo.siguienteFase();
+        controlador.getDuelo().siguienteFase();
         botonPonerCarta.setVisible(true);
         botonCambiarPosicionDeCarta.setVisible(true);
         botonTerminarMainPhase2.setVisible(true);
@@ -1023,8 +1022,8 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
 
     private void botonTerminarMainPhase2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonTerminarMainPhase2ActionPerformed
         resetearBotones();
-        if(duelo.muchasCartasEnMano()){
-            duelo.siguienteFase();
+        if(controlador.getDuelo().muchasCartasEnMano()){
+            controlador.manejarSiguienteFase();
             imprimirCampo();
             String entrada = javax.swing.JOptionPane.showInputDialog(this, "Muchas cartas en mano, descarte una:", "Descartar",javax.swing.JOptionPane.QUESTION_MESSAGE);
             if (entrada == null || entrada.trim().isEmpty()) {
@@ -1036,7 +1035,7 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
             }
             try{
                 byte indiceCartaEnMano = Byte.parseByte(entrada.trim());
-                duelo.descartarCarta(indiceCartaEnMano);
+                controlador.getDuelo().descartarCarta(indiceCartaEnMano);
                 botonTerminarMainPhase2ActionPerformed(evt);
             }
             catch(NumberFormatException e){
@@ -1047,25 +1046,25 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
                 return;
             }
         }
-        else if(duelo.hayUnGanador()){
+        else if(controlador.getDuelo().hayUnGanador()){
             resetearBotones();
-            duelo.siguienteFase();
+            controlador.manejarSiguienteFase();
             imprimirCampo();
             ((CardLayout) contenedorDeCards.getLayout()).show(contenedorDeCards, "card4");
-            etiquetaHasGanado.setText("Felicidades, " + duelo.getGanador().getNombre() + ", has ganado");
+            etiquetaHasGanado.setText("Felicidades, " + controlador.getDuelo().getGanador().getNombre() + ", has ganado");
         }
         else{
-            duelo.terminarTurno();
-            duelo.setFase("Draw Phase");
+            controlador.manejarTerminarTurno();
+            controlador.getDuelo().setFase("Draw Phase");
             imprimirCampo();
-            if(duelo.getTurno() != 0 && duelo.robarCarta()){
-                javax.swing.JOptionPane.showMessageDialog(this, "Ha robado:" + duelo.getAtacante().getMano().get(duelo.getAtacante().getMano().size()-1).getNombre(), "Robo",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            if(controlador.getDuelo().getTurno() != 0 && controlador.getDuelo().robarCarta()){
+                javax.swing.JOptionPane.showMessageDialog(this, "Ha robado:" + controlador.getDuelo().getAtacante().getMano().get(controlador.getDuelo().getAtacante().getMano().size()-1).getNombre(), "Robo",javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
-            duelo.setFase("Standby Phase");
+            controlador.getDuelo().setFase("Standby Phase");
             imprimirCampo();
-            duelo.resolverEfectosContinuos();
+            controlador.getDuelo().resolverEfectosContinuos();
             imprimirCampo();
-            duelo.setFase("Main Phase 1");
+            controlador.getDuelo().setFase("Main Phase 1");
             preguntarUsarTrampasDeInvocacion("Main Phase 1");
             botonPonerCarta.setVisible(true);
             botonCambiarPosicionDeCarta.setVisible(true);
@@ -1079,9 +1078,9 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
     }//GEN-LAST:event_botonTerminarMainPhase2ActionPerformed
 
     private void botonSaltarMainPhase1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSaltarMainPhase1ActionPerformed
-        if(duelo.getTurno() != 0){
+        if(controlador.getDuelo().getTurno() != 0){
             resetearBotones();
-            duelo.saltarFase();
+            controlador.manejarSaltarFase();
             botonAtacar.setVisible(true);
             botonTerminarBattlePhase.setVisible(true);
             botonSaltarBattlePhase.setVisible(true);
@@ -1090,17 +1089,17 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
         }
         else{
             resetearBotones();
-            duelo.terminarTurno();
-            duelo.setFase("Draw Phase");
+            controlador.manejarTerminarTurno();
+            controlador.getDuelo().setFase("Draw Phase");
             imprimirCampo();
-            if(duelo.getTurno() != 0  && duelo.robarCarta()){
-                javax.swing.JOptionPane.showMessageDialog(this, "Ha robado:" + duelo.getAtacante().getMano().get(duelo.getAtacante().getMano().size()-1).getNombre(), "Robo",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            if(controlador.getDuelo().getTurno() != 0  && controlador.getDuelo().robarCarta()){
+                javax.swing.JOptionPane.showMessageDialog(this, "Ha robado:" + controlador.getDuelo().getAtacante().getMano().get(controlador.getDuelo().getAtacante().getMano().size()-1).getNombre(), "Robo",javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
-            duelo.setFase("Standby Phase");
+            controlador.getDuelo().setFase("Standby Phase");
             imprimirCampo();
-            duelo.resolverEfectosContinuos();
+            controlador.getDuelo().resolverEfectosContinuos();
             imprimirCampo();
-            duelo.setFase("Main Phase 1");
+            controlador.getDuelo().setFase("Main Phase 1");
             preguntarUsarTrampasDeInvocacion("Main Phase 1");
             botonPonerCarta.setVisible(true);
             botonCambiarPosicionDeCarta.setVisible(true);
@@ -1115,8 +1114,8 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
 
     private void botonSaltarBattlePhaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSaltarBattlePhaseActionPerformed
         resetearBotones();
-        if(duelo.muchasCartasEnMano()){
-            duelo.saltarFase();
+        if(controlador.getDuelo().muchasCartasEnMano()){
+            controlador.manejarSaltarFase();
             imprimirCampo();
             String entrada = javax.swing.JOptionPane.showInputDialog(this, "Muchas cartas en mano, descarte una:", "Descartar",javax.swing.JOptionPane.QUESTION_MESSAGE);
             if (entrada == null || entrada.trim().isEmpty()) {
@@ -1127,7 +1126,7 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
             }
             try{
                 byte indiceCartaEnMano = Byte.parseByte(entrada.trim());
-                duelo.descartarCarta(indiceCartaEnMano);
+                controlador.getDuelo().descartarCarta(indiceCartaEnMano);
                 botonSaltarBattlePhaseActionPerformed(evt);
             }
             catch(NumberFormatException e){
@@ -1137,25 +1136,25 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
                 return;
             }
         }
-        else if(duelo.hayUnGanador()){
+        else if(controlador.getDuelo().hayUnGanador()){
             resetearBotones();
-            duelo.saltarFase();
+            controlador.manejarSaltarFase();
             imprimirCampo();
             ((CardLayout) contenedorDeCards.getLayout()).show(contenedorDeCards, "card4");
-            etiquetaHasGanado.setText("Felicidades, " + duelo.getGanador().getNombre() + ", has ganado");
+            etiquetaHasGanado.setText("Felicidades, " + controlador.getDuelo().getGanador().getNombre() + ", has ganado");
         }
         else{
-            duelo.terminarTurno();
-            duelo.setFase("Draw Phase");
+            controlador.manejarTerminarTurno();
+            controlador.getDuelo().setFase("Draw Phase");
             imprimirCampo();
-            if(duelo.getTurno() != 0 && duelo.robarCarta()){
-                javax.swing.JOptionPane.showMessageDialog(this, "Ha robado:" + duelo.getAtacante().getMano().get(duelo.getAtacante().getMano().size()-1).getNombre(), "Robo",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            if(controlador.getDuelo().getTurno() != 0 && controlador.getDuelo().robarCarta()){
+                javax.swing.JOptionPane.showMessageDialog(this, "Ha robado:" + controlador.getDuelo().getAtacante().getMano().get(controlador.getDuelo().getAtacante().getMano().size()-1).getNombre(), "Robo",javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
-            duelo.setFase("Standby Phase");
+            controlador.getDuelo().setFase("Standby Phase");
             imprimirCampo();
-            duelo.resolverEfectosContinuos();
+            controlador.getDuelo().resolverEfectosContinuos();
             imprimirCampo();
-            duelo.setFase("Main Phase 1");
+            controlador.getDuelo().setFase("Main Phase 1");
             preguntarUsarTrampasDeInvocacion("Main Phase 1");
             botonPonerCarta.setVisible(true);
             botonCambiarPosicionDeCarta.setVisible(true);
@@ -1168,8 +1167,8 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
 
     private void botonSaltarMainPhase2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSaltarMainPhase2ActionPerformed
         resetearBotones();
-        if(duelo.muchasCartasEnMano()){
-            duelo.saltarFase();
+        if(controlador.getDuelo().muchasCartasEnMano()){
+            controlador.manejarSaltarFase();
             imprimirCampo();
             String entrada = javax.swing.JOptionPane.showInputDialog(this, "Muchas cartas en mano, descarte una:", "Descartar",javax.swing.JOptionPane.QUESTION_MESSAGE);
             if (entrada == null || entrada.trim().isEmpty()) {
@@ -1181,7 +1180,7 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
             }
             try{
                 byte indiceCartaEnMano = Byte.parseByte(entrada.trim());
-                duelo.descartarCarta(indiceCartaEnMano);
+                controlador.getDuelo().descartarCarta(indiceCartaEnMano);
                 botonSaltarMainPhase2ActionPerformed(evt);
             }
             catch(NumberFormatException e){
@@ -1192,25 +1191,25 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
                 return;
             }
         }
-        else if(duelo.hayUnGanador()){
+        else if(controlador.getDuelo().hayUnGanador()){
             resetearBotones();
-            duelo.saltarFase();
+            controlador.manejarSaltarFase();
             imprimirCampo();
             ((CardLayout) contenedorDeCards.getLayout()).show(contenedorDeCards, "card4");
-            etiquetaHasGanado.setText("Felicidades, " + duelo.getGanador().getNombre() + ", has ganado");
+            etiquetaHasGanado.setText("Felicidades, " + controlador.getDuelo().getGanador().getNombre() + ", has ganado");
         }
         else{
-            duelo.terminarTurno();
-            duelo.setFase("Draw Phase");
+            controlador.manejarTerminarTurno();
+            controlador.getDuelo().setFase("Draw Phase");
             imprimirCampo();
-            if(duelo.getTurno() != 0 && duelo.robarCarta()){
-                javax.swing.JOptionPane.showMessageDialog(this, "Ha robado:" + duelo.getAtacante().getMano().get(duelo.getAtacante().getMano().size()-1).getNombre(), "Robo",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            if(controlador.getDuelo().getTurno() != 0 && controlador.getDuelo().robarCarta()){
+                javax.swing.JOptionPane.showMessageDialog(this, "Ha robado:" + controlador.getDuelo().getAtacante().getMano().get(controlador.getDuelo().getAtacante().getMano().size()-1).getNombre(), "Robo",javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
-            duelo.setFase("Standby Phase");
+            controlador.getDuelo().setFase("Standby Phase");
             imprimirCampo();
-            duelo.resolverEfectosContinuos();
+            controlador.getDuelo().resolverEfectosContinuos();
             imprimirCampo();
-            duelo.setFase("Main Phase 1");
+            controlador.getDuelo().setFase("Main Phase 1");
             preguntarUsarTrampasDeInvocacion("Main phase 1");
             botonPonerCarta.setVisible(true);
             botonCambiarPosicionDeCarta.setVisible(true);
@@ -1229,105 +1228,105 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
         List<Monstruo> listaVacia = new ArrayList<> ();
         String entrada = "";
         for(int i=0; i<5; i++){
-            if(duelo.getMagicasYTrampasEnCampoAtacante()[i] != null && duelo.getMagicasYTrampasEnCampoAtacante()[i] instanceof Magia){
-                Magia mg = (Magia) duelo.getMagicasYTrampasEnCampoAtacante()[i];
+            if(controlador.getDuelo().getMagicasYTrampasEnCampoAtacante()[i] != null && controlador.getDuelo().getMagicasYTrampasEnCampoAtacante()[i] instanceof Magia){
+                Magia mg = (Magia) controlador.getDuelo().getMagicasYTrampasEnCampoAtacante()[i];
                 switch(mg.getTipoHabilidadEspecialMagia()){
                     case MONSTRUO_RENACIDO:
                         imprimirManoYCementerioAtacanteYCementerioDefensor();
                         entrada = javax.swing.JOptionPane.showInputDialog(this, "Escriba el nombre exacto del monstruo que quiere devolver del cementerio", "Monstruo renacido",javax.swing.JOptionPane.QUESTION_MESSAGE);
-                        mg.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, entrada, "", "", listaVacia);
+                        mg.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, entrada, "", "", listaVacia);
                         imprimirCampo();
                         imprimirManoYCementerioAtacante();
                         break;
                     case AGUJERO_NEGRO:
-                        mg.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
+                        mg.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
                         imprimirCampo();
                         break;
                     case TIFON_DEL_ESPACIO_MISTICO: 
                         entrada = javax.swing.JOptionPane.showInputDialog(this, "Escriba el nombre exacto de la carta mágica o trampa de su oponente que quiere destruir", "Tifón del espacio místico",javax.swing.JOptionPane.QUESTION_MESSAGE);
-                        mg.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, entrada, "", "", listaVacia);
+                        mg.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, entrada, "", "", listaVacia);
                         imprimirCampo();
                         break;
                     case ESPADAS_DE_LA_LUZ_REVELADORA:
-                        mg.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
+                        mg.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
                         imprimirCampo();
                         break;
                     case OLLA_DE_LA_CODICIA:
-                        imprimirMazo(duelo.getDefensor());
-                        mg.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
+                        imprimirMazo(controlador.getDuelo().getDefensor());
+                        mg.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
                         imprimirCampo();
                         imprimirManoYCementerioAtacante();
                         break;
                     case ENTIERRO_INSENSATO:
-                        imprimirMazo(duelo.getDefensor());
+                        imprimirMazo(controlador.getDuelo().getDefensor());
                         entrada = javax.swing.JOptionPane.showInputDialog(this, "Escriba el nombre exacto de la carta de su mazo que quiere enviar al cementerio", "Entierro insensato",javax.swing.JOptionPane.QUESTION_MESSAGE);
-                        mg.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, entrada, "", "", listaVacia);
+                        mg.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, entrada, "", "", listaVacia);
                         imprimirCampo();
                         imprimirManoYCementerioAtacante();
                         break;
                     case RAIGEKI:
-                        mg.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
+                        mg.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
                         imprimirCampo();
                         break;
                     case MIL_CUCHILLOS:
-                        if(duelo.isAtacanteTIeneMagoOscuro()){
+                        if(controlador.getDuelo().isAtacanteTIeneMagoOscuro()){
                             entrada = javax.swing.JOptionPane.showInputDialog(this, "Escriba el nombre exacto del monstruo rival que quiere destruir", "Mil cuchillos",javax.swing.JOptionPane.QUESTION_MESSAGE);
-                            mg.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, entrada, "", "", listaVacia);
+                            mg.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, entrada, "", "", listaVacia);
                             imprimirCampo();
                             break;
                         }
                     case UNIDAD:
                         if(mg.getTurnosActiva() == (byte) 0){
                             entrada = javax.swing.JOptionPane.showInputDialog(this, "Escriba el nombre exacto del monstruo cuya defensa quiere aumentar", "Unidad",javax.swing.JOptionPane.QUESTION_MESSAGE);
-                            mg.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, entrada, "", "", listaVacia);
+                            mg.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, entrada, "", "", listaVacia);
                             imprimirCampo();
                             break;
                         }
                         else if(mg.getTurnosActiva() == (byte) 1){
-                            mg.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
+                            mg.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
                             imprimirCampo();
                             break;
                         }
                     case POLIMERIZACION:
                         byte numeroDeMonstruosAFusionar = 0;
                         List<Monstruo> arregloDeMonstruosParaFusion = new ArrayList<> ();
-                        if(!duelo.isMonstruosAtacantesVacio()){
+                        if(!controlador.getDuelo().isMonstruosAtacantesVacio()){
                             do{
                                 entrada = javax.swing.JOptionPane.showInputDialog(this, "Escriba el número de monstruos que quiere fusionar", "Polimerización",javax.swing.JOptionPane.QUESTION_MESSAGE);
                                 numeroDeMonstruosAFusionar = Byte.parseByte(entrada);
-                            } while(numeroDeMonstruosAFusionar > duelo.getCuantosMonstruosTieneAtacante() || numeroDeMonstruosAFusionar < 0);
+                            } while(numeroDeMonstruosAFusionar > controlador.getDuelo().getCuantosMonstruosTieneAtacante() || numeroDeMonstruosAFusionar < 0);
                         }
                         for(int j=0; j<numeroDeMonstruosAFusionar; j++){
                             entrada = javax.swing.JOptionPane.showInputDialog(this, "Escriba exactamente el nombre del monstruo " + j + " a fusionar: ", "Polimerización",javax.swing.JOptionPane.QUESTION_MESSAGE);
-                            for(int k=duelo.getAtacante().getMano().size()-1; k>=0; k--){
-                                if(duelo.getAtacante().getMano().get(k) instanceof Monstruo && duelo.getAtacante().getMano().get(k).getNombre().equals(entrada)){
-                                    arregloDeMonstruosParaFusion.add((Monstruo) duelo.getAtacante().getMano().remove(k));
+                            for(int k=controlador.getDuelo().getAtacante().getMano().size()-1; k>=0; k--){
+                                if(controlador.getDuelo().getAtacante().getMano().get(k) instanceof Monstruo && controlador.getDuelo().getAtacante().getMano().get(k).getNombre().equals(entrada)){
+                                    arregloDeMonstruosParaFusion.add((Monstruo) controlador.getDuelo().getAtacante().getMano().remove(k));
                                     break;
                                 }
                             }
                             for(int k=0; k<5; k++){
-                                if(duelo.getMonstruosEnCampoAtacante()[k] != null && duelo.getMonstruosEnCampoAtacante()[k].getNombre().equals(entrada)){
-                                    arregloDeMonstruosParaFusion.add(duelo.getMonstruosEnCampoAtacante()[k]);
-                                    duelo.getMonstruosEnCampoAtacante()[k] = null;
+                                if(controlador.getDuelo().getMonstruosEnCampoAtacante()[k] != null && controlador.getDuelo().getMonstruosEnCampoAtacante()[k].getNombre().equals(entrada)){
+                                    arregloDeMonstruosParaFusion.add(controlador.getDuelo().getMonstruosEnCampoAtacante()[k]);
+                                    controlador.getDuelo().getMonstruosEnCampoAtacante()[k] = null;
                                     break;
                                 }
                             }
                         }
-                        mg.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, "", "", "", arregloDeMonstruosParaFusion);
+                        mg.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, "", "", "", arregloDeMonstruosParaFusion);
                         imprimirCampo();
                         break;
                 }
             }
         }
         for(int i=0; i<5; i++){
-            if(duelo.getMonstruosEnCampoAtacante()[i] != null && duelo.getMonstruosEnCampoAtacante()[i].isPuedeAtacar() && duelo.getMonstruosEnCampoAtacante()[i].isEnPosicionAtaque() &&!duelo.isMonstruosDefensoresVacio()){
+            if(controlador.getDuelo().getMonstruosEnCampoAtacante()[i] != null && controlador.getDuelo().getMonstruosEnCampoAtacante()[i].isPuedeAtacar() && controlador.getDuelo().getMonstruosEnCampoAtacante()[i].isEnPosicionAtaque() &&!controlador.getDuelo().isMonstruosDefensoresVacio()){
                 entrada = javax.swing.JOptionPane.showInputDialog(this, "Su monstruo " + i + " va a atacar, ingrese el indice del monstruo enemigo en campo que atacará o escriba 6 para no atacar", "Ataque",javax.swing.JOptionPane.QUESTION_MESSAGE);
                 try{
                     byte indiceMonstruoAAtacar = Byte.parseByte(entrada);
                     if(indiceMonstruoAAtacar == 6){
                         continue;
                     }
-                    duelo.getMonstruosEnCampoAtacante()[i].jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, indiceMonstruoAAtacar, "", "", "", listaVacia);
+                    controlador.getDuelo().getMonstruosEnCampoAtacante()[i].jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, indiceMonstruoAAtacar, "", "", "", listaVacia);
                     imprimirCampo();
                 }
                 catch(NumberFormatException e){
@@ -1341,8 +1340,8 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
                 ejecutarFuerzaDeEspejo();
                 imprimirCampo();
             }
-            else if(duelo.getMonstruosEnCampoAtacante()[i] != null && duelo.getMonstruosEnCampoAtacante()[i].isPuedeAtacar() && duelo.getMonstruosEnCampoAtacante()[i].isEnPosicionAtaque() && duelo.isMonstruosDefensoresVacio()){
-                duelo.getMonstruosEnCampoAtacante()[i].jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
+            else if(controlador.getDuelo().getMonstruosEnCampoAtacante()[i] != null && controlador.getDuelo().getMonstruosEnCampoAtacante()[i].isPuedeAtacar() && controlador.getDuelo().getMonstruosEnCampoAtacante()[i].isEnPosicionAtaque() && controlador.getDuelo().isMonstruosDefensoresVacio()){
+                controlador.getDuelo().getMonstruosEnCampoAtacante()[i].jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
                 imprimirCampo();
                 ejecutarFuerzaDeEspejo();
                 imprimirCampo();
@@ -1380,8 +1379,8 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
 
     //AQUÍ EMPIEZAN LOS METODOS AÑADIDOS PARA REL FLUJO DEL JUEGO
 
-    private void setDuelo(DueloLogica duelo){
-        this.duelo = duelo;
+    private void setControlador(DueloControlador duelo){
+        this.controlador = duelo;
     }
     private void imprimirMonstruo(JLabel etiqueta, Monstruo[] monstruos, byte i) {
         if (monstruos[i].isVisible()) {
@@ -1421,31 +1420,31 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
         JLabel[] etiquetasMonstruosJugador2 = {monstruo0Jugador2EnCampo, monstruo1Jugador2EnCampo, monstruo2Jugador2EnCampo, monstruo3Jugador2EnCampo, monstruo4Jugador2EnCampo};
         JLabel[] etiquetasMagiasYTrampasJugador1 = {magiaOTrampa0Jugador1EnCampo, magiaOTrampa1Jugador1EnCampo, magiaOTrampa2Jugador1EnCampo, magiaOTrampa3Jugador1EnCampo, magiaOTrampa4Jugador1EnCampo};
         JLabel[] etiquetasMagiasYTrampasJugador2 = {magiaOTrampa0Jugador2EnCampo, magiaOTrampa1Jugador2EnCampo, magiaOTrampa2Jugador2EnCampo, magiaOTrampa3Jugador2EnCampo, magiaOTrampa4Jugador2EnCampo};
-        etiquetaJugador1EnCampo.setText("<html><div style='width:300px; text-align:left;'>" + duelo.getCampo().getJugador1().getNombre() + "<font face='Dialog'>: ❤ </font>"  + duelo.getCampo().getJugador1().getLP() + " LP" + "</div></html>");
-        etiquetaJugador2EnCampo.setText("<html><div style='width:300px; text-align:left;'>" + duelo.getCampo().getJugador2().getNombre() + "<font face='Dialog'>: ❤ </font>" + duelo.getCampo().getJugador2().getLP() + " LP" + "</div></html>");
-        etiquetaTurnoEnCurso.setText("<html><div style='width:120px; text-align:center;'>" + "Turno: " + duelo.getTurno() + "</div></html>");
-        etiquetaFaseEnCurso.setText("<html><div style='width:120px; text-align:center;'>" + duelo.getFase() + "</div></html>");
+        etiquetaJugador1EnCampo.setText("<html><div style='width:300px; text-align:left;'>" + controlador.getDuelo().getCampo().getJugador1().getNombre() + "<font face='Dialog'>: ❤ </font>"  + controlador.getDuelo().getCampo().getJugador1().getLP() + " LP" + "</div></html>");
+        etiquetaJugador2EnCampo.setText("<html><div style='width:300px; text-align:left;'>" + controlador.getDuelo().getCampo().getJugador2().getNombre() + "<font face='Dialog'>: ❤ </font>" + controlador.getDuelo().getCampo().getJugador2().getLP() + " LP" + "</div></html>");
+        etiquetaTurnoEnCurso.setText("<html><div style='width:120px; text-align:center;'>" + "Turno: " + controlador.getDuelo().getTurno() + "</div></html>");
+        etiquetaFaseEnCurso.setText("<html><div style='width:120px; text-align:center;'>" + controlador.getDuelo().getFase() + "</div></html>");
         for(int i=0; i<5; i++){
-            if(duelo.getCampo().getMonstruosEnCampoJugador1()[i] != null){
-                imprimirMonstruo(etiquetasMonstruosJugador1[i], duelo.getCampo().getMonstruosEnCampoJugador1(),(byte) i);
+            if(controlador.getDuelo().getCampo().getMonstruosEnCampoJugador1()[i] != null){
+                imprimirMonstruo(etiquetasMonstruosJugador1[i], controlador.getDuelo().getCampo().getMonstruosEnCampoJugador1(),(byte) i);
             }
             else{
                 etiquetasMonstruosJugador1[i].setText("Posición vacía");
             }
-            if(duelo.getCampo().getMagicasYTrampasEnCampoJugador1()[i] != null){
-                imprimirMagiasYTrampas(etiquetasMagiasYTrampasJugador1[i], duelo.getCampo().getMagicasYTrampasEnCampoJugador1(), (byte) i);
+            if(controlador.getDuelo().getCampo().getMagicasYTrampasEnCampoJugador1()[i] != null){
+                imprimirMagiasYTrampas(etiquetasMagiasYTrampasJugador1[i], controlador.getDuelo().getCampo().getMagicasYTrampasEnCampoJugador1(), (byte) i);
             }
             else{
                 etiquetasMagiasYTrampasJugador1[i].setText("Posición vacía");
             }
-            if(duelo.getCampo().getMonstruosEnCampoJugador2()[i] != null){
-                imprimirMonstruo(etiquetasMonstruosJugador2[i], duelo.getCampo().getMonstruosEnCampoJugador2(), (byte) i);
+            if(controlador.getDuelo().getCampo().getMonstruosEnCampoJugador2()[i] != null){
+                imprimirMonstruo(etiquetasMonstruosJugador2[i], controlador.getDuelo().getCampo().getMonstruosEnCampoJugador2(), (byte) i);
             }
             else{
                 etiquetasMonstruosJugador2[i].setText("Posición vacía");
             }
-            if(duelo.getCampo().getMagicasYTrampasEnCampoJugador2()[i] != null){
-                imprimirMagiasYTrampas(etiquetasMagiasYTrampasJugador2[i], duelo.getCampo().getMagicasYTrampasEnCampoJugador2(), (byte) i);
+            if(controlador.getDuelo().getCampo().getMagicasYTrampasEnCampoJugador2()[i] != null){
+                imprimirMagiasYTrampas(etiquetasMagiasYTrampasJugador2[i], controlador.getDuelo().getCampo().getMagicasYTrampasEnCampoJugador2(), (byte) i);
             }
             else{
                 etiquetasMagiasYTrampasJugador2[i].setText("Posición vacía");
@@ -1521,11 +1520,11 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
         modelo.setRowCount(0);
         byte i = 0;
         List<Carta> cementerio;
-        if(duelo.getTurno() % 2 == 0){
-            cementerio = duelo.getCampo().getCementerioJugador1();
+        if(controlador.getDuelo().getTurno() % 2 == 0){
+            cementerio = controlador.getDuelo().getCampo().getCementerioJugador1();
         }
         else{
-            cementerio = duelo.getCampo().getCementerioJugador2();
+            cementerio = controlador.getDuelo().getCampo().getCementerioJugador2();
         }
         for (Carta carta : cementerio) {
             String tipo = "", nivel = "", ataque = "", defensa = "", descripcion = carta.getCuadroDeTexto();
@@ -1580,11 +1579,11 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
         resetearDialogWindow();
         jDialog1.setTitle("Mano Y Cementerio");
         Jugador atacante;
-        if(duelo.getTurno()%2==0){
-            atacante = duelo.getCampo().getJugador1();
+        if(controlador.getDuelo().getTurno()%2==0){
+            atacante = controlador.getDuelo().getCampo().getJugador1();
         }
         else{
-            atacante = duelo.getCampo().getJugador2();
+            atacante = controlador.getDuelo().getCampo().getJugador2();
         }
         etiquetaMano.setVisible(true);
         etiquetaCementerio.setVisible(true);
@@ -1598,13 +1597,13 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
         resetearDialogWindow();
         jDialog1.setTitle("Mano Y Cementerio");
         Jugador atacante, defensor;
-        if(duelo.getTurno()%2==0){
-            atacante = duelo.getCampo().getJugador1();
-            defensor = duelo.getCampo().getJugador2();
+        if(controlador.getDuelo().getTurno()%2==0){
+            atacante = controlador.getDuelo().getCampo().getJugador1();
+            defensor = controlador.getDuelo().getCampo().getJugador2();
         }
         else{
-            atacante = duelo.getCampo().getJugador2();
-            defensor = duelo.getCampo().getJugador1();
+            atacante = controlador.getDuelo().getCampo().getJugador2();
+            defensor = controlador.getDuelo().getCampo().getJugador1();
         }
         etiquetaMano.setVisible(true);
         etiquetaCementerio.setVisible(true);
@@ -1615,11 +1614,11 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
         DefaultTableModel modelo = (DefaultTableModel) tablaCementerio.getModel();
         byte i = 0;
         List<Carta> cementerio;
-        if(duelo.getTurno() % 2 != 0){
-            cementerio = duelo.getCampo().getCementerioJugador1();
+        if(controlador.getDuelo().getTurno() % 2 != 0){
+            cementerio = controlador.getDuelo().getCampo().getCementerioJugador1();
         }
         else{
-            cementerio = duelo.getCampo().getCementerioJugador2();
+            cementerio = controlador.getDuelo().getCampo().getCementerioJugador2();
         }
         for (Carta carta : cementerio) {
             String tipo = "", nivel = "", ataque = "", defensa = "", descripcion = carta.getCuadroDeTexto();
@@ -1653,12 +1652,12 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
             Jugador jugador1 = new Jugador(nombreJugador1, mazo);
             Jugador jugador2 = new Jugador(nombreJugador2, mazo);
             Campo campo = new Campo(jugador1, jugador2);
-            duelo.setCampo(campo);
+            controlador.getDuelo().setCampo(campo);
         }
     }
     private void preguntarUsarTrampasDeInvocacion(String fase){
         usarTrampas = false;
-        if(duelo.isDefensorTieneTrampaDeInvocacion()){
+        if(controlador.getDuelo().isDefensorTieneTrampaDeInvocacion()){
             if(javax.swing.JOptionPane.showConfirmDialog(this, "Defensor, tiene trampas que puede activar en la "+ fase + ", activar?", "Activar trampa", javax.swing.JOptionPane.YES_NO_OPTION) == 0){
                 usarTrampas = true;
             }
@@ -1669,7 +1668,7 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
     }
     private void preguntarUsarTrampasDeBatalla(){
         usarTrampas = false;
-        if(duelo.isDefensorTieneTrampaDeAtaque()){
+        if(controlador.getDuelo().isDefensorTieneTrampaDeAtaque()){
             if(javax.swing.JOptionPane.showConfirmDialog(this, "Defensor, tiene trampas que puede activar en la Battle Phase, activar?", "Activar trampa", javax.swing.JOptionPane.YES_NO_OPTION) == 0){
                 usarTrampas = true;
             }
@@ -1679,7 +1678,7 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
         }
     }
     private boolean preguntarUsarTrampa(String nombre){
-        if(duelo.isDefensorTieneTrampaDeAtaque()){
+        if(controlador.getDuelo().isDefensorTieneTrampaDeAtaque()){
             if(javax.swing.JOptionPane.showConfirmDialog(this, "Defensor, quiere activar " + nombre + "?", "Activar " + nombre, javax.swing.JOptionPane.YES_NO_OPTION) == 0){
                 return true;
             }
@@ -1693,16 +1692,16 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
         if(usarTrampas){
             List<Monstruo> listaVacia = new ArrayList<> ();
             for(int i=0; i<5; i++){
-                if(duelo.getMagicasYTrampasEnCampoDefensor()[i] instanceof Trampa && duelo.getMagicasYTrampasEnCampoDefensor()[i].getNombre().equals("Cilindro Mágico")){
-                    Trampa t = (Trampa) duelo.getMagicasYTrampasEnCampoDefensor()[i];
+                if(controlador.getDuelo().getMagicasYTrampasEnCampoDefensor()[i] instanceof Trampa && controlador.getDuelo().getMagicasYTrampasEnCampoDefensor()[i].getNombre().equals("Cilindro Mágico")){
+                    Trampa t = (Trampa) controlador.getDuelo().getMagicasYTrampasEnCampoDefensor()[i];
                     if(preguntarUsarTrampa(t.getNombre())){
                         if(t.getTurnosActiva() < 1){
                             String monstruoANegar = javax.swing.JOptionPane.showInputDialog(this, "Escriba el nombre exacto del monstruo cuyo ataque quiere negar", "Cilindro Mágico",javax.swing.JOptionPane.QUESTION_MESSAGE);
                             System.out.println("");
-                            t.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, monstruoANegar, "", "", listaVacia);
+                            t.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, monstruoANegar, "", "", listaVacia);
                         }
                         else if(t.getTurnosActiva() > 0){
-                            t.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
+                            t.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
                         }
                     }
                 }
@@ -1713,10 +1712,10 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
         if(usarTrampas){
             List<Monstruo> listaVacia = new ArrayList<> ();
             for(int i=0; i<5; i++){
-                if(duelo.getMagicasYTrampasEnCampoDefensor()[i] instanceof Trampa && duelo.getMagicasYTrampasEnCampoDefensor()[i].getNombre().equals("Armadura de Sakuretsu")){
-                    Trampa t = (Trampa) duelo.getMagicasYTrampasEnCampoDefensor()[i];
+                if(controlador.getDuelo().getMagicasYTrampasEnCampoDefensor()[i] instanceof Trampa && controlador.getDuelo().getMagicasYTrampasEnCampoDefensor()[i].getNombre().equals("Armadura de Sakuretsu")){
+                    Trampa t = (Trampa) controlador.getDuelo().getMagicasYTrampasEnCampoDefensor()[i];
                     if(preguntarUsarTrampa(t.getNombre())){
-                        t.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, monstruoAEliminar, "", "", "", listaVacia);
+                        t.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, monstruoAEliminar, "", "", "", listaVacia);
                     }
                 }
             }
@@ -1726,10 +1725,10 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
         if(usarTrampas){
             List<Monstruo> listaVacia = new ArrayList<> ();
             for(int i=0; i<5; i++){
-                if(duelo.getMagicasYTrampasEnCampoDefensor()[i] instanceof Trampa && duelo.getMagicasYTrampasEnCampoDefensor()[i].getNombre().equals("Fuerza de Espejo")){
-                    Trampa t = (Trampa) duelo.getMagicasYTrampasEnCampoDefensor()[i];
+                if(controlador.getDuelo().getMagicasYTrampasEnCampoDefensor()[i] instanceof Trampa && controlador.getDuelo().getMagicasYTrampasEnCampoDefensor()[i].getNombre().equals("Fuerza de Espejo")){
+                    Trampa t = (Trampa) controlador.getDuelo().getMagicasYTrampasEnCampoDefensor()[i];
                     if(preguntarUsarTrampa(t.getNombre())){
-                        t.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
+                        t.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
                     }
                 }
             }
@@ -1739,10 +1738,10 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
         if(usarTrampas){
             List<Monstruo> listaVacia = new ArrayList<> ();
             for(int i=0; i<5; i++){
-                if(duelo.getMagicasYTrampasEnCampoDefensor()[i] instanceof Trampa && duelo.getMagicasYTrampasEnCampoDefensor()[i].getNombre().equals("Tributo Torrencial")){
-                    Trampa t = (Trampa) duelo.getMagicasYTrampasEnCampoDefensor()[i];
+                if(controlador.getDuelo().getMagicasYTrampasEnCampoDefensor()[i] instanceof Trampa && controlador.getDuelo().getMagicasYTrampasEnCampoDefensor()[i].getNombre().equals("Tributo Torrencial")){
+                    Trampa t = (Trampa) controlador.getDuelo().getMagicasYTrampasEnCampoDefensor()[i];
                     if(preguntarUsarTrampa(t.getNombre())){
-                        t.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
+                        t.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
                     }
                 }
             }
@@ -1752,25 +1751,25 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
         if(usarTrampas){
             List<Monstruo> listaVacia = new ArrayList<> ();
             for(int i=0; i<5; i++){
-                if(duelo.getMagicasYTrampasEnCampoDefensor()[i] instanceof Trampa){
-                    Trampa t = (Trampa) duelo.getMagicasYTrampasEnCampoDefensor()[i];
+                if(controlador.getDuelo().getMagicasYTrampasEnCampoDefensor()[i] instanceof Trampa){
+                    Trampa t = (Trampa) controlador.getDuelo().getMagicasYTrampasEnCampoDefensor()[i];
                     switch(t.getTipoHabilidadEspecialTrampa()){
                         case LLAMADA_DE_LOS_CONDENADOS:
                             if(!t.isActivada()){
                                 if(preguntarUsarTrampa(t.getNombre())){
                                     String monstruoARevivir = javax.swing.JOptionPane.showInputDialog(this, "Escriba el nombre exacto del monstruo de su cementerio que quiere revivir", "Llamada de los Condenados",javax.swing.JOptionPane.QUESTION_MESSAGE);
-                                    t.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, monstruoARevivir, "", "", listaVacia);
+                                    t.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, monstruoARevivir, "", "", listaVacia);
                                 }
                             }
                             break;
                         case SOMBREROS_MAGICOS:
                             if(!t.isActivada()){
                                 if(preguntarUsarTrampa(t.getNombre())){
-                                    imprimirMazo(duelo.getDefensor());
+                                    imprimirMazo(controlador.getDuelo().getDefensor());
                                     String nombreMonstruoAOcultar = javax.swing.JOptionPane.showInputDialog(this, "Escriba el nombre exacto del monstruo que quiere ocultar", "Sombreros Mágicos",javax.swing.JOptionPane.QUESTION_MESSAGE);
                                     String nombreMagica1AOcultar = javax.swing.JOptionPane.showInputDialog(this, "Escriba el nombre exacto de la carta mágica 1 que servirá de sombrero", "Sombreros Mágicos",javax.swing.JOptionPane.QUESTION_MESSAGE);
                                     String nombreMagica2AOcultar =  javax.swing.JOptionPane.showInputDialog(this, "Escriba el nombre exacto de la carta mágica 2 que servirá de sombrero", "Sombreros Mágicos",javax.swing.JOptionPane.QUESTION_MESSAGE);
-                                    t.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, nombreMonstruoAOcultar, nombreMagica1AOcultar, nombreMagica2AOcultar, listaVacia);
+                                    t.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, nombreMonstruoAOcultar, nombreMagica1AOcultar, nombreMagica2AOcultar, listaVacia);
                                 }
                                 imprimirManoYCementerioAtacante();
                             }
@@ -1778,14 +1777,14 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
                         case WABOKU:
                             if(!t.isActivada()){
                                 if(preguntarUsarTrampa(t.getNombre())){
-                                    t.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
+                                    t.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
                                 }
                             }
                             break;
                         case MURO_DE_ESPEJO:
                             if(!t.isActivada()){
                                 if(preguntarUsarTrampa(t.getNombre())){
-                                    t.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
+                                    t.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
                                 }
                             }
                             else if(t.getTurnosActiva() > 0){
@@ -1796,7 +1795,7 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
                                 else{
                                     opcionMuroDeEspejo = 2;
                                 }
-                                t.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, opcionMuroDeEspejo, "", "", "", listaVacia);
+                                t.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, opcionMuroDeEspejo, "", "", "", listaVacia);
                             }
                             break;
                         case REPRESION:
@@ -1804,16 +1803,16 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
                                 if(preguntarUsarTrampa(t.getNombre())){
                                     String monstruoARobarPorTurno = javax.swing.JOptionPane.showInputDialog(this, "Escriba el nombre exacto del monstruo que robará por un turno", "Represión",javax.swing.JOptionPane.QUESTION_MESSAGE);
                                     t.setMonstruoARobarPorUnTurno(monstruoARobarPorTurno);
-                                    t.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, monstruoARobarPorTurno, "", "", listaVacia);
+                                    t.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, monstruoARobarPorTurno, "", "", listaVacia);
                                 }
                             }
                             else if(t.getTurnosActiva() > 0){
-                                t.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
+                                t.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
                             }
                             break;
                         case DRENAJE_DE_HABILIDAD:
                             if(!t.isActivada()){
-                                t.jugar(duelo.getCampo(), duelo.getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
+                                t.jugar(controlador.getDuelo().getCampo(), controlador.getDuelo().getTurno(), (byte) i, (byte) 0, "", "", "", listaVacia);
                             }
                             break;
                         case null, default:
@@ -1937,8 +1936,8 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
     private javax.swing.JTable tablaMano;
 
     @Override
-    public void actualizarDuelo(DueloLogica duelo) {
-        this.duelo = duelo;
+    public void actualizarControlador(DueloControlador duelo) {
+        this.controlador = duelo;
     }
 
     @Override
@@ -1975,7 +1974,7 @@ public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
 
     @Override
     public void limpiar() {
-        duelo = null;
+        controlador = null;
         resetearBotones();
     }
 

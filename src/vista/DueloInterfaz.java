@@ -1,10 +1,10 @@
 package vista;
 
-import modelo.DueloLogica;
-import modelo.Jugador;
+import modelo.*;
+import controlador.*;
 
 public interface DueloInterfaz {
-    void actualizarDuelo(DueloLogica duelo);
+    void actualizarControlador(DueloControlador controlador);
     void actualizarCampo();
     void mostrarMensaje(String titulo, String mensaje);
     void mostrarError(String titulo, String mensaje);

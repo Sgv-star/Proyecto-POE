@@ -1,13 +1,16 @@
+package vista;
 
 import java.util.*;
+import modelo.*;
+import controlador.*;
 
-public class Duelo {
+public class DueloTerminal implements DueloInterfaz {
     
     Campo campo;
     byte turno;
     String fase;
 
-    public Duelo() {
+    public DueloTerminal() {
 
     }
 
@@ -31,7 +34,7 @@ public class Duelo {
         this.fase = fase;
     }
 
-    public void imprimirCampo(){
+    public void mostrarPanelJuego(){
         System.out.println("_____________________________________________________________________________");
         System.out.println("---------------------------Estado Actual Del Campo---------------------------");
         System.out.println("");
@@ -529,7 +532,7 @@ public class Duelo {
                     }
                     this.imprimirMano();
                 } while(opcionMainPhase1 != 3);
-                this.imprimirCampo();
+                this.mostrarPanelJuego();
                 if(defensorTieneTrampaDeInvocacion && activarTrampa == 1){
                     for(int i=0; i<5; i++){
                         if(magiasYTrampasDefensoras[i] instanceof Trampa){
@@ -891,7 +894,7 @@ public class Duelo {
                                 }
                             }
                         }
-                        this.imprimirCampo();
+                        this.mostrarPanelJuego();
                     }
                     if(atacante.getLP() == 0 || atacante.getLP() < 0){
                         hayUnGanador = true;
@@ -1077,7 +1080,7 @@ public class Duelo {
                             }
                             this.imprimirMano();
                         } while(opcionMainPhase1 != 3);
-                        this.imprimirCampo();
+                        this.mostrarPanelJuego();
                         if(defensorTieneTrampaDeInvocacion){
                             for(int i=0; i<5; i++){
                                 if(magiasYTrampasDefensoras[i] instanceof Trampa){
@@ -1197,7 +1200,7 @@ public class Duelo {
                     } while(opcionMainPhase1 != 3);
                 }
                 if(turno != 0){
-                    this.imprimirCampo();
+                    this.mostrarPanelJuego();
                 }
 
                 //End Phase (Fase Final)
@@ -1244,6 +1247,59 @@ public class Duelo {
             System.out.println("FELICIDADES, " + defensor.getNombre() + ", HAS GANADO!!!");
             scaner.close();
         }
+    }
+
+    @Override
+    public void actualizarDuelo(DueloLogica duelo) {
+        this.campo = duelo.getCampo();
+        this.turno = duelo.getTurno();
+        this.fase = duelo.getFase();
+    }
+
+    @Override
+    public void actualizarCampo() {
+        mostrarPanelJuego();
+    }
+
+    @Override
+    public void mostrarMensaje(String titulo, String mensaje) {
+        System.out.println("[" + titulo + "] " + mensaje);
+    }
+
+    @Override
+    public void mostrarError(String titulo, String mensaje) {
+        System.out.println("[ERROR " + titulo + "] " + mensaje);
+    }
+
+    @Override
+    public String pedirEntrada(String titulo, String mensaje) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("[" + titulo + "] " + mensaje);
+        System.out.print(">> ");
+        return scanner.nextLine();
+    }
+
+    @Override
+    public boolean pedirConfirmacion(String titulo, String mensaje) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("[" + titulo + "] " + mensaje + " (S/N)");
+        System.out.print(">> ");
+        String respuesta = scanner.nextLine();
+        return respuesta.equalsIgnoreCase("S");
+    }
+
+    @Override
+    public void mostrarGameOver(Jugador ganador) {
+        System.out.println("\n===============================================");
+        System.out.println("¡¡¡ " + ganador.getNombre() + " HA GANADO !!!");
+        System.out.println("===============================================\n");
+    }
+
+    @Override
+    public void limpiar() {
+        campo = null;
+        turno = 0;
+        fase = "";
     }
 
 }

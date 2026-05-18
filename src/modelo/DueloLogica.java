@@ -1,3 +1,4 @@
+package modelo;
 
 import java.util.*;
 
@@ -75,12 +76,11 @@ public class DueloLogica {
     protected void setTurno(byte turno) {
         this.turno = turno;
     }
-    protected void setFase(String fase){
+    public void setFase(String fase){
         this.fase = fase;
     }
 
-    //Seteo inicial de objetos
-    protected void setearElementosInicialesDePartida(String nombreJugador1, String nombreJugador2){
+    public void setearElementosInicialesDePartida(String nombreJugador1, String nombreJugador2){
         Mazo mazo = new Mazo();
         setTurno((byte) 0);
         setFase("Draw Phase");
@@ -204,8 +204,6 @@ public class DueloLogica {
         }
         return numeroDeMonstruosEnPosesion;
     }
-
-    //Fases y turnos
     protected boolean robarCarta(){
         if(turno != 0){
             if(getAtacante().getMazo().size() > 0){
@@ -233,7 +231,7 @@ public class DueloLogica {
             }
         }
     }
-    protected void siguienteFase(){
+    public void siguienteFase(){
         if(getFase().equals("Draw Phase")){
             setFase("Main Phase 1");
         }
@@ -251,7 +249,7 @@ public class DueloLogica {
             terminarTurno();
         }
     }
-    protected void saltarFase(){
+    public void saltarFase(){
         if(getFase().equals("Main Phase 1")){
             setFase("Battle Phase");
         }
@@ -262,7 +260,7 @@ public class DueloLogica {
             setFase("End Phase");
         }
     }
-    protected void terminarTurno(){
+    public void terminarTurno(){
         for(Monstruo m : campo.getMonstruosEnCampoJugador1()){
             if(m != null){
                 m.setPuedeAtacar(true);
@@ -299,7 +297,7 @@ public class DueloLogica {
         }
         return false;
     }
-    protected boolean colocarMonstruo(byte indiceMano, byte indiceSacrificio, boolean enPosicionAtaque){
+    public boolean colocarMonstruo(byte indiceMano, byte indiceSacrificio, boolean enPosicionAtaque){
         if(turno % 2 == 0){
             if(campo.getJugador1().getMano().get(indiceMano) instanceof Monstruo){
                 Monstruo monstruo = (Monstruo) campo.getJugador1().getMano().get(indiceMano);
@@ -345,7 +343,7 @@ public class DueloLogica {
             return false;
         }
     }
-    protected boolean colocarMagia(byte indiceMano, boolean usar){
+    public boolean colocarMagia(byte indiceMano, boolean usar){
         if(turno % 2 == 0){
             if(campo.getJugador1().getMano().get(indiceMano) instanceof Magia){
                 for(int i=0; i<5; i++){
@@ -383,7 +381,7 @@ public class DueloLogica {
             return false;
         }
     }
-    protected boolean colocarTrampa(byte indiceMano){
+    public boolean colocarTrampa(byte indiceMano){
         if(turno % 2 == 0){
             if(campo.getJugador1().getMano().get(indiceMano) instanceof Trampa){
                 for(int i=0; i<5; i++){
@@ -409,8 +407,7 @@ public class DueloLogica {
             return false;
         }
     }
-    //Cambiar Posiciones
-    protected boolean cambiarPosicionDeMonstruo(byte indiceCampo){
+    public boolean cambiarPosicionDeMonstruo(byte indiceCampo){
         if(turno % 2 == 0){
             if(!campo.getMonstruosEnCampoJugador1()[indiceCampo].isYaCambioPosicionEnEsteTurno()){
                 campo.getMonstruosEnCampoJugador1()[indiceCampo].setEnPosicionAtaque(!campo.getMonstruosEnCampoJugador1()[indiceCampo].isEnPosicionAtaque());
@@ -430,7 +427,7 @@ public class DueloLogica {
             }
         }
     }
-    protected boolean cambiarPosicionDeMagia(byte indiceCampo){
+    public boolean cambiarPosicionDeMagia(byte indiceCampo){
         if(turno % 2 == 0){
             if(campo.getMagicasYTrampasEnCampoJugador1()[indiceCampo] instanceof Magia && !campo.getMagicasYTrampasEnCampoJugador1()[indiceCampo].isVisible()){
                 campo.getMagicasYTrampasEnCampoJugador1()[indiceCampo].setVisible(true);
@@ -450,8 +447,7 @@ public class DueloLogica {
             }
         }
     }
-    //Fase de batalla
-    protected boolean atacar(byte indiceAtacante, byte indiceDefensor){
+    public boolean atacar(byte indiceAtacante, byte indiceDefensor){
         List<Monstruo> listaVacia = new ArrayList<> ();
         if(turno % 2 == 0){
             if(campo.getMonstruosEnCampoJugador1()[indiceAtacante] != null && campo.getMonstruosEnCampoJugador1()[indiceAtacante].isEnPosicionAtaque() && campo.getMonstruosEnCampoJugador1()[indiceAtacante].isPuedeAtacar()){
@@ -472,7 +468,6 @@ public class DueloLogica {
             }
         }
     }
-    //Activar efectos
     protected void activarMagia(byte cartaAActivar, byte byteAux, String stringAux, String stringAux2, String stringAux3, List<Monstruo> lista){
         if(turno % 2 == 0){
             if(campo.getMagicasYTrampasEnCampoJugador1()[cartaAActivar] != null && campo.getMagicasYTrampasEnCampoJugador1()[cartaAActivar] instanceof Magia && campo.getMagicasYTrampasEnCampoJugador1()[cartaAActivar].isVisible()){
@@ -498,8 +493,7 @@ public class DueloLogica {
             }
         }
     }
-    //Descartar cartas al final del turno
-    protected void descartarCarta(byte indiceMano){
+    public void descartarCarta(byte indiceMano){
         if(turno % 2 == 0){
             campo.getCementerioJugador1().add(campo.getJugador1().getMano().remove(indiceMano));
         }
@@ -507,7 +501,7 @@ public class DueloLogica {
             campo.getCementerioJugador2().add(campo.getJugador2().getMano().remove(indiceMano));
         }
     }
-    protected boolean muchasCartasEnMano(){
+    public boolean muchasCartasEnMano(){
         if(turno % 2 == 0){
             if(campo.getJugador1().getMano().size() > 6){
                 return true;
@@ -525,8 +519,7 @@ public class DueloLogica {
             }
         }
     }
-    //Condiciones para terminar partida
-    protected boolean hayUnGanador(){
+    public boolean hayUnGanador(){
         if(campo.getJugador1().getLP() == 0 || campo.getJugador1().getMazo().size() == 0){
             return true;
         }
@@ -537,7 +530,7 @@ public class DueloLogica {
             return false;
         }
     }
-    protected Jugador getGanador(){
+    public Jugador getGanador(){
         if(campo.getJugador1().getLP() == 0 || campo.getJugador1().getMazo().size() == 0){
             return campo.getJugador2();
         }

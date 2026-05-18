@@ -6,24 +6,30 @@ package vista;
  */
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.awt.CardLayout;
 import java.util.ArrayList;
 import java.util.List;
+import modelo.*;
+import controlador.*;
 
 /**
  *
  * @author Usuario
  */
-public class NewJFrame extends javax.swing.JFrame { 
+public class NewJFrame extends javax.swing.JFrame implements DueloInterfaz {
     private DueloLogica duelo;
     private boolean usarTrampas;
+    private DueloControlador controlador;
 
     /**
      * Creates new form NewJFrame
      */
     public NewJFrame() {
         initComponents();
+        this.controlador = new DueloControlador(this);
+        this.usarTrampas = true;
     }
 
     /**
@@ -853,18 +859,15 @@ public class NewJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonIniciarActionPerformed
-        duelo = new DueloLogica();
-        setDuelo(duelo);
         setearNombresDeJugadores();
-        duelo.setFase("Main Phase 1");
-        duelo.setTurno((byte) 0);
+        String nombreJugador1 = ingresoNombreJugador1.getText();
+        String nombreJugador2 = ingresoNombreJugador2.getText();
+        controlador.iniciarJuego(nombreJugador1, nombreJugador2);
         resetearBotones();
         botonPonerCarta.setVisible(true);
         botonCambiarPosicionDeCarta.setVisible(true);
         botonTerminarMainPhase1.setVisible(true);
         botonSaltarMainPhase1.setVisible(true);
-        ((CardLayout) contenedorDeCards.getLayout()).show(contenedorDeCards, "ponerCarta");
-        imprimirCampo();
     }//GEN-LAST:event_botonIniciarActionPerformed
 
     private void botonPonerCartaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPonerCartaActionPerformed
@@ -887,336 +890,23 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_botonPonerMonstruoActionPerformed
 
     private void botonPonerTrampaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPonerTrampaActionPerformed
-        resetearBotones();
-        String entrada = javax.swing.JOptionPane.showInputDialog(
-        this, "Ingrese el índice en su mano de la trampa a colocar:", "Trampa",javax.swing.JOptionPane.QUESTION_MESSAGE);
-        if (entrada == null || entrada.trim().isEmpty()) {
-            resetearBotones();
-            botonPonerCarta.setVisible(true);
-            botonCambiarPosicionDeCarta.setVisible(true);
-            if(duelo.getFase() == "Main Phase 1"){
-            botonTerminarMainPhase1.setVisible(true);
-            }
-            else{
-                botonTerminarMainPhase2.setVisible(true);
-            }
-            return;
-        }
-        try{
-            byte indiceCartaEnMano = Byte.parseByte(entrada.trim());
-            if(duelo.colocarTrampa(indiceCartaEnMano)){
-                imprimirCampo();
-            }
-            else{
-                resetearBotones();
-                botonPonerCarta.setVisible(true);
-                botonCambiarPosicionDeCarta.setVisible(true);
-                if(duelo.getFase() == "Main Phase 1"){
-                botonTerminarMainPhase1.setVisible(true);
-                }
-                else{
-                    botonTerminarMainPhase2.setVisible(true);
-                }
-                return;
-            }
-        }
-        catch(NumberFormatException e){
-            resetearBotones();
-            botonPonerCarta.setVisible(true);
-            botonCambiarPosicionDeCarta.setVisible(true);
-            if(duelo.getFase() == "Main Phase 1"){
-            botonTerminarMainPhase1.setVisible(true);
-            }
-            else{
-                botonTerminarMainPhase2.setVisible(true);
-            }
-            return;
-        }
-        botonPonerCarta.setVisible(true);
-        botonCambiarPosicionDeCarta.setVisible(true);
-        if(duelo.getFase() == "Main Phase 1"){
-        botonTerminarMainPhase1.setVisible(true);
-        }
-        else{
-            botonTerminarMainPhase2.setVisible(true);
-        }
+        controlador.manejarColocarTrampa();
     }//GEN-LAST:event_botonPonerTrampaActionPerformed
 
     private void botonPonerMonstruoEnAtaqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPonerMonstruoEnAtaqueActionPerformed
-        resetearBotones();
-        String entrada = javax.swing.JOptionPane.showInputDialog(
-        this, "Ingrese el índice en su mano del monstruo a colocar:", "Monstruo",javax.swing.JOptionPane.QUESTION_MESSAGE);
-        if (entrada == null || entrada.trim().isEmpty()) {
-            resetearBotones();
-            botonPonerCarta.setVisible(true);
-            botonCambiarPosicionDeCarta.setVisible(true);
-            if(duelo.getFase() == "Main Phase 1"){
-            botonTerminarMainPhase1.setVisible(true);
-            }
-            else{
-                botonTerminarMainPhase2.setVisible(true);
-            }
-            return;
-        }
-        try{;
-            byte indiceCartaEnMano = Byte.parseByte(entrada.trim());
-            Monstruo m  = (Monstruo) duelo.getAtacante().getMano().get(indiceCartaEnMano);
-            if(m.getNivel() <= 4){
-                if(duelo.colocarMonstruo(indiceCartaEnMano, (byte) 0, true)){
-                    imprimirCampo();
-                    ejecutarTributoTorrencial();
-                    imprimirCampo();
-                }
-                else{
-                    resetearBotones();
-                    botonPonerCarta.setVisible(true);
-                    botonCambiarPosicionDeCarta.setVisible(true);
-                    if(duelo.getFase() == "Main Phase 1"){
-                    botonTerminarMainPhase1.setVisible(true);
-                    }
-                    else{
-                        botonTerminarMainPhase2.setVisible(true);
-                    }
-                    return;
-                }
-            }
-            else{
-                entrada = javax.swing.JOptionPane.showInputDialog(this, "Ingrese el índice en campo del monstruo a sacrificar", "Sacrificio",javax.swing.JOptionPane.QUESTION_MESSAGE);
-                byte indiceCartaEnManoSacrificio = Byte.parseByte(entrada);
-                try{
-                    duelo.colocarMonstruo(indiceCartaEnMano, indiceCartaEnManoSacrificio, true);
-                    imprimirCampo();
-                    ejecutarTributoTorrencial();
-                    imprimirCampo();
-                }
-                catch(NumberFormatException e){
-                    resetearBotones();
-                    botonPonerCarta.setVisible(true);
-                    botonCambiarPosicionDeCarta.setVisible(true);
-                    if(duelo.getFase() == "Main Phase 1"){
-                    botonTerminarMainPhase1.setVisible(true);
-                    }
-                    else{
-                        botonTerminarMainPhase2.setVisible(true);
-                    }
-                    return;
-                }
-            }
-        }
-        catch(NumberFormatException e){
-            resetearBotones();
-            botonPonerCarta.setVisible(true);
-            botonCambiarPosicionDeCarta.setVisible(true);
-            if(duelo.getFase() == "Main Phase 1"){
-            botonTerminarMainPhase1.setVisible(true);
-            }
-            else{
-                botonTerminarMainPhase2.setVisible(true);
-            }
-            return;
-        }
-        botonPonerCarta.setVisible(true);
-        botonCambiarPosicionDeCarta.setVisible(true);
-        if(duelo.getFase() == "Main Phase 1"){
-        botonTerminarMainPhase1.setVisible(true);
-        }
-        else{
-            botonTerminarMainPhase2.setVisible(true);
-        }
-        return;
+        controlador.manejarColocarMonstruoEnAtaque();
     }//GEN-LAST:event_botonPonerMonstruoEnAtaqueActionPerformed
 
     private void botonPonerMonstruoEnDefensaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPonerMonstruoEnDefensaActionPerformed
-        resetearBotones();
-        String entrada = javax.swing.JOptionPane.showInputDialog(
-        this, "Ingrese el índice en su mano del monstruo a colocar:", "Monstruo",javax.swing.JOptionPane.QUESTION_MESSAGE);
-        if (entrada == null || entrada.trim().isEmpty()) {
-            resetearBotones();
-            botonPonerCarta.setVisible(true);
-            botonCambiarPosicionDeCarta.setVisible(true);
-            if(duelo.getFase() == "Main Phase 1"){
-            botonTerminarMainPhase1.setVisible(true);
-            }
-            else{
-                botonTerminarMainPhase2.setVisible(true);
-            }
-            return;
-        }
-        try{;
-            byte indiceCartaEnMano = Byte.parseByte(entrada.trim());
-            Monstruo m  = (Monstruo) duelo.getAtacante().getMano().get(indiceCartaEnMano);
-            if(m.getNivel() <= 4){
-                if(duelo.colocarMonstruo(indiceCartaEnMano, (byte) 0, false)){
-                    imprimirCampo();
-                    ejecutarTributoTorrencial();
-                    imprimirCampo();
-                }
-                else{
-                    resetearBotones();
-                    botonPonerCarta.setVisible(true);
-                    botonCambiarPosicionDeCarta.setVisible(true);
-                    if(duelo.getFase() == "Main Phase 1"){
-                    botonTerminarMainPhase1.setVisible(true);
-                    }
-                    else{
-                        botonTerminarMainPhase2.setVisible(true);
-                    }
-                    return;
-                }
-            }
-            else{
-                entrada = javax.swing.JOptionPane.showInputDialog(this, "Ingrese el índice en campo del monstruo a sacrificar", "Sacrificio",javax.swing.JOptionPane.QUESTION_MESSAGE);
-                byte indiceCartaEnManoSacrificio = Byte.parseByte(entrada.trim());
-                try{
-                    duelo.colocarMonstruo(indiceCartaEnMano, indiceCartaEnManoSacrificio, false);
-                    imprimirCampo();
-                    ejecutarTributoTorrencial();
-                    imprimirCampo();
-                }
-                catch(NumberFormatException e){
-                    resetearBotones();
-                    botonPonerCarta.setVisible(true);
-                    botonCambiarPosicionDeCarta.setVisible(true);
-                    if(duelo.getFase() == "Main Phase 1"){
-                    botonTerminarMainPhase1.setVisible(true);
-                    }
-                    else{
-                        botonTerminarMainPhase2.setVisible(true);
-                    }
-                    return;
-                }
-            }
-        }
-        catch(NumberFormatException e){
-            resetearBotones();
-            botonPonerCarta.setVisible(true);
-            botonCambiarPosicionDeCarta.setVisible(true);
-            if(duelo.getFase() == "Main Phase 1"){
-            botonTerminarMainPhase1.setVisible(true);
-            }
-            else{
-                botonTerminarMainPhase2.setVisible(true);
-            }
-            return;
-        }
-        botonPonerCarta.setVisible(true);
-        botonCambiarPosicionDeCarta.setVisible(true);
-        if(duelo.getFase() == "Main Phase 1"){
-        botonTerminarMainPhase1.setVisible(true);
-        }
-        else{
-            botonTerminarMainPhase2.setVisible(true);
-        }
+        controlador.manejarColocarMonstruoEnDefensa();
     }//GEN-LAST:event_botonPonerMonstruoEnDefensaActionPerformed
 
     private void botonPonerMagiaSinUsarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPonerMagiaSinUsarActionPerformed
-        resetearBotones();
-        String entrada = javax.swing.JOptionPane.showInputDialog(this, "Ingrese el índice en su mano de la magia a colocar:", "Magia",javax.swing.JOptionPane.QUESTION_MESSAGE);
-        if (entrada == null || entrada.trim().isEmpty()) {
-            resetearBotones();
-            botonPonerCarta.setVisible(true);
-            botonCambiarPosicionDeCarta.setVisible(true);
-            if(duelo.getFase() == "Main Phase 1"){
-            botonTerminarMainPhase1.setVisible(true);
-            }
-            else{
-                botonTerminarMainPhase2.setVisible(true);
-            }
-            return;
-        }
-        try{
-            byte indiceCartaEnMano = Byte.parseByte(entrada.trim());
-            if(duelo.colocarMagia(indiceCartaEnMano, true)){
-                imprimirCampo();
-            }
-            else{
-                resetearBotones();
-                botonPonerCarta.setVisible(true);
-                botonCambiarPosicionDeCarta.setVisible(true);
-                if(duelo.getFase() == "Main Phase 1"){
-                botonTerminarMainPhase1.setVisible(true);
-                }
-                else{
-                    botonTerminarMainPhase2.setVisible(true);
-                }
-                return;
-            }
-        }
-        catch(NumberFormatException e){
-            resetearBotones();
-            botonPonerCarta.setVisible(true);
-            botonCambiarPosicionDeCarta.setVisible(true);
-            if(duelo.getFase() == "Main Phase 1"){
-                botonTerminarMainPhase1.setVisible(true);
-            }
-            else{
-                botonTerminarMainPhase2.setVisible(true);
-            }
-            return;
-        }
-        botonPonerCarta.setVisible(true);
-        botonCambiarPosicionDeCarta.setVisible(true);
-        if(duelo.getFase() == "Main Phase 1"){
-                botonTerminarMainPhase1.setVisible(true);
-        }
-        else{
-            botonTerminarMainPhase2.setVisible(true);
-        }
+        controlador.manejarColocarMagiaSinUsar();
     }//GEN-LAST:event_botonPonerMagiaSinUsarActionPerformed
 
     private void botonPonerMagiaUsandolaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPonerMagiaUsandolaActionPerformed
-        resetearBotones();
-        String entrada = javax.swing.JOptionPane.showInputDialog(this, "Ingrese el índice en su mano de la magia a colocar:", "Magia",javax.swing.JOptionPane.QUESTION_MESSAGE);
-        if (entrada == null || entrada.trim().isEmpty()) {
-            resetearBotones();
-            botonPonerCarta.setVisible(true);
-            botonCambiarPosicionDeCarta.setVisible(true);
-            if(duelo.getFase() == "Main Phase 1"){
-                botonTerminarMainPhase1.setVisible(true);
-            }
-            else{
-                botonTerminarMainPhase2.setVisible(true);
-            }
-            return;
-        }
-        try{
-            byte indiceCartaEnMano = Byte.parseByte(entrada.trim());
-            if(duelo.colocarMagia(indiceCartaEnMano, true)){
-                imprimirCampo();
-            }
-            else{
-                resetearBotones();
-                botonPonerCarta.setVisible(true);
-                botonCambiarPosicionDeCarta.setVisible(true);
-                if(duelo.getFase() == "Main Phase 1"){
-                botonTerminarMainPhase1.setVisible(true);
-                }
-                else{
-                    botonTerminarMainPhase2.setVisible(true);
-                }
-                return;
-            }
-        }
-        catch(NumberFormatException e){
-            resetearBotones();
-            botonPonerCarta.setVisible(true);
-            botonCambiarPosicionDeCarta.setVisible(true);
-            if(duelo.getFase() == "Main Phase 1"){
-                botonTerminarMainPhase1.setVisible(true);
-            }
-            else{
-                botonTerminarMainPhase2.setVisible(true);
-            }
-            return;
-        }
-        botonPonerCarta.setVisible(true);
-        botonCambiarPosicionDeCarta.setVisible(true);
-        if(duelo.getFase() == "Main Phase 1"){
-                botonTerminarMainPhase1.setVisible(true);
-        }
-        else{
-            botonTerminarMainPhase2.setVisible(true);
-        }
+        controlador.manejarColocarMagiaUsada();
     }//GEN-LAST:event_botonPonerMagiaUsandolaActionPerformed
 
     private void botonCambiarPosicionDeCartaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCambiarPosicionDeCartaActionPerformed
@@ -1226,60 +916,9 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_botonCambiarPosicionDeCartaActionPerformed
 
     private void botonCambiarPosicionDeMagiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCambiarPosicionDeMagiaActionPerformed
-        resetearBotones();
-        String entrada = javax.swing.JOptionPane.showInputDialog(this, "Ingrese el índice en su campo de la magia a cambiar de posición (0-4):", "Magia",javax.swing.JOptionPane.QUESTION_MESSAGE);
-        if (entrada == null || entrada.trim().isEmpty()) {
-            resetearBotones();
-            botonPonerCarta.setVisible(true);
-            botonCambiarPosicionDeCarta.setVisible(true);
-            if(duelo.getFase() == "Main Phase 1"){
-                botonTerminarMainPhase1.setVisible(true);
-            }
-            else{
-                botonTerminarMainPhase2.setVisible(true);
-            }
-            return;
-        }
-        try{
-            byte indiceCartaEnMano = Byte.parseByte(entrada.trim());
-            if(duelo.getMagicasYTrampasEnCampoAtacante()[indiceCartaEnMano] != null && duelo.cambiarPosicionDeMagia(indiceCartaEnMano)){
-                imprimirCampo();
-            }
-            else{
-                resetearBotones();
-                botonPonerCarta.setVisible(true);
-                botonCambiarPosicionDeCarta.setVisible(true);
-                if(duelo.getFase() == "Main Phase 1"){
-                botonTerminarMainPhase1.setVisible(true);
-                }
-                else{
-                    botonTerminarMainPhase2.setVisible(true);
-                }
-                return;
-            }
-        }
-        catch(NumberFormatException e){
-            resetearBotones();
-            botonPonerCarta.setVisible(true);
-            botonCambiarPosicionDeCarta.setVisible(true);
-            if(duelo.getFase() == "Main Phase 1"){
-                botonTerminarMainPhase1.setVisible(true);
-            }
-            else{
-                botonTerminarMainPhase2.setVisible(true);
-            }
-            return;
-        }
-        botonPonerCarta.setVisible(true);
-        botonCambiarPosicionDeCarta.setVisible(true);
-        if(duelo.getFase() == "Main Phase 1"){
-                botonTerminarMainPhase1.setVisible(true);
-        }
-        else{
-            botonTerminarMainPhase2.setVisible(true);
-        }
-        imprimirCampo();
+        controlador.manejarCambiarPosicionMagia();
     }//GEN-LAST:event_botonCambiarPosicionDeMagiaActionPerformed
+           
 
     private void botonCambiarPosicionDeMonstruoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCambiarPosicionDeMonstruoActionPerformed
         resetearBotones();
@@ -1352,7 +991,7 @@ public class NewJFrame extends javax.swing.JFrame {
             duelo.terminarTurno();
             duelo.setFase("Draw Phase");
             imprimirCampo();
-            if(duelo.getTurno() != 0 && duelo.robarCarta()){
+            if(duelo.getTurno() != 0 && controlador.robarCarta()){
                 javax.swing.JOptionPane.showMessageDialog(this, "Ha robado:" + duelo.getAtacante().getMano().get(duelo.getAtacante().getMano().size()-1).getNombre(), "Robo",javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
             duelo.setFase("Standby Phase");
@@ -2296,5 +1935,52 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane scrollMano;
     private javax.swing.JTable tablaCementerio;
     private javax.swing.JTable tablaMano;
+
+    @Override
+    public void actualizarDuelo(DueloLogica duelo) {
+        this.duelo = duelo;
+    }
+
+    @Override
+    public void actualizarCampo() {
+        imprimirCampo();
+    }
+
+    @Override
+    public void mostrarMensaje(String titulo, String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    @Override
+    public void mostrarError(String titulo, String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.ERROR_MESSAGE);
+    }
+
+    @Override
+    public String pedirEntrada(String titulo, String mensaje) {
+        return JOptionPane.showInputDialog(this, mensaje, titulo, JOptionPane.QUESTION_MESSAGE);
+    }
+
+    @Override
+    public boolean pedirConfirmacion(String titulo, String mensaje) {
+        return JOptionPane.showConfirmDialog(this, mensaje, titulo, JOptionPane.YES_NO_OPTION) == 0;
+    }
+
+    @Override
+    public void mostrarGameOver(Jugador ganador) {
+        JOptionPane.showMessageDialog(this, "¡" + ganador.getNombre() + " ha ganado la partida!",
+            "Fin de la Partida", JOptionPane.INFORMATION_MESSAGE);
+        ((CardLayout) contenedorDeCards.getLayout()).show(contenedorDeCards, "cardFinal");
+    }
+
+    @Override
+    public void limpiar() {
+        duelo = null;
+        resetearBotones();
+    }
+
+    public void mostrarPanelJuego() {
+        ((CardLayout) contenedorDeCards.getLayout()).show(contenedorDeCards, "ponerCarta");
+    }
     // End of variables declaration//GEN-END:variables
 }

@@ -40,7 +40,7 @@ public class Trampa extends Carta implements Activable{
     protected void setTurnosActiva(byte turnosActiva){
         this.turnosActiva = turnosActiva;
     }
-    protected void setMonstruoARobarPorUnTurno(String monstruoARobarPorUnTurno){
+    public void setMonstruoARobarPorUnTurno(String monstruoARobarPorUnTurno){
         this.monstruoARobarPorUnTurno = monstruoARobarPorUnTurno;
     }
     protected void setMomentoDeActivacion(TipoHabilidadEspecialTrampa momentoDeActivacion) {

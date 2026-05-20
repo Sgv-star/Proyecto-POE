@@ -1,0 +1,16 @@
+package modelo;
+
+public enum TipoHabilidadTrampa {
+    FUERZA_ESPEJO, 
+    CILINDRO_MAGICO, 
+    TRIBUTO_TORRENCIAL, 
+    ARMADURA_SAKURETSU, 
+    LLAMADA_CONDENADOS, 
+    SOMBREROS_MAGICOS, 
+    WABOKU, 
+    MURO_ESPEJO, 
+    REPRESION, 
+    DRAENAJE_HABILIDAD, 
+    INVOCACION, 
+    BATALLA
+}

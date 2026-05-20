@@ -5,27 +5,27 @@ import java.util.*;
 public abstract class Carta {
 
     private String nombre;
-    private String cuadroDeTexto;
-    private boolean visible;
+    private String descripcion;
+    private boolean esVisible;
 
-    protected Carta(String nombre, String cuadroDeTexto, boolean visible){
+    protected Carta(String nombre, String descripcion, boolean esVisible){
         this.nombre = nombre;
-        this.cuadroDeTexto = cuadroDeTexto;
-        this.visible = visible;
+        this.descripcion = descripcion;
+        this.esVisible = esVisible;
     }
 
-    public String getNombre() {
+    public String obtenerNombre() {
         return nombre;
     }
-    public String getCuadroDeTexto() {
-        return cuadroDeTexto;
+    public String obtenerDescripcion() {
+        return descripcion;
     }
-    public boolean isVisible() {
-        return visible;
+    public boolean esVisible() {
+        return esVisible;
     }
 
-    public void setVisible(boolean visible) {
-        this.visible = visible;
+    public void establecerVisible(boolean visible) {
+        this.esVisible = visible;
     }
 
     public abstract boolean jugar(Campo campo, byte turno, byte cartaAActivar, byte byteAux, String stringAux, String stringAux2, String stringAux3, List<Monstruo> lista);

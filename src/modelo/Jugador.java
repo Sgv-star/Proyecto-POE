@@ -5,54 +5,58 @@ import java.util.*;
 public class Jugador {
 
     private String nombre;
-    private short LP;
+    private short puntosVida;
     private List<Carta> mazo = new ArrayList<>();
     private List<Carta> mano = new ArrayList<>();
     private List<Carta> cementerio = new ArrayList<>();
 
-    public Jugador(){
-        
+    public Jugador() {
+        this.puntosVida = 8000;
     }
 
     public Jugador(String nombre, Mazo mazoGeneral) {
         this.nombre = nombre;
-        LP = (short) 8000;
-        setMazo(mazoGeneral);
-        setMano(mazo);
+        this.puntosVida = 8000;
+        inicializarMazo(mazoGeneral);
+        inicializarMano();
     }
 
-    public String getNombre() {
+    public String obtenerNombre() {
         return nombre;
     }
-    public short getLP() {
-        return LP;
+    public short obtenerPuntosVida() {
+        return puntosVida;
     }
-    public List<Carta> getMazo() {
+    public List<Carta> obtenerMazo() {
         return mazo;
     }
-    public List<Carta> getMano() {
+    public List<Carta> obtenerMano() {
         return mano;
     }
-    public List<Carta> getCementerio(){
+    public List<Carta> obtenerCementerio(){
         return cementerio;
     }
     
-    public void setNombre(String nombre) {
+    public void establecerNombre(String nombre) {
         this.nombre = nombre;
     }
-    public void setLP(short lP) {
-        LP = lP;
+    public void establecerPuntosVida(short lp) {
+        this.puntosVida = lp;
     }
-    public void setMazo(Mazo mazoGeneral) {
-        for(byte i=0; i<25
-            ; i++){
-            this.mazo.add(mazoGeneral.getMazoGeneral().remove(0));
-        }
-    }
-    public void setMano(List<Carta> mazo) {
-        for(byte i=0; i<5; i++){
-            this.mano.add(mazo.remove(0));
+    
+    public void inicializarMazo(Mazo mazoGeneral) {
+        for(byte i=0; i<25; i++){
+            if (!mazoGeneral.obtenerCartas().isEmpty()) {
+                this.mazo.add(mazoGeneral.obtenerCartas().remove(0));
+            }
         }
     }
     
+    public void inicializarMano() {
+        for(byte i=0; i<5; i++){
+            if (!this.mazo.isEmpty()) {
+                this.mano.add(this.mazo.remove(0));
+            }
+        }
+    }
 }

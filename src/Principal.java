@@ -1,19 +1,19 @@
+import controlador.ControladorDuelo;
+import javax.swing.SwingUtilities;
 import modelo.Campo;
 import vista.VistaDuelo;
-import controlador.ControladorDuelo;
-
-import javax.swing.SwingUtilities;
 
 public class Principal {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             Campo modeloCampo = new Campo();
 
-            VistaDuelo vista = new VistaDuelo();
+            VistaDuelo vistaGUI = new VistaDuelo();
+            //VistaConsola vistaTerminal = new VistaConsola();
 
-            ControladorDuelo controlador = new ControladorDuelo(modeloCampo, vista);
+            ControladorDuelo controlador = new ControladorDuelo(modeloCampo, vistaGUI);
 
-            vista.setVisible(true);
+            vistaGUI.setVisible(true);
         });
     }
 }

@@ -8,7 +8,7 @@ import modelo.Carta;
 import modelo.Magia;
 import modelo.Monstruo;
 
-public class VistaDuelo extends JFrame {
+public class VistaDuelo extends JFrame implements IVista {
     private JPanel contenedorPrincipal;
     private CardLayout navegador;
 
@@ -69,7 +69,7 @@ public class VistaDuelo extends JFrame {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 try {
-                    Image img = new ImageIcon("yugilogo-convertido-a-600x500-convertido-a-800x700.jpeg").getImage();
+                    Image img = new ImageIcon("src/yugilogo-convertido-a-600x500-convertido-a-800x700.jpeg").getImage();
                     g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
                 } catch (Exception e) {}
             }
@@ -77,7 +77,7 @@ public class VistaDuelo extends JFrame {
         
         logoInicio = new JLabel();
         try {
-            ImageIcon iconLogo = new ImageIcon("yugiletras-convertido-a-250x101-removebg-preview.png");
+            ImageIcon iconLogo = new ImageIcon("src/yugiletras-convertido-a-250x101-removebg-preview.png");
             logoInicio.setIcon(iconLogo);
         } catch (Exception e) {}
         logoInicio.setBounds(375, 50, 250, 101);
@@ -112,7 +112,7 @@ public class VistaDuelo extends JFrame {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 try {
-                    Image img = new ImageIcon("yugilogo-convertido-a-600x500-convertido-a-800x700.jpeg").getImage();
+                    Image img = new ImageIcon("src/yugilogo-convertido-a-600x500-convertido-a-800x700.jpeg").getImage();
                     g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
                 } catch (Exception e) {}
             }
@@ -210,7 +210,7 @@ public class VistaDuelo extends JFrame {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 try {
-                    Image img = new ImageIcon("yugilogo-convertido-a-600x500-convertido-a-800x700.jpeg").getImage();
+                    Image img = new ImageIcon("src/yugilogo-convertido-a-600x500-convertido-a-800x700.jpeg").getImage();
                     g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
                 } catch (Exception e) {}
             }
@@ -325,4 +325,13 @@ public class VistaDuelo extends JFrame {
     public JButton obtenerBotonSiguienteFase() { return botonSiguienteFase; }
     public String obtenerNombre1() { return entradaNombre1.getText(); }
     public String obtenerNombre2() { return entradaNombre2.getText(); }
+
+    @Override
+    public void vincularControlador(controlador.ControladorDuelo controlador) {
+        botonEmpezar.addActionListener(e -> controlador.iniciarDuelo());
+        botonSiguienteFase.addActionListener(e -> controlador.avanzarTurno());
+        botonAtacar.addActionListener(e -> controlador.ejecutarBatalla());
+        botonPonerCarta.addActionListener(e -> controlador.ponerCarta());
+        botonVerMano.addActionListener(e -> controlador.actualizarInterfaz());
+    }
 }

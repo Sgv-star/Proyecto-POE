@@ -1,9 +1,9 @@
 package controlador;
 
+import java.util.ArrayList;
+import java.util.List;
 import modelo.*;
 import vista.VistaDuelo;
-import java.util.List;
-import java.util.ArrayList;
 
 public class ControladorDuelo {
     private Campo campo;
@@ -41,7 +41,17 @@ public class ControladorDuelo {
         vista.obtenerBotonVerMano().addActionListener(e -> actualizarInterfaz());
     }
 
-    private void avanzarTurno() {
+    public void iniciarDuelo() {
+        String n1 = vista.obtenerNombre1();
+        String n2 = vista.obtenerNombre2();
+        Mazo mazo = new Mazo();
+        campo.establecerJugador1(new Jugador(n1, mazo));
+        campo.establecerJugador2(new Jugador(n2, mazo));
+        vista.irAJuego();
+        actualizarInterfaz();
+    }
+
+    public void avanzarTurno() {
         if (fase.equals("Main 1")) {
             // Jugador 1 termina su turno -> Jugador 2 roba -> Main 2
             jugadorActivo = 2;
@@ -71,7 +81,7 @@ public class ControladorDuelo {
         }
     }
 
-    private void ponerCarta() {
+    public void ponerCarta() {
         Jugador actual = (jugadorActivo == 1) ? campo.obtenerJugador1() : campo.obtenerJugador2();
         if (actual.obtenerMano().isEmpty()) {
             vista.mostrarMensaje("Mano vacía.");
@@ -146,7 +156,7 @@ public class ControladorDuelo {
         return -1;
     }
 
-    private void ejecutarBatalla() {
+    public void ejecutarBatalla() {
         int idxAtk = vista.pedirIndiceCampo("Tu monstruo atacante");
         int idxDef = vista.pedirIndiceCampo("Monstruo OBJETIVO (Oponente)");
         if (idxAtk < 0 || idxDef < 0) return;
@@ -194,7 +204,7 @@ public class ControladorDuelo {
         cem.add(m);
     }
 
-    private void actualizarInterfaz() {
+    public void actualizarInterfaz() {
         Jugador j1 = campo.obtenerJugador1();
         Jugador j2 = campo.obtenerJugador2();
         Jugador actual = (jugadorActivo == 1) ? j1 : j2;

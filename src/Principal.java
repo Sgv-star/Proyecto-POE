@@ -1,6 +1,7 @@
 import controlador.ControladorDuelo;
 import javax.swing.SwingUtilities;
 import modelo.Campo;
+import vista.VistaConsola;
 import vista.VistaDuelo;
 
 public class Principal {
@@ -9,10 +10,14 @@ public class Principal {
             Campo modeloCampo = new Campo();
 
             VistaDuelo vistaGUI = new VistaDuelo();
-            //VistaConsola vistaTerminal = new VistaConsola();
+            VistaConsola vistaTerminal = new VistaConsola();
 
             ControladorDuelo controlador = new ControladorDuelo(modeloCampo, vistaGUI);
 
+            vistaTerminal.vincularControlador(controlador);
+            vistaGUI.vincularControlador(controlador);
+
+            //vistaTerminal.iniciarBucle();
             vistaGUI.setVisible(true);
         });
     }

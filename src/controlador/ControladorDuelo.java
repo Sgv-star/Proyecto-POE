@@ -3,16 +3,17 @@ package controlador;
 import java.util.ArrayList;
 import java.util.List;
 import modelo.*;
+import vista.IVista;
 import vista.VistaDuelo;
 
 public class ControladorDuelo {
     private Campo campo;
-    private VistaDuelo vista;
+    private IVista vista;
     private int turno;
     private String fase;
     private int jugadorActivo;
 
-    public ControladorDuelo(Campo campo, VistaDuelo vista) {
+    public ControladorDuelo(Campo campo, IVista vista) {
         this.campo = campo;
         this.vista = vista;
         this.turno = 1;
@@ -23,22 +24,25 @@ public class ControladorDuelo {
     }
 
     private void vincularEventos() {
-        vista.obtenerBotonEmpezar().addActionListener(e -> {
-            String n1 = vista.obtenerNombre1();
-            String n2 = vista.obtenerNombre2();
-            Mazo mazo = new Mazo();
-            campo.establecerJugador1(new Jugador(n1, mazo));
-            campo.establecerJugador2(new Jugador(n2, mazo));
-            vista.irAJuego();
-            actualizarInterfaz();
-        });
+        if(vista instanceof VistaDuelo){
+            VistaDuelo vistaGUI = (VistaDuelo) vista;
+            vistaGUI.obtenerBotonEmpezar().addActionListener(e -> {
+                String n1 = vista.obtenerNombre1();
+                String n2 = vista.obtenerNombre2();
+                Mazo mazo = new Mazo();
+                campo.establecerJugador1(new Jugador(n1, mazo));
+                campo.establecerJugador2(new Jugador(n2, mazo));
+                vista.irAJuego();
+                actualizarInterfaz();
+            });
 
-        // BOTÓN ÚNICO: SIGUIENTE FASE
-        vista.obtenerBotonSiguienteFase().addActionListener(e -> avanzarTurno());
+            // BOTÓN ÚNICO: SIGUIENTE FASE
+            vistaGUI.obtenerBotonSiguienteFase().addActionListener(e -> avanzarTurno());
 
-        vista.obtenerBotonAtacar().addActionListener(e -> ejecutarBatalla());
-        vista.obtenerBotonPonerCarta().addActionListener(e -> ponerCarta());
-        vista.obtenerBotonVerMano().addActionListener(e -> actualizarInterfaz());
+            vistaGUI.obtenerBotonAtacar().addActionListener(e -> ejecutarBatalla());
+            vistaGUI.obtenerBotonPonerCarta().addActionListener(e -> ponerCarta());
+            vistaGUI.obtenerBotonVerMano().addActionListener(e -> actualizarInterfaz());
+        }
     }
 
     public void iniciarDuelo() {

@@ -23,20 +23,49 @@ public class Monstruo extends Carta {
         this.puedeAtacar = true;
     }
 
-    public byte obtenerNivel() { return nivel; }
-    public short obtenerAtaqueBase() { return ataqueBase; }
-    public short obtenerDefensaBase() { return defensaBase; }
-    public short obtenerAtaque() { return ataque; }
-    public short obtenerDefensa() { return defensa; }
-    public boolean estaEnPosicionAtaque() { return enPosicionAtaque; }
-    public boolean yaCambioPosicion() { return yaCambioPosicion; }
-    public boolean puedeAtacar() { return puedeAtacar; }
+    public byte obtenerNivel() { 
+        return nivel; 
+    }
+    public short obtenerAtaqueBase() { 
+        return ataqueBase; 
+    }
+    public short obtenerDefensaBase() { 
+        return defensaBase; 
+    }
+    public short obtenerAtaque() { 
+        return ataque; 
+    }
+    public short obtenerDefensa() { 
+        return defensa; 
+    }
+    public boolean estaEnPosicionAtaque() { 
+        return enPosicionAtaque; 
+    }
+    public boolean yaCambioPosicion() { 
+        return yaCambioPosicion; 
+    }
+    public boolean puedeAtacar() { 
+        return puedeAtacar; 
+    }
 
-    public void establecerAtaque(short ataque) { this.ataque = ataque; }
-    public void establecerDefensa(short defensa) { this.defensa = defensa; }
-    public void establecerEnPosicionAtaque(boolean enPosicionAtaque) { this.enPosicionAtaque = enPosicionAtaque; }
-    public void establecerYaCambioPosicion(boolean yaCambioPosicion) { this.yaCambioPosicion = yaCambioPosicion; }
-    public void establecerPuedeAtacar(boolean puedeAtacar) { this.puedeAtacar = puedeAtacar; }
+    public void establecerNivel(byte nivel){
+        this.nivel = nivel;
+    }
+    public void establecerAtaque(short ataque) { 
+        this.ataque = ataque; 
+    }
+    public void establecerDefensa(short defensa) { 
+        this.defensa = defensa; 
+    }
+    public void establecerEnPosicionAtaque(boolean enPosicionAtaque) { 
+        this.enPosicionAtaque = enPosicionAtaque; 
+    }
+    public void establecerYaCambioPosicion(boolean yaCambioPosicion) { 
+        this.yaCambioPosicion = yaCambioPosicion; 
+    }
+    public void establecerPuedeAtacar(boolean puedeAtacar) { 
+        this.puedeAtacar = puedeAtacar; 
+    }
 
     @Override
     public boolean jugar(Campo campo, byte turno, byte cartaAActivar, byte byteAux, String stringAux, String stringAux2, String stringAux3, List<Monstruo> lista) {

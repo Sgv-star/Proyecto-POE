@@ -1,8 +1,8 @@
 package controlador;
 
+import java.util.List;
 import modelo.*;
 import vista.VistaDuelo;
-import java.util.List;
 
 public class ControladorMonstruo {
     private Monstruo modelo;
@@ -30,14 +30,12 @@ public class ControladorMonstruo {
         }
 
         if (objetivo == null) {
-            // Ataque directo
             defensor.establecerPuntosVida((short) (defensor.obtenerPuntosVida() - modelo.obtenerAtaque()));
         } else {
             if (objetivo.estaEnPosicionAtaque()) {
                 if (modelo.obtenerAtaque() > objetivo.obtenerAtaque()) {
                     defensor.establecerPuntosVida((short) (defensor.obtenerPuntosVida() - (modelo.obtenerAtaque() - objetivo.obtenerAtaque())));
                     cementerioDefensor.add(objetivo);
-                    // El objetivo debe ser removido del campo (manejado por ControladorCampo)
                 } else if (modelo.obtenerAtaque() < objetivo.obtenerAtaque()) {
                     atacante.establecerPuntosVida((short) (atacante.obtenerPuntosVida() - (objetivo.obtenerAtaque() - modelo.obtenerAtaque())));
                     cementerioAtacante.add(modelo);

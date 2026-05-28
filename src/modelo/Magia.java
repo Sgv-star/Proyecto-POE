@@ -12,9 +12,15 @@ public class Magia extends Carta {
         this.turnosActiva = 0;
     }
 
-    public TipoHabilidadMagia obtenerTipoHabilidad() { return tipoHabilidad; }
-    public byte obtenerTurnosActiva() { return turnosActiva; }
-    public void establecerTurnosActiva(byte turnos) { this.turnosActiva = turnos; }
+    public TipoHabilidadMagia obtenerTipoHabilidad() { 
+        return tipoHabilidad; 
+    }
+    public byte obtenerTurnosActiva() { 
+        return turnosActiva; 
+    }
+    public void establecerTurnosActiva(byte turnos) { 
+        this.turnosActiva = turnos; 
+    }
 
     @Override
     public boolean jugar(Campo campo, byte turno, byte cartaAActivar, byte byteAux, String stringAux, String stringAux2, String stringAux3, List<Monstruo> lista) {

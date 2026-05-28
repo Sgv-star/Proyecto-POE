@@ -17,15 +17,31 @@ public class Trampa extends Carta {
         this.estaActivada = false;
     }
 
-    public TipoHabilidadTrampa obtenerTipoHabilidad() { return tipoHabilidad; }
-    public byte obtenerTurnosActiva() { return turnosActiva; }
-    public String obtenerMonstruoRobado() { return monstruoRobado; }
-    public TipoHabilidadTrampa obtenerMomentoActivacion() { return momentoActivacion; }
-    public boolean estaActivada() { return estaActivada; }
+    public TipoHabilidadTrampa obtenerTipoHabilidad() { 
+        return tipoHabilidad; 
+    }
+    public byte obtenerTurnosActiva() { 
+        return turnosActiva; 
+    }
+    public String obtenerMonstruoRobado() { 
+        return monstruoRobado; 
+    }
+    public TipoHabilidadTrampa obtenerMomentoActivacion() { 
+        return momentoActivacion; 
+    }
+    public boolean estaActivada() { 
+        return estaActivada; 
+    }
 
-    public void establecerTurnosActiva(byte turnos) { this.turnosActiva = turnos; }
-    public void establecerMonstruoRobado(String nombre) { this.monstruoRobado = nombre; }
-    public void establecerEstaActivada(boolean activada) { this.estaActivada = activada; }
+    public void establecerTurnosActiva(byte turnos) { 
+        this.turnosActiva = turnos; 
+    }
+    public void establecerMonstruoRobado(String nombre) { 
+        this.monstruoRobado = nombre; 
+    }
+    public void establecerEstaActivada(boolean activada) { 
+        this.estaActivada = activada; 
+    }
 
     @Override
     public boolean jugar(Campo campo, byte turno, byte cartaAActivar, byte byteAux, String stringAux, String stringAux2, String stringAux3, List<Monstruo> lista) {

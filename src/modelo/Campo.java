@@ -20,17 +20,37 @@ public class Campo {
     
     public Campo() {}
 
-    public Monstruo[] obtenerMonstruosJugador1() { return monstruosJugador1; }
-    public Monstruo[] obtenerMonstruosJugador2() { return monstruosJugador2; }
-    public Carta[] obtenerMagicasYTrampasJugador1() { return magicasYTrampasJugador1; }
-    public Carta[] obtenerMagicasYTrampasJugador2() { return magicasYTrampasJugador2; }
-    public List<Carta> obtenerCementerioJugador1() { return cementerioJugador1; }
-    public List<Carta> obtenerCementerioJugador2() { return cementerioJugador2; }
-    public Jugador obtenerJugador1() { return jugador1; }
-    public Jugador obtenerJugador2() { return jugador2; }
+    public Monstruo[] obtenerMonstruosJugador1() { 
+        return monstruosJugador1; 
+    }
+    public Monstruo[] obtenerMonstruosJugador2() { 
+        return monstruosJugador2; 
+    }
+    public Carta[] obtenerMagicasYTrampasJugador1() { 
+        return magicasYTrampasJugador1; 
+    }
+    public Carta[] obtenerMagicasYTrampasJugador2() { 
+        return magicasYTrampasJugador2; 
+    }
+    public List<Carta> obtenerCementerioJugador1() { 
+        return cementerioJugador1; 
+    }
+    public List<Carta> obtenerCementerioJugador2() { 
+        return cementerioJugador2; 
+    }
+    public Jugador obtenerJugador1() { 
+        return jugador1; 
+    }
+    public Jugador obtenerJugador2() { 
+        return jugador2; 
+    }
 
-    public void establecerJugador1(Jugador jugador) { this.jugador1 = jugador; }
-    public void establecerJugador2(Jugador jugador) { this.jugador2 = jugador; }
+    public void establecerJugador1(Jugador jugador) { 
+        this.jugador1 = jugador; 
+    }
+    public void establecerJugador2(Jugador jugador) { 
+        this.jugador2 = jugador; 
+    }
     
     public boolean colocarCarta(Carta carta, byte turno, byte posicion) {
         boolean esTurnoJugador1 = (turno % 2 == 0);

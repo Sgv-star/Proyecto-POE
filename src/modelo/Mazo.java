@@ -3,32 +3,68 @@ package modelo;
 import java.util.*;
 
 public class Mazo {
-    private List<Carta> cartas = new ArrayList<>();
+    private List<Carta> mazoGeneral = new ArrayList<>();
 
     public Mazo() {
-        // Añadimos suficientes cartas para que ambos jugadores tengan un mazo completo (25 c/u)
-        for (int i = 0; i < 10; i++) {
-            this.cartas.add(new Monstruo("Mago Oscuro", "El mago definitivo.", (byte) 7, (short) 2500, (short) 2100));
-            this.cartas.add(new Monstruo("Dragón Blanco", "Poderosa máquina de destrucción.", (byte) 8, (short) 3000, (short) 2500));
-            this.cartas.add(new Monstruo("Cráneo Convocado", "Demonio con poderes oscuros.", (byte) 6, (short) 2500, (short) 1200));
-            this.cartas.add(new Monstruo("Bebé Dragón", "Dragón pequeño con potencial.", (byte) 3, (short) 1200, (short) 700));
-            this.cartas.add(new Monstruo("Elfo Gemelo", "Hermanas elfas.", (byte) 4, (short) 1900, (short) 900));
-            
-            this.cartas.add(new Magia("Olla de la Codicia", "Roba 2 cartas.", TipoHabilidadMagia.OLLA_CODICIA));
-            this.cartas.add(new Magia("Raigeki", "Destruye monstruos oponente.", TipoHabilidadMagia.RAIGEKI));
-            
-            this.cartas.add(new Trampa("Fuerza Espejo", "Destruye atacantes.", TipoHabilidadTrampa.FUERZA_ESPEJO, TipoHabilidadTrampa.BATALLA));
-            this.cartas.add(new Trampa("Cilindro Mágico", "Refleja daño.", TipoHabilidadTrampa.CILINDRO_MAGICO, TipoHabilidadTrampa.BATALLA));
-        }
+        this.mazoGeneral.add(new Monstruo("Mago Oscuro", "El mago definitivo en términos de ataque y defensa.", (byte) 7, (short) 2500, (short) 2100));
+        this.mazoGeneral.add(new Monstruo("Dragón Blanco de Ojos Azules", "Una poderosa máquina de destrucción, casi invencible.", (byte) 8, (short) 3000, (short) 2500));
+        this.mazoGeneral.add(new Monstruo("Cráneo Convocado", "Un demonio con poderes oscuros para confundir al enemigo.", (byte) 6, (short) 2500, (short) 1200));
+        this.mazoGeneral.add(new Monstruo("Bebé Dragón", "Un dragón pequeño con un potencial que aún no ha despertado.", (byte) 3, (short) 1200, (short) 700));
+        this.mazoGeneral.add(new Monstruo("Elfo Gemelo", "Hermanas elfas que atacan con una coordinación perfecta.", (byte) 4, (short) 1900, (short) 900));
+        this.mazoGeneral.add(new Monstruo("Pared de Ilusión", "Si es atacada, devuelve al monstruo atacante a la mano del dueño.", (byte) 4, (short) 1200, (short) 1850));
+        this.mazoGeneral.add(new Monstruo("Jinete de Kaneka", "Un guerrero veloz que monta un ave mecánica.", (byte) 4, (short) 1800, (short) 1600));
+        this.mazoGeneral.add(new Monstruo("Kuriboh", "Puedes descartarlo para que el daño de un ataque sea 0.", (byte) 1, (short) 300, (short) 200));
+        this.mazoGeneral.add(new Monstruo("Sangan", "Al ir al cementerio, te permite buscar un monstruo débil en tu mazo.", (byte) 3, (short) 1000, (short) 600));
+        this.mazoGeneral.add(new Monstruo("Tomate Místico", "Al ser destruido, invoca a otro monstruo de OSCURIDAD del mazo.", (byte) 4, (short) 1400, (short) 1100));
+        this.mazoGeneral.add(new Monstruo("Soldado del Brillo Negro", "Un guerrero legendario invocado mediante un ritual antiguo.", (byte) 8, (short) 3000, (short) 2500));
+        this.mazoGeneral.add(new Monstruo("Mago de la Fe", "Al voltearse, recupera una carta mágica de tu cementerio.", (byte) 1, (short) 300, (short) 400));
+        this.mazoGeneral.add(new Monstruo("Hombre de Frijol Natural", "Un guerrero vegetal con una fuerza física sorprendente.", (byte) 3, (short) 1750, (short) 800));
+        this.mazoGeneral.add(new Monstruo("Ciber Dragón", "Puede invocarse gratis si tu oponente tiene monstruos y tú no.", (byte) 5, (short) 2100, (short) 1600));
+        this.mazoGeneral.add(new Monstruo("Breaker el Guerrero Mágico", "Al ser invocado, puede destruir una carta mágica o trampa.", (byte) 4, (short) 1600, (short) 1000));
+        this.mazoGeneral.add(new Monstruo("Caballero Comandante", "Sube el ataque de todos tus guerreros en 400 puntos.", (byte) 4, (short) 1200, (short) 1900));
+        this.mazoGeneral.add(new Monstruo("Lobo de Guerra Negro Pechado", "Un hombre lobo que prohíbe activar trampas durante su ataque.", (byte) 4, (short) 1600, (short) 1200));
+        this.mazoGeneral.add(new Monstruo("Insecto Come-Hombres", "Al voltearse boca arriba, destruye un monstruo en el campo.", (byte) 2, (short) 450, (short) 600));
+        this.mazoGeneral.add(new Monstruo("Marshmallon", "No puede ser destruido por batalla. Es un muro eterno.", (byte) 3, (short) 300, (short) 500));
+        this.mazoGeneral.add(new Monstruo("Neo Alius, Héroe Elemental", "Un héroe versátil que brilla en el campo de batalla.", (byte) 4, (short) 1900, (short) 1300));
+        this.mazoGeneral.add(new Monstruo("Pingüino Pesadilla", "Al voltearse, devuelve una carta del oponente a su mano.", (byte) 4, (short) 900, (short) 1800));
+        this.mazoGeneral.add(new Monstruo("Golem de Engranaje Antiguo", "Impide que el rival use magias o trampas cuando ataca.", (byte) 8, (short) 3000, (short) 3000));
+        this.mazoGeneral.add(new Monstruo("Chica Maga Oscura", "Gana 300 de ataque por cada Mago Oscuro en el cementerio.", (byte) 6, (short) 2000, (short) 1700));
+        this.mazoGeneral.add(new Monstruo("Jinzo", "Mientras esté en el campo, nadie puede usar cartas Trampa.", (byte) 6, (short) 2400, (short) 1500));
+        this.mazoGeneral.add(new Monstruo("Lobo de Guerra Genético", "Un monstruo normal con un ataque físico devastador.", (byte) 4, (short) 2000, (short) 100));
+        this.mazoGeneral.add(new Monstruo("Soldado de la Lanza", "Inflige daño de penetración si ataca a alguien en defensa.", (byte) 4, (short) 1500, (short) 1800));
+        this.mazoGeneral.add(new Monstruo("Gearfried el Caballero de Hierro", "Destruye cualquier carta de equipo que intentes ponerle.", (byte) 4, (short) 1800, (short) 1600));
+        this.mazoGeneral.add(new Monstruo("Zaborg, el Monarca del Trueno", "Al ser invocado por sacrificio, destruye un monstruo.", (byte) 5, (short) 2400, (short) 1000));
+        this.mazoGeneral.add(new Monstruo("Gran Escudo Gardna", "Un muro masivo que niega magias que lo seleccionen.", (byte) 4, (short) 100, (short) 2600));
+        this.mazoGeneral.add(new Monstruo("Gilaaurus", "Se invoca especial pero deja al rival revivir algo.", (byte) 3, (short) 1400, (short) 800));
+        this.mazoGeneral.add(new Magia("Monstruo Renacido", "Elige un monstruo en cualquier cementerio e invócalo en tu campo.", TipoHabilidadMagia.MONSTRUO_RENACIDO));
+        this.mazoGeneral.add(new Magia("Agujero Negro", "Destruye a todos los monstruos que estén en el campo de batalla.", TipoHabilidadMagia.AGUJERO_NEGRO));
+        this.mazoGeneral.add(new Magia("Tifón del Espacio Místico", "Destruye una carta mágica o de trampa en el campo.", TipoHabilidadMagia.TIFON_ESPACIO_MISTICO));
+        this.mazoGeneral.add(new Magia("Espadas de la Luz Reveladora", "Impide que los monstruos del oponente ataquen durante 3 turnos.", TipoHabilidadMagia.ESPADAS_LUZ_REVELADORA));
+        this.mazoGeneral.add(new Magia("Olla de la Codicia", "Roba 2 cartas de tu mazo.", TipoHabilidadMagia.OLLA_CODICIA));
+        this.mazoGeneral.add(new Magia("Entierro Insensato", "Envía un monstruo de tu mazo directamente al cementerio.", TipoHabilidadMagia.ENTIERRO_INSENSATO));
+        this.mazoGeneral.add(new Magia("Raigeki", "Destruye todos los monstruos que controle tu oponente.", TipoHabilidadMagia.RAIGEKI));
+        this.mazoGeneral.add(new Magia("Cuchillo de Cazador", "Si controlas al Mago Oscuro, destruye un monstruo del rival.", TipoHabilidadMagia.MIL_CUCHILLOS));
+        this.mazoGeneral.add(new Magia("Unidad", "Suma la defensa de todos tus monstruos para crear un muro gigante.", TipoHabilidadMagia.UNIDAD));
+        this.mazoGeneral.add(new Magia("Polimerización", "Fusiona dos o más monstruos para invocar un monstruo de Fusión.", TipoHabilidadMagia.POLIMERIZACION));
+        this.mazoGeneral.add(new Trampa("Fuerza de Espejo", "Cuando un monstruo del oponente ataca, destruye todos sus monstruos en posición de ataque.", TipoHabilidadTrampa.FUERZA_ESPEJO, TipoHabilidadTrampa.BATALLA));
+        this.mazoGeneral.add(new Trampa("Cilindro Mágico", "Niega el ataque de un monstruo enemigo e inflige daño a sus LP igual a su ataque.", TipoHabilidadTrampa.CILINDRO_MAGICO, TipoHabilidadTrampa.BATALLA));
+        this.mazoGeneral.add(new Trampa("Armadura de Sakuretsu", "Cuando un monstruo del oponente ataca, destruye al monstruo atacante.", TipoHabilidadTrampa.ARMADURA_SAKURETSU, TipoHabilidadTrampa.BATALLA));
+        this.mazoGeneral.add(new Trampa("Tributo Torrencial", "Cuando un monstruo es invocado, destruye todos los monstruos en el campo.", TipoHabilidadTrampa.TRIBUTO_TORRENCIAL, TipoHabilidadTrampa.INVOCACION));
+        this.mazoGeneral.add(new Trampa("Llamada de los Condenados", "Elige un monstruo de tu cementerio e invócalo en posición de ataque.", TipoHabilidadTrampa.LLAMADA_CONDENADOS, TipoHabilidadTrampa.INVOCACION));
+        this.mazoGeneral.add(new Trampa("Sombreros Mágicos", "Elige dos cartas mágicas de tu mazo y escóndelas con un monstruo para confundir al rival.", TipoHabilidadTrampa.SOMBREROS_MAGICOS, TipoHabilidadTrampa.INVOCACION));
+        this.mazoGeneral.add(new Trampa("Waboku", "Cualquier daño que recibas de los monstruos del oponente este turno se convierte en 0.", TipoHabilidadTrampa.WABOKU, TipoHabilidadTrampa.INVOCACION));
+        this.mazoGeneral.add(new Trampa("Muro de Espejo", "Reduce el ataque de todos los monstruos enemigos a la mitad.", TipoHabilidadTrampa.MURO_ESPEJO, TipoHabilidadTrampa.INVOCACION));
+        this.mazoGeneral.add(new Trampa("Represión", "Toma el control de un monstruo del oponente hasta el final de este turno.", TipoHabilidadTrampa.REPRESION, TipoHabilidadTrampa.INVOCACION));
+        this.mazoGeneral.add(new Trampa("Drenaje de Habilidad", "Paga 1000 LP para negar todos los efectos de los monstruos en el campo.", TipoHabilidadTrampa.DRENAJE_HABILIDAD, TipoHabilidadTrampa.INVOCACION));
 
         barajar();
     }
 
     public List<Carta> obtenerCartas() {
-        return cartas;
+        return mazoGeneral;
     }
     
     public void barajar() {
-        Collections.shuffle(cartas);
+        Collections.shuffle(mazoGeneral);
     }
 }

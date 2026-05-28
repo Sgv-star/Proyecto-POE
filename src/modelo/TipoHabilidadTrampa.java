@@ -10,7 +10,7 @@ public enum TipoHabilidadTrampa {
     WABOKU, 
     MURO_ESPEJO, 
     REPRESION, 
-    DRAENAJE_HABILIDAD, 
+    DRENAJE_HABILIDAD, 
     INVOCACION, 
     BATALLA
 }

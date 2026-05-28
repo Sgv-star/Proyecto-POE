@@ -6,7 +6,7 @@ public class Jugador {
 
     private String nombre;
     private short puntosVida;
-    private List<Carta> mazo = new ArrayList<>();
+    private Stack<Carta> mazo = new Stack<>();
     private List<Carta> mano = new ArrayList<>();
     private List<Carta> cementerio = new ArrayList<>();
 
@@ -47,7 +47,7 @@ public class Jugador {
     public void inicializarMazo(Mazo mazoGeneral) {
         for(byte i=0; i<25; i++){
             if (!mazoGeneral.obtenerCartas().isEmpty()) {
-                this.mazo.add(mazoGeneral.obtenerCartas().remove(0));
+                this.mazo.push(mazoGeneral.obtenerCartas().pop());
             }
         }
     }
@@ -55,7 +55,7 @@ public class Jugador {
     public void inicializarMano() {
         for(byte i=0; i<5; i++){
             if (!this.mazo.isEmpty()) {
-                this.mano.add(this.mazo.remove(0));
+                this.mano.add(this.mazo.pop());
             }
         }
     }

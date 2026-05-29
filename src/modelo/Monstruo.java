@@ -69,7 +69,6 @@ public class Monstruo extends Carta {
 
     @Override
     public boolean jugar(Campo campo, byte turno, byte cartaAActivar, byte byteAux, String stringAux, String stringAux2, String stringAux3, List<Monstruo> lista) {
-        // La lógica de juego se delega al controlador
         return true;
     }
 }

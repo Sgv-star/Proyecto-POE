@@ -7,8 +7,7 @@ public class Jugador {
     private String nombre;
     private short puntosVida;
     private Stack<Carta> mazo = new Stack<>();
-    private List<Carta> mano = new ArrayList<>();
-    private List<Carta> cementerio = new ArrayList<>();
+    private LinkedList<Carta> mano = new LinkedList<>();
 
     public Jugador() {
         this.puntosVida = 8000;
@@ -30,11 +29,8 @@ public class Jugador {
     public List<Carta> obtenerMazo() {
         return mazo;
     }
-    public List<Carta> obtenerMano() {
+    public LinkedList<Carta> obtenerMano() {
         return mano;
-    }
-    public List<Carta> obtenerCementerio(){
-        return cementerio;
     }
     
     public void establecerNombre(String nombre) {

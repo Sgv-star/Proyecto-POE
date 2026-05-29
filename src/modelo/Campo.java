@@ -8,8 +8,8 @@ public class Campo {
     private Monstruo[] monstruosJugador2 = new Monstruo[5];
     private Carta[] magicasYTrampasJugador1 = new Carta[5];
     private Carta[] magicasYTrampasJugador2 = new Carta[5];
-    private List<Carta> cementerioJugador1 = new ArrayList<>();
-    private List<Carta> cementerioJugador2 = new ArrayList<>();
+    private LinkedList<Carta> cementerioJugador1 = new LinkedList<>();
+    private LinkedList<Carta> cementerioJugador2 = new LinkedList<>();
     private Jugador jugador1;
     private Jugador jugador2;
 
@@ -32,10 +32,10 @@ public class Campo {
     public Carta[] obtenerMagicasYTrampasJugador2() { 
         return magicasYTrampasJugador2; 
     }
-    public List<Carta> obtenerCementerioJugador1() { 
+    public LinkedList<Carta> obtenerCementerioJugador1() { 
         return cementerioJugador1; 
     }
-    public List<Carta> obtenerCementerioJugador2() { 
+    public LinkedList<Carta> obtenerCementerioJugador2() { 
         return cementerioJugador2; 
     }
     public Jugador obtenerJugador1() { 

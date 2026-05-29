@@ -27,7 +27,6 @@ public class VistaDuelo extends JFrame implements IVista {
     private JLabel etiquetaJugador1;
     private JLabel etiquetaJugador2;
 
-    // BOTÓN ÚNICO DE FASE
     private JButton botonSiguienteFase;
     
     private JButton botonAtacar, botonPonerCarta, botonVerMano;

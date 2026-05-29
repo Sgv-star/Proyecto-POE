@@ -24,8 +24,7 @@ public class ControladorDuelo {
     }
 
     private void vincularEventos() {
-        if(vista instanceof VistaDuelo){
-            VistaDuelo vistaGUI = (VistaDuelo) vista;
+        if(vista instanceof VistaDuelo vistaGUI){
             vistaGUI.obtenerBotonEmpezar().addActionListener(e -> {
                 String n1 = vista.obtenerNombre1();
                 String n2 = vista.obtenerNombre2();
@@ -36,7 +35,6 @@ public class ControladorDuelo {
                 actualizarInterfaz();
             });
 
-            // BOTÓN ÚNICO: SIGUIENTE FASE
             vistaGUI.obtenerBotonSiguienteFase().addActionListener(e -> avanzarTurno());
 
             vistaGUI.obtenerBotonAtacar().addActionListener(e -> ejecutarBatalla());
@@ -97,7 +95,6 @@ public class ControladorDuelo {
 
         Carta carta = actual.obtenerMano().get(idx);
         
-        // Lógica de Sacrificios para Monstruos
         if (carta instanceof Monstruo) {
             Monstruo m = (Monstruo) carta;
             int req = (m.obtenerNivel() >= 7) ? 2 : (m.obtenerNivel() >= 5 ? 1 : 0);
@@ -110,7 +107,6 @@ public class ControladorDuelo {
             }
         }
 
-        // Búsqueda automática de espacio vacío
         byte posVacia = buscarEspacioVacio(carta);
         if (posVacia == -1) {
             vista.mostrarMensaje("No hay espacios libres.");

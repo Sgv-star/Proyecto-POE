@@ -1,9 +1,8 @@
 package vista;
 
-import java.util.Scanner;
-import java.util.List;
-import modelo.*;
 import controlador.ControladorDuelo;
+import java.util.*;
+import modelo.*;
 
 public class VistaConsola implements IVista {
     private Scanner scanner = new Scanner(System.in);
@@ -77,14 +76,13 @@ public class VistaConsola implements IVista {
     }
 
     @Override
-    public void refrescarDialogoCartas(List<Carta> mano, List<Carta> cementerio) {
+    public void refrescarDialogoCartas(LinkedList<Carta> mano, HashMap<String, Carta> cementerio) {
         System.out.println("--- TU MANO ---");
         for (int i = 0; i < mano.size(); i++) {
             Carta c = mano.get(i);
             String tipo = (c instanceof Monstruo) ? "MON" : (c instanceof Magia ? "MAG" : "TRA");
             String info = i + ": [" + tipo + "] " + c.obtenerNombre();
-            if (c instanceof Monstruo) {
-                Monstruo m = (Monstruo) c;
+            if (c instanceof Monstruo m) {
                 info += " [Lvl:" + m.obtenerNivel() + " ATK:" + m.obtenerAtaque() + " DEF:" + m.obtenerDefensa() + "]";
             }
             System.out.println(info);
@@ -132,12 +130,12 @@ public class VistaConsola implements IVista {
             String accion = scanner.nextLine().toUpperCase();
             
             switch (accion) {
-                case "P": controlador.ponerCarta(); break;
-                case "A": controlador.ejecutarBatalla(); break;
-                case "S": controlador.avanzarTurno(); break;
-                case "V": controlador.actualizarInterfaz(); break;
-                case "Q": enJuego = false; break;
-                default: System.out.println("Acción no válida.");
+                case "P" -> controlador.ponerCarta();
+                case "A" -> controlador.ejecutarBatalla();
+                case "S" -> controlador.avanzarTurno();
+                case "V" -> controlador.actualizarInterfaz();
+                case "Q" -> enJuego = false;
+                default -> System.out.println("Acción no válida.");
             }
         }
         System.out.println("¡Gracias por jugar!");

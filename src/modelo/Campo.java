@@ -8,8 +8,8 @@ public class Campo {
     private Monstruo[] monstruosJugador2 = new Monstruo[5];
     private Carta[] magicasYTrampasJugador1 = new Carta[5];
     private Carta[] magicasYTrampasJugador2 = new Carta[5];
-    private LinkedList<Carta> cementerioJugador1 = new LinkedList<>();
-    private LinkedList<Carta> cementerioJugador2 = new LinkedList<>();
+    private HashMap<String, Carta> cementerioJugador1 = new HashMap<>();
+    private HashMap<String, Carta> cementerioJugador2 = new HashMap<>();
     private Jugador jugador1;
     private Jugador jugador2;
 
@@ -32,10 +32,10 @@ public class Campo {
     public Carta[] obtenerMagicasYTrampasJugador2() { 
         return magicasYTrampasJugador2; 
     }
-    public LinkedList<Carta> obtenerCementerioJugador1() { 
+    public HashMap<String, Carta> obtenerCementerioJugador1() { 
         return cementerioJugador1; 
     }
-    public LinkedList<Carta> obtenerCementerioJugador2() { 
+    public HashMap<String, Carta> obtenerCementerioJugador2() { 
         return cementerioJugador2; 
     }
     public Jugador obtenerJugador1() { 
@@ -69,4 +69,14 @@ public class Campo {
         }
         return false;
     }
+
+    public void agregarAlCementerio(Carta carta, int jugador) {
+        if (jugador == 1){
+            cementerioJugador1.put(carta.obtenerNombre(), carta);
+        } 
+        else{
+            cementerioJugador2.put(carta.obtenerNombre(), carta);
+        }
+    }
+
 }

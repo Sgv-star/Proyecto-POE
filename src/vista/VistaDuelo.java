@@ -1,7 +1,7 @@
 package vista;
 
 import java.awt.*;
-import java.util.List;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import modelo.Carta;
@@ -298,7 +298,7 @@ public class VistaDuelo extends JFrame implements IVista {
 
     public void mostrarMensaje(String m) { JOptionPane.showMessageDialog(this, m); }
 
-    public void refrescarDialogoCartas(List<Carta> mano, List<Carta> cementerio) {
+    public void refrescarDialogoCartas(LinkedList<Carta> mano, HashMap<String, Carta> cementerio) {
         DefaultTableModel modelMano = (DefaultTableModel) tablaMano.getModel();
         DefaultTableModel modelCem = (DefaultTableModel) tablaCementerio.getModel();
         modelMano.setRowCount(0);
@@ -310,7 +310,7 @@ public class VistaDuelo extends JFrame implements IVista {
             modelMano.addRow(new Object[]{i++, c.obtenerNombre(), tipo, stats});
         }
         i = 0;
-        for (Carta c : cementerio) {
+        for (Carta c : cementerio.values()) {
             String stats = (c instanceof Monstruo) ? ((Monstruo)c).obtenerAtaque() + "/" + ((Monstruo)c).obtenerDefensa() : "-";
             String tipo = (c instanceof Monstruo) ? "MON" : (c instanceof Magia ? "MAG" : "TRA");
             modelCem.addRow(new Object[]{i++, c.obtenerNombre(), tipo, stats});

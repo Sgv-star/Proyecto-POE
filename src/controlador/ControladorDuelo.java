@@ -1,7 +1,6 @@
 package controlador;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import modelo.*;
 import vista.IVista;
 import vista.VistaDuelo;
@@ -128,7 +127,7 @@ public class ControladorDuelo {
 
     private boolean realizarSacrificios(int cantidad) {
         Monstruo[] campoM = (jugadorActivo == 1) ? campo.obtenerMonstruosJugador1() : campo.obtenerMonstruosJugador2();
-        List<Carta> cem = (jugadorActivo == 1) ? campo.obtenerCementerioJugador1() : campo.obtenerCementerioJugador2();
+        HashMap<String, Carta> cem = (jugadorActivo == 1) ? campo.obtenerCementerioJugador1() : campo.obtenerCementerioJugador2();
         
         List<Integer> ocupados = new ArrayList<>();
         for (int i=0; i<5; i++) if (campoM[i] != null) ocupados.add(i);
@@ -141,7 +140,7 @@ public class ControladorDuelo {
                 vista.mostrarMensaje("Selección inválida. Sacrificio cancelado.");
                 return false; 
             }
-            cem.add(campoM[idx]);
+            cem.put(campoM[idx].obtenerNombre(), campoM[idx]);
             campoM[idx] = null;
         }
         return true;
@@ -199,16 +198,16 @@ public class ControladorDuelo {
 
     private void removerDelCampo(Monstruo m, int numJugador) {
         Monstruo[] c = (numJugador == 1) ? campo.obtenerMonstruosJugador1() : campo.obtenerMonstruosJugador2();
-        List<Carta> cem = (numJugador == 1) ? campo.obtenerCementerioJugador1() : campo.obtenerCementerioJugador2();
+        HashMap<String, Carta> cem = (numJugador == 1) ? campo.obtenerCementerioJugador1() : campo.obtenerCementerioJugador2();
         for (int i=0; i<5; i++) if (c[i] == m) { c[i] = null; break; }
-        cem.add(m);
+        cem.put(m.obtenerNombre(), m);
     }
 
     public void actualizarInterfaz() {
         Jugador j1 = campo.obtenerJugador1();
         Jugador j2 = campo.obtenerJugador2();
         Jugador actual = (jugadorActivo == 1) ? j1 : j2;
-        List<Carta> cem = (jugadorActivo == 1) ? campo.obtenerCementerioJugador1() : campo.obtenerCementerioJugador2();
+        HashMap<String, Carta> cem = (jugadorActivo == 1) ? campo.obtenerCementerioJugador1() : campo.obtenerCementerioJugador2();
         
         vista.actualizarTurnoYFase(turno, fase);
         vista.actualizarPuntosVida(j1.obtenerNombre(), j1.obtenerPuntosVida(), j2.obtenerNombre(), j2.obtenerPuntosVida());

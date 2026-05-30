@@ -24,7 +24,14 @@ public class ControladorTrampa {
         HashMap<String, Carta> cementerioDefensor = (turno % 2 == 0) ? campo.obtenerCementerioJugador1() : campo.obtenerCementerioJugador2();
         Trampa trampa = (Trampa) magiasYTrampasAtacante[cartaAActivar];
         switch (modelo.obtenerTipoHabilidad()) {
-            case FUERZA_ESPEJO -> destruirAtacantes(campo, turno);
+            case FUERZA_ESPEJO -> {
+                for (int i = 0; i < 5; i++) {
+                    if (monstruosAtacante[i] != null && monstruosAtacante[i].estaEnPosicionAtaque()) {
+                        campo.removerDelCampo(monstruosAtacante[i].obtenerNombre(), turno % 2 == 0 ? 1 : 2);
+                        monstruosAtacante[i] = null;
+                    }
+                }
+            }
 
             case CILINDRO_MAGICO -> {
                 if(trampa.obtenerTurnosActiva() < 1){
@@ -54,10 +61,12 @@ public class ControladorTrampa {
             case TRIBUTO_TORRENCIAL -> {
                 for(int j=0; j<5; j++){
                     if(monstruosAtacante[j] != null){
+                        campo.removerDelCampo(monstruosAtacante[j].obtenerNombre(), turno % 2 == 0 ? 1 : 2);
                         cementerioAtacante.put(monstruosAtacante[j].obtenerNombre(), monstruosAtacante[j]);
                         monstruosAtacante[j] = null;
                     }
                     if(monstruosDefensor[j] != null){
+                        campo.removerDelCampo(monstruosDefensor[j].obtenerNombre(), turno % 2 == 0 ? 1 : 2);
                         cementerioDefensor.put(monstruosDefensor[j].obtenerNombre(), monstruosDefensor[j]);
                         monstruosDefensor[j] = null;
                     }
@@ -69,6 +78,7 @@ public class ControladorTrampa {
 
             case ARMADURA_SAKURETSU -> {
                 if(monstruosAtacante[byteAux] != null){
+                    campo.removerDelCampo(monstruosAtacante[byteAux].obtenerNombre(), turno % 2 == 0 ? 1 : 2);
                     cementerioAtacante.put(monstruosAtacante[byteAux].obtenerNombre(), monstruosAtacante[byteAux]);
                     monstruosAtacante[byteAux] = null;
                 }

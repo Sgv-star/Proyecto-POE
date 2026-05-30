@@ -115,13 +115,7 @@ public class ControladorMagia {
             }
 
             case MIL_CUCHILLOS -> {
-                boolean tieneMagoOscuro = false;
-                for(Monstruo m : monstruosAtacante){
-                    if(m != null && m.obtenerNombre().equals("Mago Oscuro")){
-                        tieneMagoOscuro = true;
-                        break;
-                    }
-                }
+                boolean tieneMagoOscuro = campo.estaEnCampo("Mago Oscuro", turno % 2 == 0 ? 1 : 2);
                 if(tieneMagoOscuro){
                     for(int j=0; j<5; j++){
                         if(monstruosOponente[j] != null && monstruosOponente[j].obtenerNombre().equals(cartaAActivar)){
@@ -187,10 +181,12 @@ public class ControladorMagia {
     private void limpiarMonstruos(Campo campo) {
         for (int i = 0; i < 5; i++) {
             if (campo.obtenerMonstruosJugador1()[i] != null) {
+                campo.removerDelCampo(campo.obtenerMonstruosJugador1()[i].obtenerNombre(), 1);
                 campo.obtenerCementerioJugador1().put(campo.obtenerMonstruosJugador1()[i].obtenerNombre(), campo.obtenerMonstruosJugador1()[i]);
                 campo.obtenerMonstruosJugador1()[i] = null;
             }
             if (campo.obtenerMonstruosJugador2()[i] != null) {
+                campo.removerDelCampo(campo.obtenerMonstruosJugador2()[i].obtenerNombre(), 2);
                 campo.obtenerCementerioJugador2().put(campo.obtenerMonstruosJugador2()[i].obtenerNombre(), campo.obtenerMonstruosJugador2()[i]);
                 campo.obtenerMonstruosJugador2()[i] = null;
             }

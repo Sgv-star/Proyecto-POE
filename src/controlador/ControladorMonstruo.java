@@ -18,7 +18,8 @@ public class ControladorMonstruo {
             modelo.establecerEnPosicionAtaque(!modelo.estaEnPosicionAtaque());
             modelo.establecerYaCambioPosicion(true);
             vista.actualizarTablero();
-        } else {
+        } 
+        else {
             vista.mostrarMensaje("Ya cambió de posición este turno.");
         }
     }

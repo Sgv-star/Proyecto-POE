@@ -24,3 +24,14 @@ Al iniciar el juego se pide el nombre de los dos jugadores y se hace clic en **I
 Toda entrada de datos (elegir cartas, escribir nombres de monstruos para efectos, confirmar acciones) se maneja mediante ventanas emergentes que aparecen según la acción que se realice. El campo de juego se actualiza en tiempo real.
 
 ---
+
+## Tablero KanbanFlow
+https://kanbanflow.com/board/WKV9vja
+
+---
+
+## Estrcuturas de datos usadas
+Pila (Stack): Para el mazo, debido a que conceptualmente el mazo es perfecto para ser tratado como una pila (LIFO), se ponen cartas cartas "arriba" y se sacan las de "abajo".
+Lista enlazada (LinkedList): Para la mano del jugador, debido a que su funcionamiento es similar al de un array, y es más eficiente para insertar o eliminar su primera o última posición.
+Tabla Hash (HashMap): Se usa para los variables de los cementerios de los jugadores, ya que de esta forma, cartas que requieran buscar una carta específica en algún cementerio, puede hacerlo de forma óptima simplemente con el nombre de la carta, ya que el nombre de la carta es la clave y la carta en sí, el valor.
+Conjunto (set): Se añadió un set en el campo, de forma que al necesitar verificar si cierta carta existe en el campo, debido al efecto especial de una magia o trampa, con el set se puede lograr fácilmente al llevar un control de cartas en campo.

@@ -1,7 +1,7 @@
 package vista;
 
 import java.awt.*;
-import java.util.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import modelo.Carta;
@@ -19,7 +19,9 @@ public class VistaDuelo extends JFrame implements IVista {
     private JTextField entradaNombre1;
     private JTextField entradaNombre2;
     private JButton botonEmpezar;
+    private JButton botonCargarPartida;
     private JLabel logoInicio;
+    private JTextArea areaResultados;
 
     private JLabel etiquetaTurno;
     private JLabel etiquetaFase;
@@ -27,9 +29,10 @@ public class VistaDuelo extends JFrame implements IVista {
     private JLabel etiquetaJugador1;
     private JLabel etiquetaJugador2;
 
+    // BOTÓN ÚNICO DE FASE
     private JButton botonSiguienteFase;
     
-    private JButton botonAtacar, botonPonerCarta, botonVerMano;
+    private JButton botonAtacar, botonPonerCarta, botonVerMano, botonGuardarPartida;
 
     private JLabel[] monstruosJ1 = new JLabel[5];
     private JLabel[] magiasYTrampasJ1 = new JLabel[5];
@@ -68,7 +71,7 @@ public class VistaDuelo extends JFrame implements IVista {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 try {
-                    Image img = new ImageIcon("src/yugilogo-convertido-a-600x500-convertido-a-800x700.jpeg").getImage();
+                    Image img = new ImageIcon("src/imagenes/yugilogo-convertido-a-600x500-convertido-a-800x700.jpeg").getImage();
                     g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
                 } catch (Exception e) {}
             }
@@ -76,7 +79,7 @@ public class VistaDuelo extends JFrame implements IVista {
         
         logoInicio = new JLabel();
         try {
-            ImageIcon iconLogo = new ImageIcon("src/yugiletras-convertido-a-250x101-removebg-preview.png");
+            ImageIcon iconLogo = new ImageIcon("src/imagenes/yugiletras-convertido-a-250x101-removebg-preview.png");
             logoInicio.setIcon(iconLogo);
         } catch (Exception e) {}
         logoInicio.setBounds(375, 50, 250, 101);
@@ -103,6 +106,21 @@ public class VistaDuelo extends JFrame implements IVista {
         botonEmpezar = new JButton("Comenzar Duelo");
         botonEmpezar.setBounds(425, 320, 150, 40);
         panelInicio.add(botonEmpezar);
+
+        botonCargarPartida = new JButton("Cargar Partida");
+        botonCargarPartida.setBounds(425, 370, 150, 40);
+        panelInicio.add(botonCargarPartida);
+
+        areaResultados = new JTextArea();
+        areaResultados.setEditable(false);
+        areaResultados.setLineWrap(true);
+        areaResultados.setWrapStyleWord(true);
+        areaResultados.setFont(new Font("Monospaced", Font.PLAIN, 13));
+        areaResultados.setBackground(new Color(10, 10, 10, 180));
+        areaResultados.setForeground(Color.WHITE);
+        JScrollPane scrollResultados = new JScrollPane(areaResultados);
+        scrollResultados.setBounds(300, 440, 400, 220);
+        panelInicio.add(scrollResultados);
     }
 
     private void inicializarPanelJuego() {
@@ -111,7 +129,7 @@ public class VistaDuelo extends JFrame implements IVista {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 try {
-                    Image img = new ImageIcon("src/yugilogo-convertido-a-600x500-convertido-a-800x700.jpeg").getImage();
+                    Image img = new ImageIcon("src/imagenes/yugilogo-convertido-a-600x500-convertido-a-800x700.jpeg").getImage();
                     g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
                 } catch (Exception e) {}
             }
@@ -177,6 +195,10 @@ public class VistaDuelo extends JFrame implements IVista {
         botonPonerCarta = new JButton("Poner Carta");
         botonPonerCarta.setBounds(860, 600, 120, 40);
         panelJuego.add(botonPonerCarta);
+
+        botonGuardarPartida = new JButton("Guardar Partida");
+        botonGuardarPartida.setBounds(700, 650, 280, 40);
+        panelJuego.add(botonGuardarPartida);
     }
 
     private JLabel crearZona(String texto, int x, int y, int w, int h) {
@@ -209,7 +231,7 @@ public class VistaDuelo extends JFrame implements IVista {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 try {
-                    Image img = new ImageIcon("src/yugilogo-convertido-a-600x500-convertido-a-800x700.jpeg").getImage();
+                    Image img = new ImageIcon("src/imagenes/yugilogo-convertido-a-600x500-convertido-a-800x700.jpeg").getImage();
                     g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
                 } catch (Exception e) {}
             }
@@ -265,6 +287,21 @@ public class VistaDuelo extends JFrame implements IVista {
         navegador.show(contenedorPrincipal, "juego");
         dialogoCartas.setVisible(true);
     }
+
+    public void irAFinal() {
+        dialogoCartas.setVisible(false);
+        navegador.show(contenedorPrincipal, "final");
+    }
+
+    public void establecerResumenResultados(String texto) {
+        areaResultados.setText(texto);
+    }
+
+    public String seleccionarPartida(List<String> partidas) {
+        if (partidas == null || partidas.isEmpty()) return null;
+        Object seleccion = JOptionPane.showInputDialog(this, "Selecciona una partida guardada:", "Cargar Partida", JOptionPane.QUESTION_MESSAGE, null, partidas.toArray(), partidas.get(0));
+        return seleccion == null ? null : seleccion.toString();
+    }
     
     public void actualizarTablero() { repaint(); revalidate(); }
 
@@ -298,7 +335,7 @@ public class VistaDuelo extends JFrame implements IVista {
 
     public void mostrarMensaje(String m) { JOptionPane.showMessageDialog(this, m); }
 
-    public void refrescarDialogoCartas(LinkedList<Carta> mano, HashMap<String, Carta> cementerio) {
+    public void refrescarDialogoCartas(List<Carta> mano, List<Carta> cementerio) {
         DefaultTableModel modelMano = (DefaultTableModel) tablaMano.getModel();
         DefaultTableModel modelCem = (DefaultTableModel) tablaCementerio.getModel();
         modelMano.setRowCount(0);
@@ -310,7 +347,7 @@ public class VistaDuelo extends JFrame implements IVista {
             modelMano.addRow(new Object[]{i++, c.obtenerNombre(), tipo, stats});
         }
         i = 0;
-        for (Carta c : cementerio.values()) {
+        for (Carta c : cementerio) {
             String stats = (c instanceof Monstruo) ? ((Monstruo)c).obtenerAtaque() + "/" + ((Monstruo)c).obtenerDefensa() : "-";
             String tipo = (c instanceof Monstruo) ? "MON" : (c instanceof Magia ? "MAG" : "TRA");
             modelCem.addRow(new Object[]{i++, c.obtenerNombre(), tipo, stats});
@@ -318,10 +355,12 @@ public class VistaDuelo extends JFrame implements IVista {
     }
 
     public JButton obtenerBotonEmpezar() { return botonEmpezar; }
+    public JButton obtenerBotonCargarPartida() { return botonCargarPartida; }
     public JButton obtenerBotonVerMano() { return botonVerMano; }
     public JButton obtenerBotonPonerCarta() { return botonPonerCarta; }
     public JButton obtenerBotonAtacar() { return botonAtacar; }
     public JButton obtenerBotonSiguienteFase() { return botonSiguienteFase; }
+    public JButton obtenerBotonGuardarPartida() { return botonGuardarPartida; }
     public String obtenerNombre1() { return entradaNombre1.getText(); }
     public String obtenerNombre2() { return entradaNombre2.getText(); }
 
@@ -332,5 +371,7 @@ public class VistaDuelo extends JFrame implements IVista {
         botonAtacar.addActionListener(e -> controlador.ejecutarBatalla());
         botonPonerCarta.addActionListener(e -> controlador.ponerCarta());
         botonVerMano.addActionListener(e -> controlador.actualizarInterfaz());
+        botonCargarPartida.addActionListener(e -> controlador.cargarPartida());
+        botonGuardarPartida.addActionListener(e -> controlador.guardarPartida());
     }
 }

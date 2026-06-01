@@ -1,8 +1,9 @@
 package vista;
 
-import controlador.ControladorDuelo;
-import java.util.*;
+import java.util.List;
+import java.util.Scanner;
 import modelo.*;
+import controlador.ControladorDuelo;
 
 public class VistaConsola implements IVista {
     private Scanner scanner = new Scanner(System.in);
@@ -16,19 +17,19 @@ public class VistaConsola implements IVista {
 
     @Override
     public int pedirIndiceMano(int max) {
-        System.out.print("Elige índice de carta en mano (0-" + (max - 1) + "): ");
+        System.out.print("Elige indice de carta en mano (0-" + (max - 1) + "): ");
         try { return Integer.parseInt(scanner.nextLine()); } catch (Exception e) { return -1; }
     }
 
     @Override
     public int pedirIndiceCampo(String mensaje) {
-        System.out.print(mensaje + " (índice 0-4): ");
+        System.out.print(mensaje + " (indice 0-4): ");
         try { return Integer.parseInt(scanner.nextLine()); } catch (Exception e) { return -1; }
     }
 
     @Override
     public int pedirOpcionPosicion() {
-        System.out.print("¿Posición? (0: Ataque, 1: Defensa): ");
+        System.out.print("Posicion? (0: Ataque, 1: Defensa): ");
         try { return Integer.parseInt(scanner.nextLine()); } catch (Exception e) { return -1; }
     }
 
@@ -76,13 +77,14 @@ public class VistaConsola implements IVista {
     }
 
     @Override
-    public void refrescarDialogoCartas(LinkedList<Carta> mano, HashMap<String, Carta> cementerio) {
+    public void refrescarDialogoCartas(List<Carta> mano, List<Carta> cementerio) {
         System.out.println("--- TU MANO ---");
         for (int i = 0; i < mano.size(); i++) {
             Carta c = mano.get(i);
             String tipo = (c instanceof Monstruo) ? "MON" : (c instanceof Magia ? "MAG" : "TRA");
             String info = i + ": [" + tipo + "] " + c.obtenerNombre();
-            if (c instanceof Monstruo m) {
+            if (c instanceof Monstruo) {
+                Monstruo m = (Monstruo) c;
                 info += " [Lvl:" + m.obtenerNivel() + " ATK:" + m.obtenerAtaque() + " DEF:" + m.obtenerDefensa() + "]";
             }
             System.out.println(info);
@@ -101,7 +103,6 @@ public class VistaConsola implements IVista {
 
     @Override
     public void actualizarTablero() {
-        // En consola, la actualización es automática por el flujo de System.out
     }
 
     @Override
@@ -122,22 +123,78 @@ public class VistaConsola implements IVista {
     }
 
     public void iniciarBucle() {
-        controlador.iniciarDuelo();
-        
+        mostrarInicio();
+
         while (enJuego) {
-            System.out.println("\nAcciones: [P]oner Carta, [A]tacar, [S]iguiente Fase, [V]er Estado, [Q]uit");
-            System.out.print("Elige acción: ");
+            System.out.println("\nAcciones: [P]oner Carta, [A]tacar, [S]iguiente Fase, [V]er Estado, [G]uardar, [Q]uit");
+            System.out.print("Elige accion: ");
             String accion = scanner.nextLine().toUpperCase();
-            
+
             switch (accion) {
-                case "P" -> controlador.ponerCarta();
-                case "A" -> controlador.ejecutarBatalla();
-                case "S" -> controlador.avanzarTurno();
-                case "V" -> controlador.actualizarInterfaz();
-                case "Q" -> enJuego = false;
-                default -> System.out.println("Acción no válida.");
+                case "P": controlador.ponerCarta(); break;
+                case "A": controlador.ejecutarBatalla(); break;
+                case "S": controlador.avanzarTurno(); break;
+                case "V": controlador.actualizarInterfaz(); break;
+                case "G": controlador.guardarPartida(); break;
+                case "Q": enJuego = false; break;
+                default: System.out.println("Accion no valida.");
             }
         }
-        System.out.println("¡Gracias por jugar!");
+        System.out.println("Gracias por jugar!");
+    }
+
+    private void mostrarInicio() {
+        boolean esperando = true;
+        while (esperando) {
+            System.out.println("\n" + controlador.obtenerResumenResultados());
+            System.out.println("\nInicio: [N]ueva Partida, [C]argar Partida, [Q]uit");
+            System.out.print("Elige opcion: ");
+            String accion = scanner.nextLine().toUpperCase();
+
+            switch (accion) {
+                case "N":
+                    controlador.iniciarDuelo();
+                    esperando = false;
+                    break;
+                case "C":
+                    if (cargarPartidaDesdeConsola()) {
+                        esperando = false;
+                    }
+                    break;
+                case "Q":
+                    enJuego = false;
+                    esperando = false;
+                    break;
+                default:
+                    System.out.println("Opcion no valida.");
+            }
+        }
+    }
+
+    private boolean cargarPartidaDesdeConsola() {
+        List<String> partidas = controlador.obtenerNombresPartidasGuardadas();
+        if (partidas.isEmpty()) {
+            System.out.println("No hay partidas guardadas.");
+            return false;
+        }
+
+        System.out.println("\nPartidas guardadas:");
+        for (int i = 0; i < partidas.size(); i++) {
+            System.out.println(i + ". " + partidas.get(i));
+        }
+
+        System.out.print("Elige partida: ");
+        try {
+            int indice = Integer.parseInt(scanner.nextLine());
+            if (indice < 0 || indice >= partidas.size()) {
+                System.out.println("Partida no valida.");
+                return false;
+            }
+            controlador.cargarPartida(partidas.get(indice));
+            return enJuego;
+        } catch (Exception e) {
+            System.out.println("Partida no valida.");
+            return false;
+        }
     }
 }

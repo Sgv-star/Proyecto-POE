@@ -1,8 +1,8 @@
 package vista;
 
-import java.util.*;
-import modelo.Campo;
+import java.util.List;
 import modelo.Carta;
+import modelo.Campo;
 
 public interface IVista {
     void mostrarMensaje(String mensaje);
@@ -12,11 +12,12 @@ public interface IVista {
     void actualizarTurnoYFase(int turno, String fase);
     void actualizarPuntosVida(String n1, int p1, String n2, int p2);
     void actualizarZonasCampo(Campo campo);
-    void refrescarDialogoCartas(LinkedList<Carta> mano, HashMap<String, Carta> cementerio);
+    void refrescarDialogoCartas(List<Carta> mano, List<Carta> cementerio);
     void establecerInstruccion(String texto);
     void irAJuego();
     void actualizarTablero();
     
+    // Métodos para obtener datos de inicio (pueden variar entre implementaciones)
     String obtenerNombre1();
     String obtenerNombre2();
     void vincularControlador(controlador.ControladorDuelo controlador);

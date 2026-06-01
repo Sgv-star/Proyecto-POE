@@ -8,10 +8,8 @@ public class Campo {
     private Monstruo[] monstruosJugador2 = new Monstruo[5];
     private Carta[] magicasYTrampasJugador1 = new Carta[5];
     private Carta[] magicasYTrampasJugador2 = new Carta[5];
-    private HashMap<String, Carta> cementerioJugador1 = new HashMap<>();
-    private HashMap<String, Carta> cementerioJugador2 = new HashMap<>();
-    private Set<String> cartasEnCampoJ1 = new HashSet<>();
-    private Set<String> cartasEnCampoJ2 = new HashSet<>();
+    private List<Carta> cementerioJugador1 = new ArrayList<>();
+    private List<Carta> cementerioJugador2 = new ArrayList<>();
     private Jugador jugador1;
     private Jugador jugador2;
 
@@ -34,10 +32,10 @@ public class Campo {
     public Carta[] obtenerMagicasYTrampasJugador2() { 
         return magicasYTrampasJugador2; 
     }
-    public HashMap<String, Carta> obtenerCementerioJugador1() { 
+    public List<Carta> obtenerCementerioJugador1() { 
         return cementerioJugador1; 
     }
-    public HashMap<String, Carta> obtenerCementerioJugador2() { 
+    public List<Carta> obtenerCementerioJugador2() { 
         return cementerioJugador2; 
     }
     public Jugador obtenerJugador1() { 
@@ -60,55 +58,15 @@ public class Campo {
             Monstruo[] campo = esTurnoJugador1 ? monstruosJugador1 : monstruosJugador2;
             if (campo[posicion] == null) {
                 campo[posicion] = (Monstruo) carta;
-                if (esTurnoJugador1) {
-                    cartasEnCampoJ1.add(carta.obtenerNombre());
-                }
-                else{
-                    cartasEnCampoJ2.add(carta.obtenerNombre());
-                }
                 return true;
             }
         } else {
             Carta[] campo = esTurnoJugador1 ? magicasYTrampasJugador1 : magicasYTrampasJugador2;
             if (campo[posicion] == null) {
                 campo[posicion] = carta;
-                if (esTurnoJugador1) {
-                    cartasEnCampoJ1.add(carta.obtenerNombre());
-                }
-                else{
-                    cartasEnCampoJ2.add(carta.obtenerNombre());
-                }
                 return true;
             }
         }
         return false;
     }
-
-    public boolean estaEnCampo(String nombre, int jugador) {
-        if (jugador == 1) {
-            return cartasEnCampoJ1.contains(nombre);
-        } 
-        else{
-            return cartasEnCampoJ2.contains(nombre);
-        }
-    }
-
-    public void removerDelCampo(String nombre, int jugador) {
-        if (jugador == 1){
-            cartasEnCampoJ1.remove(nombre);
-        }
-        else{
-            cartasEnCampoJ2.remove(nombre);
-        }
-    }
-
-    public void agregarAlCementerio(Carta carta, int jugador) {
-        if (jugador == 1){
-            cementerioJugador1.put(carta.obtenerNombre(), carta);
-        } 
-        else{
-            cementerioJugador2.put(carta.obtenerNombre(), carta);
-        }
-    }
-
 }

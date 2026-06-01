@@ -25,9 +25,9 @@ public class ControladorCampo {
 
     public void enviarAlCementerio(Carta carta, int numeroJugador) {
         if (numeroJugador == 1) {
-            modelo.obtenerCementerioJugador1().add(carta);
+            modelo.getCementerioJugador1().add(carta);
         } else {
-            modelo.obtenerCementerioJugador2().add(carta);
+            modelo.getCementerioJugador2().add(carta);
         }
         vista.actualizarTablero();
     }

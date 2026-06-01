@@ -19,47 +19,47 @@ public class Campo {
         this.jugador1 = jugador1;
         this.jugador2 = jugador2;
     }
-    
+
     public Campo() {}
 
-    public Monstruo[] obtenerMonstruosJugador1() { 
-        return monstruosJugador1; 
+    public Monstruo[] getMonstruosJugador1() {
+        return monstruosJugador1;
     }
-    public Monstruo[] obtenerMonstruosJugador2() { 
-        return monstruosJugador2; 
+    public Monstruo[] getMonstruosJugador2() {
+        return monstruosJugador2;
     }
-    public Carta[] obtenerMagicasYTrampasJugador1() { 
-        return magicasYTrampasJugador1; 
+    public Carta[] getMagicasYTrampasJugador1() {
+        return magicasYTrampasJugador1;
     }
-    public Carta[] obtenerMagicasYTrampasJugador2() { 
-        return magicasYTrampasJugador2; 
+    public Carta[] getMagicasYTrampasJugador2() {
+        return magicasYTrampasJugador2;
     }
-    public List<Carta> obtenerCementerioJugador1() { 
+    public List<Carta> getCementerioJugador1() {
         return new CementerioLista(cementerioJugador1);
     }
-    public List<Carta> obtenerCementerioJugador2() { 
+    public List<Carta> getCementerioJugador2() {
         return new CementerioLista(cementerioJugador2);
     }
-    public HashMap<String, Carta> obtenerMapaCementerioJugador1() {
+    public HashMap<String, Carta> getMapaCementerioJugador1() {
         return cementerioJugador1;
     }
-    public HashMap<String, Carta> obtenerMapaCementerioJugador2() {
+    public HashMap<String, Carta> getMapaCementerioJugador2() {
         return cementerioJugador2;
     }
-    public Jugador obtenerJugador1() { 
-        return jugador1; 
+    public Jugador getJugador1() {
+        return jugador1;
     }
-    public Jugador obtenerJugador2() { 
-        return jugador2; 
+    public Jugador getJugador2() {
+        return jugador2;
     }
 
-    public void establecerJugador1(Jugador jugador) { 
-        this.jugador1 = jugador; 
+    public void setJugador1(Jugador jugador) {
+        this.jugador1 = jugador;
     }
-    public void establecerJugador2(Jugador jugador) { 
-        this.jugador2 = jugador; 
+    public void setJugador2(Jugador jugador) {
+        this.jugador2 = jugador;
     }
-    
+
     public boolean colocarCarta(Carta carta, byte turno, byte posicion) {
         boolean esTurnoJugador1 = (turno % 2 == 0);
         if (carta instanceof Monstruo) {
@@ -95,9 +95,9 @@ public class Campo {
     public void agregarAlCementerio(Carta carta, int jugador) {
         if (carta == null) return;
         if (jugador == 1) {
-            cementerioJugador1.put(carta.obtenerNombre(), carta);
+            cementerioJugador1.put(carta.getNombre(), carta);
         } else {
-            cementerioJugador2.put(carta.obtenerNombre(), carta);
+            cementerioJugador2.put(carta.getNombre(), carta);
         }
     }
 
@@ -117,9 +117,9 @@ public class Campo {
     private void agregarControlCampo(Carta carta, int jugador) {
         if (carta == null) return;
         if (jugador == 1) {
-            cartasEnCampoJ1.add(carta.obtenerNombre());
+            cartasEnCampoJ1.add(carta.getNombre());
         } else {
-            cartasEnCampoJ2.add(carta.obtenerNombre());
+            cartasEnCampoJ2.add(carta.getNombre());
         }
     }
 
@@ -143,7 +143,7 @@ public class Campo {
         @Override
         public boolean add(Carta carta) {
             if (carta == null) return false;
-            mapa.put(carta.obtenerNombre(), carta);
+            mapa.put(carta.getNombre(), carta);
             return true;
         }
 

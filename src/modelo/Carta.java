@@ -14,17 +14,17 @@ public abstract class Carta {
         this.esVisible = esVisible;
     }
 
-    public String obtenerNombre() {
+    public String getNombre() {
         return nombre;
     }
-    public String obtenerDescripcion() {
+    public String getDescripcion() {
         return descripcion;
     }
     public boolean esVisible() {
         return esVisible;
     }
 
-    public void establecerVisible(boolean visible) {
+    public void setVisible(boolean visible) {
         this.esVisible = visible;
     }
 

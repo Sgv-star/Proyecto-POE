@@ -13,12 +13,12 @@ public interface IVista {
     void actualizarPuntosVida(String n1, int p1, String n2, int p2);
     void actualizarZonasCampo(Campo campo);
     void refrescarDialogoCartas(List<Carta> mano, List<Carta> cementerio);
-    void establecerInstruccion(String texto);
+    void setInstruccion(String texto);
     void irAJuego();
     void actualizarTablero();
-    
+
     // Métodos para obtener datos de inicio (pueden variar entre implementaciones)
-    String obtenerNombre1();
-    String obtenerNombre2();
+    String getNombre1();
+    String getNombre2();
     void vincularControlador(controlador.ControladorDuelo controlador);
 }

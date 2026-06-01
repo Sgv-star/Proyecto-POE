@@ -21,40 +21,40 @@ public class Jugador {
         inicializarMano();
     }
 
-    public String obtenerNombre() {
+    public String getNombre() {
         return nombre;
     }
-    public short obtenerPuntosVida() {
+    public short getPuntosVida() {
         return puntosVida;
     }
-    public Stack<Carta> obtenerMazo() {
+    public Stack<Carta> getMazo() {
         return mazo;
     }
-    public LinkedList<Carta> obtenerMano() {
+    public LinkedList<Carta> getMano() {
         return mano;
     }
-    public List<Carta> obtenerCementerio(){
+    public List<Carta> getCementerio(){
         return new ArrayList<>(cementerio.values());
     }
-    public HashMap<String, Carta> obtenerMapaCementerio() {
+    public HashMap<String, Carta> getMapaCementerio() {
         return cementerio;
     }
-    
-    public void establecerNombre(String nombre) {
+
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    public void establecerPuntosVida(short lp) {
+    public void setPuntosVida(short lp) {
         this.puntosVida = lp;
     }
-    
+
     public void inicializarMazo(Mazo mazoGeneral) {
         for(byte i=0; i<25; i++){
-            if (!mazoGeneral.obtenerCartas().isEmpty()) {
-                this.mazo.push(mazoGeneral.obtenerCartas().pop());
+            if (!mazoGeneral.getCartas().isEmpty()) {
+                this.mazo.push(mazoGeneral.getCartas().pop());
             }
         }
     }
-    
+
     public void inicializarMano() {
         for(byte i=0; i<5; i++){
             if (!this.mazo.isEmpty()) {

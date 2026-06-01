@@ -12,14 +12,14 @@ public class Magia extends Carta {
         this.turnosActiva = 0;
     }
 
-    public TipoHabilidadMagia obtenerTipoHabilidad() { 
-        return tipoHabilidad; 
+    public TipoHabilidadMagia getTipoHabilidad() {
+        return tipoHabilidad;
     }
-    public byte obtenerTurnosActiva() { 
-        return turnosActiva; 
+    public byte getTurnosActiva() {
+        return turnosActiva;
     }
-    public void establecerTurnosActiva(byte turnos) { 
-        this.turnosActiva = turnos; 
+    public void setTurnosActiva(byte turnos) {
+        this.turnosActiva = turnos;
     }
 
     @Override

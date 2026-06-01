@@ -31,7 +31,7 @@ public class VistaDuelo extends JFrame implements IVista {
 
     // BOTÓN ÚNICO DE FASE
     private JButton botonSiguienteFase;
-    
+
     private JButton botonAtacar, botonPonerCarta, botonVerMano, botonGuardarPartida;
 
     private JLabel[] monstruosJ1 = new JLabel[5];
@@ -76,7 +76,7 @@ public class VistaDuelo extends JFrame implements IVista {
                 } catch (Exception e) {}
             }
         };
-        
+
         logoInicio = new JLabel();
         try {
             ImageIcon iconLogo = new ImageIcon("src/imagenes/yugiletras-convertido-a-250x101-removebg-preview.png");
@@ -211,7 +211,7 @@ public class VistaDuelo extends JFrame implements IVista {
     }
 
     private void inicializarDialogoCartas() {
-        dialogoCartas = new JDialog(this, "Mano y Cementerio", false); 
+        dialogoCartas = new JDialog(this, "Mano y Cementerio", false);
         dialogoCartas.setSize(400, 600);
         dialogoCartas.setLayout(new GridLayout(2, 1));
         Point loc = this.getLocation();
@@ -243,7 +243,7 @@ public class VistaDuelo extends JFrame implements IVista {
         panelFinal.add(txtFinal);
     }
 
-    public void establecerInstruccion(String texto) {
+    public void setInstruccion(String texto) {
         etiquetaInstruccion.setText(texto);
     }
 
@@ -283,7 +283,7 @@ public class VistaDuelo extends JFrame implements IVista {
         gestionarBotonesFase(fase);
     }
 
-    public void irAJuego() { 
+    public void irAJuego() {
         navegador.show(contenedorPrincipal, "juego");
         dialogoCartas.setVisible(true);
     }
@@ -293,7 +293,7 @@ public class VistaDuelo extends JFrame implements IVista {
         navegador.show(contenedorPrincipal, "final");
     }
 
-    public void establecerResumenResultados(String texto) {
+    public void setResumenResultados(String texto) {
         areaResultados.setText(texto);
     }
 
@@ -302,15 +302,15 @@ public class VistaDuelo extends JFrame implements IVista {
         Object seleccion = JOptionPane.showInputDialog(this, "Selecciona una partida guardada:", "Cargar Partida", JOptionPane.QUESTION_MESSAGE, null, partidas.toArray(), partidas.get(0));
         return seleccion == null ? null : seleccion.toString();
     }
-    
+
     public void actualizarTablero() { repaint(); revalidate(); }
 
     public void actualizarZonasCampo(modelo.Campo campo) {
         for (int i = 0; i < 5; i++) {
-            actualizarLabelZona(monstruosJ1[i], campo.obtenerMonstruosJugador1()[i], "MON");
-            actualizarLabelZona(magiasYTrampasJ1[i], campo.obtenerMagicasYTrampasJugador1()[i], "M/T");
-            actualizarLabelZona(monstruosJ2[i], campo.obtenerMonstruosJugador2()[i], "MON");
-            actualizarLabelZona(magiasYTrampasJ2[i], campo.obtenerMagicasYTrampasJugador2()[i], "M/T");
+            actualizarLabelZona(monstruosJ1[i], campo.getMonstruosJugador1()[i], "MON");
+            actualizarLabelZona(magiasYTrampasJ1[i], campo.getMagicasYTrampasJugador1()[i], "M/T");
+            actualizarLabelZona(monstruosJ2[i], campo.getMonstruosJugador2()[i], "MON");
+            actualizarLabelZona(magiasYTrampasJ2[i], campo.getMagicasYTrampasJugador2()[i], "M/T");
         }
     }
 
@@ -320,10 +320,10 @@ public class VistaDuelo extends JFrame implements IVista {
             label.setForeground(Color.LIGHT_GRAY);
         } else {
             String color = (carta instanceof Monstruo) ? "yellow" : "cyan";
-            String info = "<html><center><b style='color:" + color + "'>" + carta.obtenerNombre() + "</b><br>";
+            String info = "<html><center><b style='color:" + color + "'>" + carta.getNombre() + "</b><br>";
             if (carta instanceof Monstruo) {
                 Monstruo m = (Monstruo) carta;
-                info += "<small>Nvl:" + m.obtenerNivel() + " | " + m.obtenerAtaque() + "/" + m.obtenerDefensa() + "</small><br>";
+                info += "<small>Nvl:" + m.getNivel() + " | " + m.getAtaque() + "/" + m.getDefensa() + "</small><br>";
                 info += "<i style='color:white'>" + (m.estaEnPosicionAtaque() ? "[ATK]" : "[DEF]") + "</i>";
             } else {
                 info += "<small>(" + (carta instanceof Magia ? "MAGIA" : "TRAMPA") + ")</small>";
@@ -342,27 +342,27 @@ public class VistaDuelo extends JFrame implements IVista {
         modelCem.setRowCount(0);
         int i = 0;
         for (Carta c : mano) {
-            String stats = (c instanceof Monstruo) ? ((Monstruo)c).obtenerAtaque() + "/" + ((Monstruo)c).obtenerDefensa() : "-";
-            String tipo = (c instanceof Monstruo) ? "MON (" + ((Monstruo)c).obtenerNivel() + ")" : (c instanceof Magia ? "MAG" : "TRA");
-            modelMano.addRow(new Object[]{i++, c.obtenerNombre(), tipo, stats});
+            String stats = (c instanceof Monstruo) ? ((Monstruo)c).getAtaque() + "/" + ((Monstruo)c).getDefensa() : "-";
+            String tipo = (c instanceof Monstruo) ? "MON (" + ((Monstruo)c).getNivel() + ")" : (c instanceof Magia ? "MAG" : "TRA");
+            modelMano.addRow(new Object[]{i++, c.getNombre(), tipo, stats});
         }
         i = 0;
         for (Carta c : cementerio) {
-            String stats = (c instanceof Monstruo) ? ((Monstruo)c).obtenerAtaque() + "/" + ((Monstruo)c).obtenerDefensa() : "-";
+            String stats = (c instanceof Monstruo) ? ((Monstruo)c).getAtaque() + "/" + ((Monstruo)c).getDefensa() : "-";
             String tipo = (c instanceof Monstruo) ? "MON" : (c instanceof Magia ? "MAG" : "TRA");
-            modelCem.addRow(new Object[]{i++, c.obtenerNombre(), tipo, stats});
+            modelCem.addRow(new Object[]{i++, c.getNombre(), tipo, stats});
         }
     }
 
-    public JButton obtenerBotonEmpezar() { return botonEmpezar; }
-    public JButton obtenerBotonCargarPartida() { return botonCargarPartida; }
-    public JButton obtenerBotonVerMano() { return botonVerMano; }
-    public JButton obtenerBotonPonerCarta() { return botonPonerCarta; }
-    public JButton obtenerBotonAtacar() { return botonAtacar; }
-    public JButton obtenerBotonSiguienteFase() { return botonSiguienteFase; }
-    public JButton obtenerBotonGuardarPartida() { return botonGuardarPartida; }
-    public String obtenerNombre1() { return entradaNombre1.getText(); }
-    public String obtenerNombre2() { return entradaNombre2.getText(); }
+    public JButton getBotonEmpezar() { return botonEmpezar; }
+    public JButton getBotonCargarPartida() { return botonCargarPartida; }
+    public JButton getBotonVerMano() { return botonVerMano; }
+    public JButton getBotonPonerCarta() { return botonPonerCarta; }
+    public JButton getBotonAtacar() { return botonAtacar; }
+    public JButton getBotonSiguienteFase() { return botonSiguienteFase; }
+    public JButton getBotonGuardarPartida() { return botonGuardarPartida; }
+    public String getNombre1() { return entradaNombre1.getText(); }
+    public String getNombre2() { return entradaNombre2.getText(); }
 
     @Override
     public void vincularControlador(controlador.ControladorDuelo controlador) {

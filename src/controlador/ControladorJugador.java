@@ -14,16 +14,16 @@ public class ControladorJugador {
     }
 
     public void recibirDanio(int cantidad) {
-        short nuevosPuntos = (short) (modelo.obtenerPuntosVida() - cantidad);
+        short nuevosPuntos = (short) (modelo.getPuntosVida() - cantidad);
         if (nuevosPuntos < 0) nuevosPuntos = 0;
-        modelo.establecerPuntosVida(nuevosPuntos);
+        modelo.setPuntosVida(nuevosPuntos);
         vista.actualizarTablero();
     }
 
     public void robarCarta() {
-        if (!modelo.obtenerMazo().isEmpty()) {
-            Carta carta = modelo.obtenerMazo().pop();
-            modelo.obtenerMano().add(carta);
+        if (!modelo.getMazo().isEmpty()) {
+            Carta carta = modelo.getMazo().pop();
+            modelo.getMano().add(carta);
         }
         vista.actualizarTablero();
     }

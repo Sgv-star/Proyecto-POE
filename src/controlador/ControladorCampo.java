@@ -2,6 +2,7 @@ package controlador;
 
 import modelo.Campo;
 import modelo.Carta;
+import modelo.Monstruo;
 import vista.VistaDuelo;
 
 public class ControladorCampo {
@@ -24,9 +25,9 @@ public class ControladorCampo {
 
     public void enviarAlCementerio(Carta carta, int numeroJugador) {
         if (numeroJugador == 1) {
-            modelo.obtenerCementerioJugador1().put(carta.obtenerNombre(), carta);
+            modelo.obtenerCementerioJugador1().add(carta);
         } else {
-            modelo.obtenerCementerioJugador2().put(carta.obtenerNombre(), carta);
+            modelo.obtenerCementerioJugador2().add(carta);
         }
         vista.actualizarTablero();
     }

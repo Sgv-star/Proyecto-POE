@@ -1,6 +1,7 @@
 package controlador;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import modelo.*;
 import vista.IVista;
 import vista.VistaDuelo;
@@ -11,6 +12,9 @@ public class ControladorDuelo {
     private int turno;
     private String fase;
     private int jugadorActivo;
+    private PersistenciaPartida persistenciaPartida;
+    private RegistroResultados registroResultados;
+    private boolean dueloTerminado;
 
     public ControladorDuelo(Campo campo, IVista vista) {
         this.campo = campo;
@@ -18,55 +22,44 @@ public class ControladorDuelo {
         this.turno = 1;
         this.fase = "Main 1";
         this.jugadorActivo = 1;
-
-        vincularEventos();
-    }
-
-    private void vincularEventos() {
-        if(vista instanceof VistaDuelo vistaGUI){
-            vistaGUI.obtenerBotonEmpezar().addActionListener(e -> {
-                String n1 = vista.obtenerNombre1();
-                String n2 = vista.obtenerNombre2();
-                Mazo mazo = new Mazo();
-                campo.establecerJugador1(new Jugador(n1, mazo));
-                campo.establecerJugador2(new Jugador(n2, mazo));
-                vista.irAJuego();
-                actualizarInterfaz();
-            });
-
-            vistaGUI.obtenerBotonSiguienteFase().addActionListener(e -> avanzarTurno());
-
-            vistaGUI.obtenerBotonAtacar().addActionListener(e -> ejecutarBatalla());
-            vistaGUI.obtenerBotonPonerCarta().addActionListener(e -> ponerCarta());
-            vistaGUI.obtenerBotonVerMano().addActionListener(e -> actualizarInterfaz());
-        }
+        this.persistenciaPartida = new PersistenciaPartida();
+        this.registroResultados = new RegistroResultados();
+        this.dueloTerminado = false;
+        actualizarResumenResultados();
     }
 
     public void iniciarDuelo() {
-        String n1 = vista.obtenerNombre1();
-        String n2 = vista.obtenerNombre2();
+        iniciarNuevaPartida(vista.obtenerNombre1(), vista.obtenerNombre2());
+    }
+
+    private void iniciarNuevaPartida(String n1, String n2) {
         Mazo mazo = new Mazo();
         campo.establecerJugador1(new Jugador(n1, mazo));
         campo.establecerJugador2(new Jugador(n2, mazo));
+        limpiarCampo();
+        turno = 1;
+        fase = "Main 1";
+        jugadorActivo = 1;
+        dueloTerminado = false;
         vista.irAJuego();
         actualizarInterfaz();
     }
 
     public void avanzarTurno() {
+        if (dueloTerminado) return;
         if (fase.equals("Main 1")) {
-            // Jugador 1 termina su turno -> Jugador 2 roba -> Main 2
             jugadorActivo = 2;
             robarCarta(2);
+            if (dueloTerminado) return;
             fase = "Main 2";
         } else if (fase.equals("Main 2")) {
-            // Jugador 2 termina su turno -> Fase de Batalla (Ataca el activo)
             fase = "Batalla";
         } else if (fase.equals("Batalla")) {
-            // Se termina el turno completo -> Siguiente turno, Jugador 1 roba
             fase = "Main 1";
             turno++;
             jugadorActivo = 1;
             robarCarta(1);
+            if (dueloTerminado) return;
         }
         actualizarInterfaz();
     }
@@ -74,18 +67,21 @@ public class ControladorDuelo {
     private void robarCarta(int numJugador) {
         Jugador j = (numJugador == 1) ? campo.obtenerJugador1() : campo.obtenerJugador2();
         if (!j.obtenerMazo().isEmpty()) {
-            Carta robada = j.obtenerMazo().remove(0);
+            Carta robada = j.obtenerMazo().pop();
             j.obtenerMano().add(robada);
             vista.mostrarMensaje(j.obtenerNombre() + " ha robado la carta: " + robada.obtenerNombre());
         } else {
-            vista.mostrarMensaje(j.obtenerNombre() + " no tiene más cartas en su mazo.");
+            vista.mostrarMensaje(j.obtenerNombre() + " no tiene mas cartas en su mazo.");
+            Jugador ganador = (numJugador == 1) ? campo.obtenerJugador2() : campo.obtenerJugador1();
+            finalizarDuelo(ganador, j);
         }
     }
 
     public void ponerCarta() {
+        if (dueloTerminado) return;
         Jugador actual = (jugadorActivo == 1) ? campo.obtenerJugador1() : campo.obtenerJugador2();
         if (actual.obtenerMano().isEmpty()) {
-            vista.mostrarMensaje("Mano vacía.");
+            vista.mostrarMensaje("Mano vacia.");
             return;
         }
 
@@ -93,11 +89,11 @@ public class ControladorDuelo {
         if (idx < 0 || idx >= actual.obtenerMano().size()) return;
 
         Carta carta = actual.obtenerMano().get(idx);
-        
+
         if (carta instanceof Monstruo) {
             Monstruo m = (Monstruo) carta;
             int req = (m.obtenerNivel() >= 7) ? 2 : (m.obtenerNivel() >= 5 ? 1 : 0);
-            
+
             if (req > 0) {
                 if (!realizarSacrificios(req)) {
                     vista.mostrarMensaje("No tienes suficientes monstruos para sacrificar.");
@@ -127,35 +123,37 @@ public class ControladorDuelo {
 
     private boolean realizarSacrificios(int cantidad) {
         Monstruo[] campoM = (jugadorActivo == 1) ? campo.obtenerMonstruosJugador1() : campo.obtenerMonstruosJugador2();
-        HashMap<String, Carta> cem = (jugadorActivo == 1) ? campo.obtenerCementerioJugador1() : campo.obtenerCementerioJugador2();
-        
+        List<Carta> cem = (jugadorActivo == 1) ? campo.obtenerCementerioJugador1() : campo.obtenerCementerioJugador2();
+
         List<Integer> ocupados = new ArrayList<>();
-        for (int i=0; i<5; i++) if (campoM[i] != null) ocupados.add(i);
+        for (int i = 0; i < 5; i++) if (campoM[i] != null) ocupados.add(i);
 
         if (ocupados.size() < cantidad) return false;
 
         for (int i = 0; i < cantidad; i++) {
-            int idx = vista.pedirIndiceCampo("Elige monstruo para SACRIFICAR (" + (i+1) + "/" + cantidad + ")");
+            int idx = vista.pedirIndiceCampo("Elige monstruo para SACRIFICAR (" + (i + 1) + "/" + cantidad + ")");
             if (idx < 0 || idx > 4 || campoM[idx] == null) {
-                vista.mostrarMensaje("Selección inválida. Sacrificio cancelado.");
-                return false; 
+                vista.mostrarMensaje("Seleccion invalida. Sacrificio cancelado.");
+                return false;
             }
-            cem.put(campoM[idx].obtenerNombre(), campoM[idx]);
+            cem.add(campoM[idx]);
+            campo.removerDelCampo(campoM[idx].obtenerNombre(), jugadorActivo);
             campoM[idx] = null;
         }
         return true;
     }
 
     private byte buscarEspacioVacio(Carta c) {
-        Object[] zones = (c instanceof Monstruo) ? 
+        Object[] zones = (c instanceof Monstruo) ?
             ((jugadorActivo == 1) ? campo.obtenerMonstruosJugador1() : campo.obtenerMonstruosJugador2()) :
             ((jugadorActivo == 1) ? campo.obtenerMagicasYTrampasJugador1() : campo.obtenerMagicasYTrampasJugador2());
-        
+
         for (byte i = 0; i < 5; i++) if (zones[i] == null) return i;
         return -1;
     }
 
     public void ejecutarBatalla() {
+        if (dueloTerminado) return;
         int idxAtk = vista.pedirIndiceCampo("Tu monstruo atacante");
         int idxDef = vista.pedirIndiceCampo("Monstruo OBJETIVO (Oponente)");
         if (idxAtk < 0 || idxDef < 0) return;
@@ -166,13 +164,13 @@ public class ControladorDuelo {
         Monstruo mDef = (jugadorActivo == 1) ? campo.obtenerMonstruosJugador2()[idxDef] : campo.obtenerMonstruosJugador1()[idxDef];
 
         if (mAtk == null || !mAtk.estaEnPosicionAtaque()) {
-            vista.mostrarMensaje("Elegir un atacante válido en posición de ataque.");
+            vista.mostrarMensaje("Elegir un atacante valido en posicion de ataque.");
             return;
         }
 
         if (mDef == null) {
             def.establecerPuntosVida((short)(def.obtenerPuntosVida() - mAtk.obtenerAtaque()));
-            vista.mostrarMensaje("¡Ataque directo!");
+            vista.mostrarMensaje("Ataque directo.");
         } else {
             if (mDef.estaEnPosicionAtaque()) {
                 if (mAtk.obtenerAtaque() > mDef.obtenerAtaque()) {
@@ -194,31 +192,136 @@ public class ControladorDuelo {
             }
         }
         actualizarInterfaz();
+        verificarFinDuelo();
     }
 
     private void removerDelCampo(Monstruo m, int numJugador) {
         Monstruo[] c = (numJugador == 1) ? campo.obtenerMonstruosJugador1() : campo.obtenerMonstruosJugador2();
-        HashMap<String, Carta> cem = (numJugador == 1) ? campo.obtenerCementerioJugador1() : campo.obtenerCementerioJugador2();
-        for (int i=0; i<5; i++) if (c[i] == m) { c[i] = null; break; }
-        cem.put(m.obtenerNombre(), m);
+        List<Carta> cem = (numJugador == 1) ? campo.obtenerCementerioJugador1() : campo.obtenerCementerioJugador2();
+        for (int i = 0; i < 5; i++) if (c[i] == m) { c[i] = null; campo.removerDelCampo(m.obtenerNombre(), numJugador); break; }
+        cem.add(m);
+    }
+
+    public void guardarPartida() {
+        if (campo.obtenerJugador1() == null || campo.obtenerJugador2() == null) {
+            vista.mostrarMensaje("No hay una partida para guardar.");
+            return;
+        }
+        try {
+            persistenciaPartida.guardar(campo, turno, fase, jugadorActivo);
+            vista.mostrarMensaje("Partida guardada correctamente como: " + campo.obtenerJugador1().obtenerNombre() + " vs " + campo.obtenerJugador2().obtenerNombre());
+        } catch (Exception e) {
+            vista.mostrarMensaje("No se pudo guardar la partida: " + e.getMessage());
+        }
+    }
+
+    public void cargarPartida() {
+        try {
+            List<String> partidas = persistenciaPartida.obtenerNombresPartidas();
+            if (partidas.isEmpty()) {
+                vista.mostrarMensaje("No hay partidas guardadas.");
+                return;
+            }
+            String seleccion = partidas.get(0);
+            if (vista instanceof VistaDuelo) {
+                seleccion = ((VistaDuelo) vista).seleccionarPartida(partidas);
+            }
+            if (seleccion == null || seleccion.trim().isEmpty()) {
+                return;
+            }
+            cargarPartida(seleccion);
+        } catch (Exception e) {
+            vista.mostrarMensaje("No se pudo cargar la partida: " + e.getMessage());
+        }
+    }
+
+    public void cargarPartida(String seleccion) {
+        try {
+            PersistenciaPartida.EstadoPartida estado = persistenciaPartida.cargar(campo, seleccion);
+            turno = estado.obtenerTurno();
+            fase = estado.obtenerFase();
+            jugadorActivo = estado.obtenerJugadorActivo();
+            dueloTerminado = false;
+            vista.irAJuego();
+            actualizarInterfaz();
+            vista.mostrarMensaje("Partida cargada correctamente: " + seleccion);
+        } catch (Exception e) {
+            vista.mostrarMensaje("No se pudo cargar la partida: " + e.getMessage());
+        }
+    }
+
+    public List<String> obtenerNombresPartidasGuardadas() {
+        try {
+            return persistenciaPartida.obtenerNombresPartidas();
+        } catch (Exception e) {
+            vista.mostrarMensaje("No se pudieron leer las partidas guardadas: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    public String obtenerResumenResultados() {
+        return registroResultados.obtenerResumen();
+    }
+
+    private void verificarFinDuelo() {
+        Jugador j1 = campo.obtenerJugador1();
+        Jugador j2 = campo.obtenerJugador2();
+        if (j1.obtenerPuntosVida() <= 0) {
+            finalizarDuelo(j2, j1);
+        } else if (j2.obtenerPuntosVida() <= 0) {
+            finalizarDuelo(j1, j2);
+        }
+    }
+
+    private void finalizarDuelo(Jugador ganador, Jugador perdedor) {
+        if (dueloTerminado) return;
+        dueloTerminado = true;
+        try {
+            registroResultados.guardarResultado(ganador, perdedor, turno);
+            actualizarResumenResultados();
+        } catch (Exception e) {
+            vista.mostrarMensaje("No se pudo guardar el resultado: " + e.getMessage());
+        }
+        vista.mostrarMensaje("Ganador: " + ganador.obtenerNombre());
+        if (vista instanceof VistaDuelo) {
+            ((VistaDuelo) vista).irAFinal();
+        }
     }
 
     public void actualizarInterfaz() {
         Jugador j1 = campo.obtenerJugador1();
         Jugador j2 = campo.obtenerJugador2();
         Jugador actual = (jugadorActivo == 1) ? j1 : j2;
-        HashMap<String, Carta> cem = (jugadorActivo == 1) ? campo.obtenerCementerioJugador1() : campo.obtenerCementerioJugador2();
-        
+        List<Carta> cem = (jugadorActivo == 1) ? campo.obtenerCementerioJugador1() : campo.obtenerCementerioJugador2();
+
         vista.actualizarTurnoYFase(turno, fase);
         vista.actualizarPuntosVida(j1.obtenerNombre(), j1.obtenerPuntosVida(), j2.obtenerNombre(), j2.obtenerPuntosVida());
         vista.actualizarZonasCampo(campo);
         vista.refrescarDialogoCartas(actual.obtenerMano(), cem);
-        
+
         String instruccion = "TURNO DE " + actual.obtenerNombre().toUpperCase();
         if (fase.equals("Main 1") || fase.equals("Main 2")) instruccion += " | Pon una carta.";
-        else if (fase.equals("Batalla")) instruccion += " | ¡Presiona ATACAR!";
+        else if (fase.equals("Batalla")) instruccion += " | Presiona ATACAR.";
         vista.establecerInstruccion(instruccion);
-        
+
         vista.actualizarTablero();
+    }
+
+    private void actualizarResumenResultados() {
+        if (vista instanceof VistaDuelo) {
+            ((VistaDuelo) vista).establecerResumenResultados(registroResultados.obtenerResumen());
+        }
+    }
+
+    private void limpiarCampo() {
+        for (int i = 0; i < 5; i++) {
+            campo.obtenerMonstruosJugador1()[i] = null;
+            campo.obtenerMonstruosJugador2()[i] = null;
+            campo.obtenerMagicasYTrampasJugador1()[i] = null;
+            campo.obtenerMagicasYTrampasJugador2()[i] = null;
+        }
+        campo.obtenerCementerioJugador1().clear();
+        campo.obtenerCementerioJugador2().clear();
+        campo.limpiarControlCampo();
     }
 }

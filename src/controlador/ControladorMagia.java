@@ -1,6 +1,5 @@
 package controlador;
 
-import java.util.HashMap;
 import java.util.List;
 import modelo.*;
 import vista.VistaDuelo;
@@ -21,57 +20,63 @@ public class ControladorMagia {
         Monstruo[] monstruosAtacante = (turno % 2 == 0) ? campo.obtenerMonstruosJugador1() : campo.obtenerMonstruosJugador2();
         Carta[] magiasYTrampasAtacante = (turno % 2 == 0) ? campo.obtenerMagicasYTrampasJugador2() : campo.obtenerMagicasYTrampasJugador1();
         Carta[] magiasYTrampasDefensor = (turno % 2 == 0) ? campo.obtenerMagicasYTrampasJugador1() : campo.obtenerMagicasYTrampasJugador2();
-        HashMap<String, Carta> cementerioAtacante = (turno % 2 == 0) ? campo.obtenerCementerioJugador2() : campo.obtenerCementerioJugador1();
-        HashMap<String, Carta> cementerioDefensor = (turno % 2 == 0) ? campo.obtenerCementerioJugador1() : campo.obtenerCementerioJugador2();
+        List<Carta> cementerioAtacante = (turno % 2 == 0) ? campo.obtenerCementerioJugador2() : campo.obtenerCementerioJugador1();
+        List<Carta> cementerioDefensor = (turno % 2 == 0) ? campo.obtenerCementerioJugador1() : campo.obtenerCementerioJugador2();
         switch (modelo.obtenerTipoHabilidad()) {
             case AGUJERO_NEGRO -> {
                 limpiarMonstruos(campo);
-                cementerioAtacante.put(magiasYTrampasAtacante[cartaAActivar].obtenerNombre(), magiasYTrampasAtacante[cartaAActivar]);
+                cementerioAtacante.add(magiasYTrampasAtacante[cartaAActivar]);
                 magiasYTrampasAtacante[cartaAActivar] = null;
             }
 
             case OLLA_CODICIA -> {
                 robarCartas(campo, turno, 2);
-                cementerioAtacante.put(magiasYTrampasAtacante[cartaAActivar].obtenerNombre(), magiasYTrampasAtacante[cartaAActivar]);
+                cementerioAtacante.add(magiasYTrampasAtacante[cartaAActivar]);
                 magiasYTrampasAtacante[cartaAActivar] = null;
             }
 
             case RAIGEKI -> {
                 destruirMonstruosOponente(campo, turno);
-                cementerioAtacante.put(magiasYTrampasAtacante[cartaAActivar].obtenerNombre(), magiasYTrampasAtacante[cartaAActivar]);
+                cementerioAtacante.add(magiasYTrampasAtacante[cartaAActivar]);
                 magiasYTrampasAtacante[cartaAActivar] = null;
             }
 
             case MONSTRUO_RENACIDO -> {
                 for(int j = 0; j<campo.obtenerCementerioJugador1().size(); j++){
-                    for(int k = 0; k<5; k++){
-                        if( monstruosAtacante[k] == null){
-                            monstruosAtacante[k] = (Monstruo) campo.obtenerCementerioJugador1().remove(objetivoNombre);
-                            break;
+                    if(campo.obtenerCementerioJugador1().get(j).obtenerNombre().equals(objetivoNombre)){
+                        for(int k = 0; k<5; k++){
+                            if( monstruosAtacante[k] == null){
+                                monstruosAtacante[k] = (Monstruo) campo.obtenerCementerioJugador1().get(j);
+                                campo.obtenerCementerioJugador1().remove(j);
+                                break;
+                            }
                         }
                     }
                 }
                 for(int j = 0; j<campo.obtenerCementerioJugador2().size(); j++){
-                    for(int k = 0; k<5; k++){
-                        if( monstruosAtacante[k] == null){
-                            monstruosAtacante[k] = (Monstruo) campo.obtenerCementerioJugador2().remove(objetivoNombre);
-                            break;
+                    if(campo.obtenerCementerioJugador2().get(j).obtenerNombre().equals(objetivoNombre)){
+                        for(int k = 0; k<5; k++){
+                            if( monstruosAtacante[k] == null){
+                                monstruosAtacante[k] = (Monstruo) campo.obtenerCementerioJugador2().get(j);
+                                campo.obtenerCementerioJugador2().remove(j);
+                                break;
+                            }
                         }
                     }
                 }
-                cementerioAtacante.put(magiasYTrampasAtacante[cartaAActivar].obtenerNombre(), magiasYTrampasAtacante[cartaAActivar]);
+                cementerioAtacante.add(magiasYTrampasAtacante[cartaAActivar]);
                 magiasYTrampasAtacante[cartaAActivar] = null;
             }
 
             case TIFON_ESPACIO_MISTICO -> {
                 for(int j=0; j<5; j++){
                     if(magiasYTrampasDefensor[j] != null && magiasYTrampasDefensor[j].obtenerNombre().equals(objetivoNombre)){
-                        cementerioDefensor.put(magiasYTrampasDefensor[j].obtenerNombre(), magiasYTrampasDefensor[j]);
+                        cementerioDefensor.add(magiasYTrampasDefensor[j]);
                         magiasYTrampasDefensor[j] = null;
                         break;
                     }
                 }
-                cementerioAtacante.put(magiasYTrampasAtacante[cartaAActivar].obtenerNombre(), magiasYTrampasAtacante[cartaAActivar]);
+                cementerioAtacante.add(magiasYTrampasAtacante[cartaAActivar]);
                 magiasYTrampasAtacante[cartaAActivar] = null;
             }
 
@@ -91,7 +96,7 @@ public class ControladorMagia {
                     carta.establecerTurnosActiva((byte) (carta.obtenerTurnosActiva()+1));
                 } else {
                     carta.establecerTurnosActiva((byte) 0);
-                    cementerioAtacante.put(magiasYTrampasAtacante[cartaAActivar].obtenerNombre(), magiasYTrampasAtacante[cartaAActivar]);
+                    cementerioAtacante.add(magiasYTrampasAtacante[cartaAActivar]);
                     magiasYTrampasAtacante[cartaAActivar] = null;
                     for(int j = 0; j<5; j++){
                         if(monstruosOponente[j] != null){
@@ -106,26 +111,32 @@ public class ControladorMagia {
             case ENTIERRO_INSENSATO -> {
                 for(int j=0; j<atacante.obtenerMazo().size(); j++){
                     if(atacante.obtenerMazo().get(j).obtenerNombre().equals(objetivoNombre)){
-                        cementerioAtacante.put(atacante.obtenerMazo().get(j).obtenerNombre(), atacante.obtenerMazo().remove(j));
+                        cementerioAtacante.add(atacante.obtenerMazo().remove(j));
                         break;
                     }
                 }
-                cementerioAtacante.put(magiasYTrampasAtacante[cartaAActivar].obtenerNombre(), magiasYTrampasAtacante[cartaAActivar]);
+                cementerioAtacante.add(magiasYTrampasAtacante[cartaAActivar]);
                 magiasYTrampasAtacante[cartaAActivar] = null;
             }
 
             case MIL_CUCHILLOS -> {
-                boolean tieneMagoOscuro = campo.estaEnCampo("Mago Oscuro", turno % 2 == 0 ? 1 : 2);
+                boolean tieneMagoOscuro = false;
+                for(Monstruo m : monstruosAtacante){
+                    if(m != null && m.obtenerNombre().equals("Mago Oscuro")){
+                        tieneMagoOscuro = true;
+                        break;
+                    }
+                }
                 if(tieneMagoOscuro){
                     for(int j=0; j<5; j++){
                         if(monstruosOponente[j] != null && monstruosOponente[j].obtenerNombre().equals(cartaAActivar)){
-                            cementerioDefensor.put(magiasYTrampasDefensor[cartaAActivar].obtenerNombre(), magiasYTrampasDefensor[cartaAActivar]);
+                            cementerioDefensor.add(monstruosOponente[j]);
                             monstruosOponente[j] = null;
                             break;
                         }
                     }
                 }
-                cementerioAtacante.put(magiasYTrampasAtacante[cartaAActivar].obtenerNombre(), magiasYTrampasAtacante[cartaAActivar]);
+                cementerioAtacante.add(magiasYTrampasAtacante[cartaAActivar]);
                 magiasYTrampasAtacante[cartaAActivar] = null;
             }
 
@@ -152,7 +163,7 @@ public class ControladorMagia {
                         }
                     }
                     carta.establecerTurnosActiva((byte) 0);
-                    cementerioAtacante.put(magiasYTrampasAtacante[cartaAActivar].obtenerNombre(), magiasYTrampasAtacante[cartaAActivar]);
+                    cementerioAtacante.add(magiasYTrampasAtacante[cartaAActivar]);
                     magiasYTrampasAtacante[cartaAActivar] = null;
                 }
             }
@@ -163,7 +174,7 @@ public class ControladorMagia {
                     monstruoFusion.establecerNivel((byte) (monstruoFusion.obtenerNivel() + listaMateriales.get(j).obtenerNivel()));
                     monstruoFusion.establecerAtaque((short) (monstruoFusion.obtenerAtaque() + listaMateriales.get(j).obtenerAtaque()));
                     monstruoFusion.establecerDefensa((short) (monstruoFusion.obtenerDefensa() + listaMateriales.get(j).obtenerDefensa()));
-                    cementerioAtacante.put(listaMateriales.get(j).obtenerNombre(), listaMateriales.get(j));
+                    cementerioAtacante.add(listaMateriales.get(j));
                 }
                 for(int j=0; j<5; j++){
                     if(monstruosAtacante[j] == null){
@@ -171,23 +182,22 @@ public class ControladorMagia {
                         break;
                     }
                 }
-                cementerioAtacante.put(magiasYTrampasAtacante[cartaAActivar].obtenerNombre(), magiasYTrampasAtacante[cartaAActivar]);
+                cementerioAtacante.add(magiasYTrampasAtacante[cartaAActivar]);
                 magiasYTrampasAtacante[cartaAActivar] = null;
             }
         }
+        campo.reconstruirControlCampo();
         vista.actualizarTablero();
     }
 
     private void limpiarMonstruos(Campo campo) {
         for (int i = 0; i < 5; i++) {
             if (campo.obtenerMonstruosJugador1()[i] != null) {
-                campo.removerDelCampo(campo.obtenerMonstruosJugador1()[i].obtenerNombre(), 1);
-                campo.obtenerCementerioJugador1().put(campo.obtenerMonstruosJugador1()[i].obtenerNombre(), campo.obtenerMonstruosJugador1()[i]);
+                campo.obtenerCementerioJugador1().add(campo.obtenerMonstruosJugador1()[i]);
                 campo.obtenerMonstruosJugador1()[i] = null;
             }
             if (campo.obtenerMonstruosJugador2()[i] != null) {
-                campo.removerDelCampo(campo.obtenerMonstruosJugador2()[i].obtenerNombre(), 2);
-                campo.obtenerCementerioJugador2().put(campo.obtenerMonstruosJugador2()[i].obtenerNombre(), campo.obtenerMonstruosJugador2()[i]);
+                campo.obtenerCementerioJugador2().add(campo.obtenerMonstruosJugador2()[i]);
                 campo.obtenerMonstruosJugador2()[i] = null;
             }
         }
@@ -197,17 +207,17 @@ public class ControladorMagia {
         Jugador actual = (turno % 2 == 0) ? campo.obtenerJugador1() : campo.obtenerJugador2();
         for (int i = 0; i < cantidad; i++) {
             if (!actual.obtenerMazo().isEmpty()) {
-                actual.obtenerMano().add(actual.obtenerMazo().remove(0));
+                actual.obtenerMano().add(actual.obtenerMazo().pop());
             }
         }
     }
 
     private void destruirMonstruosOponente(Campo campo, byte turno) {
         Monstruo[] oponente = (turno % 2 == 0) ? campo.obtenerMonstruosJugador2() : campo.obtenerMonstruosJugador1();
-        HashMap<String, Carta> cementerio = (turno % 2 == 0) ? campo.obtenerCementerioJugador2() : campo.obtenerCementerioJugador1();
+        List<Carta> cementerio = (turno % 2 == 0) ? campo.obtenerCementerioJugador2() : campo.obtenerCementerioJugador1();
         for (int i = 0; i < 5; i++) {
             if (oponente[i] != null) {
-                cementerio.put(oponente[i].obtenerNombre(), oponente[i]);
+                cementerio.add(oponente[i]);
                 oponente[i] = null;
             }
         }

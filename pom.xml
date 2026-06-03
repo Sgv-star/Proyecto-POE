@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.Sgv-star</groupId>
-    <artifactId>proyecto-poe-copia</artifactId>
+    <artifactId>proyecto-poe</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>

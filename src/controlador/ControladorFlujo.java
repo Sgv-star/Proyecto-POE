@@ -20,7 +20,7 @@ public class ControladorFlujo {
         vista.actualizarTablero();
     }
 
-    public byte obtenerTurnoActual() {
+    public byte getTurnoActual() {
         return turnoActual;
     }
 }

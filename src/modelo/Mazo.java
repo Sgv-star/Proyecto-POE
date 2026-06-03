@@ -60,11 +60,11 @@ public class Mazo {
         barajar();
     }
 
-    public Stack<Carta> obtenerCartas() {
+    public Stack<Carta> getCartas() {
         return mazoGeneral;
     }
-    
-    public final void barajar() {
+
+    public void barajar() {
         Collections.shuffle(mazoGeneral);
     }
 }

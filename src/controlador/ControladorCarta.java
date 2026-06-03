@@ -13,11 +13,11 @@ public class ControladorCarta {
     }
 
     public void voltearCarta() {
-        modelo.establecerVisible(!modelo.esVisible());
+        modelo.setVisible(!modelo.esVisible());
         vista.actualizarTablero();
     }
-    
-    public String obtenerNombre() {
-        return modelo.obtenerNombre();
+
+    public String getNombre() {
+        return modelo.getNombre();
     }
 }

@@ -1,6 +1,8 @@
 package controlador;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import modelo.*;
 import vista.VistaDuelo;
 
@@ -14,268 +16,259 @@ public class ControladorTrampa {
     }
 
     public void activarEfecto(Campo campo, byte turno, byte cartaAActivar, byte byteAux, String stringAux) {
-        Jugador oponente = (turno % 2 == 0) ? campo.obtenerJugador2() : campo.obtenerJugador1();
-        Jugador atacante = (turno % 2 == 0) ? campo.obtenerJugador1() : campo.obtenerJugador2();
-        Monstruo[] monstruosDefensor = (turno % 2 == 0) ? campo.obtenerMonstruosJugador2() : campo.obtenerMonstruosJugador1();
-        Monstruo[] monstruosAtacante = (turno % 2 == 0) ? campo.obtenerMonstruosJugador1() : campo.obtenerMonstruosJugador2();
-        Carta[] magiasYTrampasAtacante = (turno % 2 == 0) ? campo.obtenerMagicasYTrampasJugador2() : campo.obtenerMagicasYTrampasJugador1();
-        Carta[] magiasYTrampasDefensor = (turno % 2 == 0) ? campo.obtenerMagicasYTrampasJugador1() : campo.obtenerMagicasYTrampasJugador2();
-        HashMap<String, Carta> cementerioAtacante = (turno % 2 == 0) ? campo.obtenerCementerioJugador2() : campo.obtenerCementerioJugador1();
-        HashMap<String, Carta> cementerioDefensor = (turno % 2 == 0) ? campo.obtenerCementerioJugador1() : campo.obtenerCementerioJugador2();
+        Jugador oponente = (turno % 2 == 0) ? campo.getJugador2() : campo.getJugador1();
+        Jugador atacante = (turno % 2 == 0) ? campo.getJugador1() : campo.getJugador2();
+        Monstruo[] monstruosOponente = (turno % 2 == 0) ? campo.getMonstruosJugador2() : campo.getMonstruosJugador1();
+        Monstruo[] monstruosAtacante = (turno % 2 == 0) ? campo.getMonstruosJugador1() : campo.getMonstruosJugador2();
+        Carta[] magiasYTrampasAtacante = (turno % 2 == 0) ? campo.getMagicasYTrampasJugador2() : campo.getMagicasYTrampasJugador1();
+        Carta[] magiasYTrampasDefensor = (turno % 2 == 0) ? campo.getMagicasYTrampasJugador1() : campo.getMagicasYTrampasJugador2();
+        List<Carta> cementerioAtacante = (turno % 2 == 0) ? campo.getCementerioJugador2() : campo.getCementerioJugador1();
+        List<Carta> cementerioDefensor = (turno % 2 == 0) ? campo.getCementerioJugador1() : campo.getCementerioJugador2();
         Trampa trampa = (Trampa) magiasYTrampasAtacante[cartaAActivar];
-        switch (modelo.obtenerTipoHabilidad()) {
-            case FUERZA_ESPEJO -> {
-                for (int i = 0; i < 5; i++) {
-                    if (monstruosAtacante[i] != null && monstruosAtacante[i].estaEnPosicionAtaque()) {
-                        campo.removerDelCampo(monstruosAtacante[i].obtenerNombre(), turno % 2 == 0 ? 1 : 2);
-                        monstruosAtacante[i] = null;
-                    }
-                }
-            }
+        switch (modelo.getTipoHabilidad()) {
+            case FUERZA_ESPEJO:
+                destruirAtacantes(campo, turno);
+                break;
 
-            case CILINDRO_MAGICO -> {
-                if(trampa.obtenerTurnosActiva() < 1){
+            case CILINDRO_MAGICO:
+                if(trampa.getTurnosActiva() < 1){
                     for(Monstruo m : monstruosAtacante){
-                        if(m != null && m.obtenerNombre().equals(stringAux)){
-                            m.establecerAtaque((short) 0);
-                            atacante.establecerPuntosVida((short) (atacante.obtenerPuntosVida() - m.obtenerAtaqueBase()));
+                        if(m != null && m.getNombre().equals(stringAux)){
+                            m.setAtaque((short) 0);
+                            atacante.setPuntosVida((short) (atacante.getPuntosVida() - m.getAtaqueBase()));
                             break;
                         }
                     }
-                    trampa.establecerTurnosActiva((byte) (trampa.obtenerTurnosActiva()+1));
-                    trampa.establecerEstaActivada(true);
+                    trampa.setTurnosActiva((byte) (trampa.getTurnosActiva()+1));
+                    trampa.setEstaActivada(true);
                 }
-                else if(trampa.obtenerTurnosActiva() > 0){
-                    trampa.establecerTurnosActiva((byte) 0);
+                else if(trampa.getTurnosActiva() > 0){
+                    trampa.setTurnosActiva((byte) 0);
                     for(int j=0; j<5; j++){
                         if(monstruosAtacante[j] != null){
-                            monstruosAtacante[j].establecerAtaque(monstruosAtacante[j].obtenerAtaqueBase());
+                            monstruosAtacante[j].setAtaque(monstruosAtacante[j].getAtaqueBase());
                         }
                     }
-                    trampa.establecerEstaActivada(false);
-                    cementerioDefensor.put(magiasYTrampasDefensor[cartaAActivar].obtenerNombre(), magiasYTrampasDefensor[cartaAActivar]);
+                    trampa.setEstaActivada(false);
+                    cementerioDefensor.add(magiasYTrampasDefensor[cartaAActivar]);
                     magiasYTrampasDefensor[cartaAActivar] = null;
                 }
-            }
+                break;
 
-            case TRIBUTO_TORRENCIAL -> {
+            case TRIBUTO_TORRENCIAL:
                 for(int j=0; j<5; j++){
                     if(monstruosAtacante[j] != null){
-                        campo.removerDelCampo(monstruosAtacante[j].obtenerNombre(), turno % 2 == 0 ? 1 : 2);
-                        cementerioAtacante.put(monstruosAtacante[j].obtenerNombre(), monstruosAtacante[j]);
+                        cementerioAtacante.add(monstruosAtacante[j]);
                         monstruosAtacante[j] = null;
                     }
-                    if(monstruosDefensor[j] != null){
-                        campo.removerDelCampo(monstruosDefensor[j].obtenerNombre(), turno % 2 == 0 ? 1 : 2);
-                        cementerioDefensor.put(monstruosDefensor[j].obtenerNombre(), monstruosDefensor[j]);
-                        monstruosDefensor[j] = null;
+                    if(monstruosOponente[j] != null){
+                        cementerioDefensor.add(monstruosOponente[j]);
+                        monstruosOponente[j] = null;
                     }
                 }
-                trampa.establecerEstaActivada(false);
-                cementerioDefensor.put(magiasYTrampasDefensor[cartaAActivar].obtenerNombre(), magiasYTrampasDefensor[cartaAActivar]);
+                trampa.setEstaActivada(false);
+                cementerioDefensor.add(magiasYTrampasDefensor[cartaAActivar]);
                 magiasYTrampasDefensor[cartaAActivar] = null;
-            }
+                break;
 
-            case ARMADURA_SAKURETSU -> {
+            case ARMADURA_SAKURETSU:
                 if(monstruosAtacante[byteAux] != null){
-                    campo.removerDelCampo(monstruosAtacante[byteAux].obtenerNombre(), turno % 2 == 0 ? 1 : 2);
-                    cementerioAtacante.put(monstruosAtacante[byteAux].obtenerNombre(), monstruosAtacante[byteAux]);
+                    cementerioAtacante.add(monstruosAtacante[byteAux]);
                     monstruosAtacante[byteAux] = null;
                 }
-                trampa.establecerEstaActivada(false);
-                cementerioDefensor.put(magiasYTrampasDefensor[cartaAActivar].obtenerNombre(), magiasYTrampasDefensor[cartaAActivar]);
+                trampa.setEstaActivada(false);
+                cementerioDefensor.add(magiasYTrampasDefensor[cartaAActivar]);
                 magiasYTrampasDefensor[cartaAActivar] = null;
-            }
+                break;
 
-            case LLAMADA_CONDENADOS -> {
+            case LLAMADA_CONDENADOS:
                 byte indiceMonstruoARevivir=0;
                 for(int j=0; j<cementerioDefensor.size(); j++){
-                    if(cementerioDefensor.get(stringAux) instanceof Monstruo){
+                    if(cementerioDefensor.get(j).getNombre().equals(stringAux) && cementerioDefensor.get(j) instanceof Monstruo){
                         indiceMonstruoARevivir = (byte) j;
                         break;
                     }
                 }
                 for(int j=0; j<5; j++){
-                    if(monstruosDefensor[j] == null && new ArrayList<>(cementerioDefensor.values()).get(indiceMonstruoARevivir) instanceof Monstruo){
-                        monstruosDefensor[j] = (Monstruo) new ArrayList<>(cementerioDefensor.values()).get(indiceMonstruoARevivir);
-                        monstruosDefensor[j].establecerEnPosicionAtaque(true);
+                    if(monstruosOponente[j] == null && cementerioDefensor.get(indiceMonstruoARevivir) instanceof Monstruo){
+                        monstruosOponente[j] = (Monstruo) cementerioDefensor.remove(indiceMonstruoARevivir);
+                        monstruosOponente[j].setEnPosicionAtaque(true);
                         break;
                     }
                 }
-                trampa.establecerEstaActivada(false);
-                cementerioDefensor.put(magiasYTrampasDefensor[cartaAActivar].obtenerNombre(), magiasYTrampasDefensor[cartaAActivar]);
+                trampa.setEstaActivada(false);
+                cementerioDefensor.add(magiasYTrampasDefensor[cartaAActivar]);
                 magiasYTrampasDefensor[cartaAActivar] = null;
-            }
+                break;
 
-            case SOMBREROS_MAGICOS -> {
-                if(trampa.obtenerTurnosActiva() < 1){
+            case SOMBREROS_MAGICOS:
+                if(trampa.getTurnosActiva() < 1){
                     byte indiceMonstruoAOcultar=0;
                     for(int j=0; j<5; j++){
-                        if(monstruosDefensor[j] != null){
-                            if(monstruosDefensor[j].obtenerNombre().equals(stringAux)){
+                        if(monstruosOponente[j] != null){
+                            if(monstruosOponente[j].getNombre().equals(stringAux)){
                                 indiceMonstruoAOcultar = (byte) j;
                                 break;
                             }
                         }
                     }
                     List<Monstruo> cartasAOcultar = new ArrayList<> ();
-                    cartasAOcultar.add(monstruosDefensor[indiceMonstruoAOcultar]);
+                    cartasAOcultar.add(monstruosOponente[indiceMonstruoAOcultar]);
                     cartasAOcultar.add(new Monstruo("Sombrero 1", "Una carta mágica que oculta a un monstruo", (byte) 0, (short) 0, (short) 0));
                     cartasAOcultar.add(new Monstruo("Sombrero 2", "Una carta mágica que oculta a un monstruo", (byte) 0, (short) 0, (short) 0));
                     Collections.shuffle(cartasAOcultar);
-                    monstruosDefensor[indiceMonstruoAOcultar] = null;
+                    monstruosOponente[indiceMonstruoAOcultar] = null;
                     for(int j=0; j<5; j++){
-                        if(monstruosDefensor[j] == null && !cartasAOcultar.isEmpty()){
-                            monstruosDefensor[j] = cartasAOcultar.remove(0);
+                        if(monstruosOponente[j] == null && cartasAOcultar.size() > 0){
+                            monstruosOponente[j] = cartasAOcultar.remove(0);
                         }
                     }
-                    for(int j=0; j<oponente.obtenerMazo().size(); j++){
-                        if(oponente.obtenerMazo().get(j).obtenerNombre().equals(stringAux)){
-                            cementerioDefensor.put(oponente.obtenerMazo().get(j).obtenerNombre(), oponente.obtenerMazo().remove(j));
+                    for(int j=0; j<oponente.getMazo().size(); j++){
+                        if(oponente.getMazo().get(j).getNombre().equals(stringAux)){
+                            cementerioDefensor.add(oponente.getMazo().remove(j));
                         }
-                        else if(oponente.obtenerMazo().get(j).obtenerNombre().equals(stringAux)){
-                            cementerioDefensor.put(oponente.obtenerMazo().remove(j).obtenerNombre(), oponente.obtenerMazo().remove(j));
+                        else if(oponente.getMazo().get(j).getNombre().equals(stringAux)){
+                            cementerioDefensor.add(oponente.getMazo().remove(j));
                         }
                     }
-                    trampa.establecerTurnosActiva((byte) (trampa.obtenerTurnosActiva()+1));
-                    trampa.establecerEstaActivada(true);
+                    trampa.setTurnosActiva((byte) (trampa.getTurnosActiva()+1));
+                    trampa.setEstaActivada(true);
                 }
-                else if(trampa.obtenerTurnosActiva() > 0){
-                    trampa.establecerTurnosActiva((byte) 0);
+                else if(trampa.getTurnosActiva() > 0){
+                    trampa.setTurnosActiva((byte) 0);
                     for(int j=0; j<5; j++){
-                        if(monstruosDefensor[j] != null){
-                            if(monstruosDefensor[j].obtenerNombre().equals("Sombrero 1") || monstruosDefensor[j].obtenerNombre().equals("Sombrero 2")){
-                                monstruosDefensor[j] = null;
+                        if(monstruosOponente[j] != null){
+                            if(monstruosOponente[j].getNombre().equals("Sombrero 1") || monstruosOponente[j].getNombre().equals("Sombrero 2")){
+                                monstruosOponente[j] = null;
                             }
                         }
                     }
-                    trampa.establecerEstaActivada(false);
-                    cementerioDefensor.put(magiasYTrampasDefensor[cartaAActivar].obtenerNombre(), magiasYTrampasDefensor[cartaAActivar]);
+                    trampa.setEstaActivada(false);
+                    cementerioDefensor.add(magiasYTrampasDefensor[cartaAActivar]);
                     magiasYTrampasDefensor[cartaAActivar] = null;
                 }
-            }
+                break;
 
-            case WABOKU -> {
-                if(trampa.obtenerTurnosActiva() < 1){
+            case WABOKU:
+                if(trampa.getTurnosActiva() < 1){
                     for(int j=0; j<5; j++){
                         if(monstruosAtacante[j] != null){
-                            monstruosAtacante[j].establecerAtaque((short) 0);
+                            monstruosAtacante[j].setAtaque((short) 0);
                         }
                     }
-                    trampa.establecerTurnosActiva((byte) (trampa.obtenerTurnosActiva()+1));
-                    trampa.establecerEstaActivada(true);
+                    trampa.setTurnosActiva((byte) (trampa.getTurnosActiva()+1));
+                    trampa.setEstaActivada(true);
                 }
-                else if(trampa.obtenerTurnosActiva() > 0){
-                    trampa.establecerTurnosActiva((byte) 0);
+                else if(trampa.getTurnosActiva() > 0){
+                    trampa.setTurnosActiva((byte) 0);
                     for(int j=0; j<5; j++){
                         if(monstruosAtacante[j] != null){
-                            monstruosAtacante[j].establecerAtaque(monstruosAtacante[j].obtenerAtaqueBase());
+                            monstruosAtacante[j].setAtaque(monstruosAtacante[j].getAtaqueBase());
                         }
                     }
-                    trampa.establecerEstaActivada(false);
-                    cementerioDefensor.put(magiasYTrampasDefensor[cartaAActivar].obtenerNombre(), magiasYTrampasDefensor[cartaAActivar]);
+                    trampa.setEstaActivada(false);
+                    cementerioDefensor.add(magiasYTrampasDefensor[cartaAActivar]);
                     magiasYTrampasDefensor[cartaAActivar] = null;
                 }
-            }
+                break;
 
-            case MURO_ESPEJO -> {
-                if(trampa.obtenerTurnosActiva() < 1){
+            case MURO_ESPEJO:
+                if(trampa.getTurnosActiva() < 1){
                     for(int j=0; j<5; j++){
                         if(monstruosAtacante[j] != null){
-                            monstruosAtacante[j].establecerAtaque((short) (monstruosAtacante[j].obtenerAtaque() / 2));
+                            monstruosAtacante[j].setAtaque((short) (monstruosAtacante[j].getAtaque() / 2));
                         }
                     }
-                    trampa.establecerTurnosActiva((byte) (trampa.obtenerTurnosActiva()+1));
-                    trampa.establecerEstaActivada(true);
+                    trampa.setTurnosActiva((byte) (trampa.getTurnosActiva()+1));
+                    trampa.setEstaActivada(true);
                 }
-                else if(trampa.obtenerTurnosActiva() > 0){
-                    trampa.establecerTurnosActiva((byte) 0);
+                else if(trampa.getTurnosActiva() > 0){
+                    trampa.setTurnosActiva((byte) 0);
                     if(byteAux == 1){
-                        atacante.establecerPuntosVida((short) (atacante.obtenerPuntosVida()-2000));
+                        atacante.setPuntosVida((short) (atacante.getPuntosVida()-2000));
                     }
                     else if(byteAux == 2){
                         for(int j=0; j<5; j++){
                             if(monstruosAtacante[j] != null){
-                                monstruosAtacante[j].establecerAtaque(monstruosAtacante[j].obtenerAtaqueBase());
+                                monstruosAtacante[j].setAtaque(monstruosAtacante[j].getAtaqueBase());
                             }
                         }
-                        trampa.establecerEstaActivada(false);
-                        cementerioDefensor.put(magiasYTrampasDefensor[cartaAActivar].obtenerNombre(), magiasYTrampasDefensor[cartaAActivar]);
+                        trampa.setEstaActivada(false);
+                        cementerioDefensor.add(magiasYTrampasDefensor[cartaAActivar]);
                         magiasYTrampasDefensor[cartaAActivar] = null;
                     }
                 }
-            }
+                break;
 
-            case REPRESION -> {
-                if(trampa.obtenerTurnosActiva() < 1){
+            case REPRESION:
+                if(trampa.getTurnosActiva() < 1){
                     for(int j=0; j<5; j++){
-                        if(monstruosAtacante[j] != null && monstruosAtacante[j].obtenerNombre().equals(stringAux)){
+                        if(monstruosAtacante[j] != null && monstruosAtacante[j].getNombre().equals(stringAux)){
                             for(int k=0; k<5; k++){
-                                if(monstruosDefensor[k] == null){
-                                    monstruosDefensor[k] = monstruosAtacante[j];
+                                if(monstruosOponente[k] == null){
+                                    monstruosOponente[k] = monstruosAtacante[j];
                                     monstruosAtacante[j] = null;
                                     break;
                                 }
                             }
                             break;
                         }
-                        
+
                     }
-                    trampa.establecerTurnosActiva((byte) (trampa.obtenerTurnosActiva()+1));
-                    trampa.establecerEstaActivada(true);
+                    trampa.setTurnosActiva((byte) (trampa.getTurnosActiva()+1));
+                    trampa.setEstaActivada(true);
                 }
-                else if(trampa.obtenerTurnosActiva() > 0){
+                else if(trampa.getTurnosActiva() > 0){
                     for(int j=0; j<5; j++){
-                        if(monstruosDefensor[j] != null && monstruosDefensor[j].obtenerNombre().equals(trampa.obtenerMonstruoRobado())){
+                        if(monstruosOponente[j] != null && monstruosOponente[j].getNombre().equals(trampa.getMonstruoRobado())){
                             for(int k=0; k<5; k++){
                                 if(monstruosAtacante[k] == null){
-                                    monstruosAtacante[k] = monstruosDefensor[j];
-                                    monstruosDefensor[j] = null;
+                                    monstruosAtacante[k] = monstruosOponente[j];
+                                    monstruosOponente[j] = null;
                                     break;
                                 }
                             }
                             break;
                         }
                     }
-                    trampa.establecerEstaActivada(false);
-                    trampa.establecerTurnosActiva((byte) 0);
-                    trampa.establecerMonstruoRobado("");
-                    cementerioDefensor.put(magiasYTrampasDefensor[cartaAActivar].obtenerNombre(), magiasYTrampasDefensor[cartaAActivar]);
+                    trampa.setEstaActivada(false);
+                    trampa.setTurnosActiva((byte) 0);
+                    trampa.setMonstruoRobado("");
+                    cementerioDefensor.add(magiasYTrampasDefensor[cartaAActivar]);
                     magiasYTrampasDefensor[cartaAActivar] = null;
                 }
-            }
+                break;
 
-            case DRENAJE_HABILIDAD -> {
-                oponente.establecerPuntosVida(((short) (oponente.obtenerPuntosVida()-1000)));
-                if(trampa.obtenerTurnosActiva() < 1){
+            case DRENAJE_HABILIDAD:
+                oponente.setPuntosVida(((short) (oponente.getPuntosVida()-1000)));
+                if(trampa.getTurnosActiva() < 1){
                     for(int j=0; j<5; j++){
                         if(monstruosAtacante[j] != null){
-                            monstruosAtacante[j].establecerAtaque((short) (0));
+                            monstruosAtacante[j].setAtaque((short) (0));
                         }
                     }
-                    trampa.establecerTurnosActiva((byte) (trampa.obtenerTurnosActiva()+1));
-                    trampa.establecerEstaActivada(true);
+                    trampa.setTurnosActiva((byte) (trampa.getTurnosActiva()+1));
+                    trampa.setEstaActivada(true);
                 }
-                else if(trampa.obtenerTurnosActiva() > 0){
+                else if(trampa.getTurnosActiva() > 0){
                     for(int j=0; j<5; j++){
                         if(monstruosAtacante[j] != null){
-                            monstruosAtacante[j].establecerAtaque(monstruosAtacante[j].obtenerAtaqueBase());
+                            monstruosAtacante[j].setAtaque(monstruosAtacante[j].getAtaqueBase());
                         }
                     }
-                    trampa.establecerEstaActivada(false);
-                    trampa.establecerTurnosActiva((byte) 0);
-                    cementerioDefensor.put(magiasYTrampasDefensor[cartaAActivar].obtenerNombre(), magiasYTrampasDefensor[cartaAActivar]);
+                    trampa.setEstaActivada(false);
+                    trampa.setTurnosActiva((byte) 0);
+                    cementerioDefensor.add(magiasYTrampasDefensor[cartaAActivar]);
                     magiasYTrampasDefensor[cartaAActivar] = null;
                 }
-            }
-
-            case null, default -> {}
+                break;
         }
+        campo.reconstruirControlCampo();
         vista.actualizarTablero();
     }
 
     private void destruirAtacantes(Campo campo, byte turno) {
-        Monstruo[] atacantes = (turno % 2 == 0) ? campo.obtenerMonstruosJugador1() : campo.obtenerMonstruosJugador2();
+        Monstruo[] atacantes = (turno % 2 == 0) ? campo.getMonstruosJugador1() : campo.getMonstruosJugador2();
         for (int i = 0; i < 5; i++) {
             if (atacantes[i] != null && atacantes[i].estaEnPosicionAtaque()) {
                 atacantes[i] = null;

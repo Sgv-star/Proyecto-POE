@@ -22,3 +22,7 @@ public class Principal {
         });
     }
 }
+
+//Santiago Gonzalez Villada, 2559994
+// Santiago Palomino, 2477200
+// Juan Pablo Pillimue, 2477332

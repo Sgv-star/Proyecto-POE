@@ -1,7 +1,9 @@
 package controlador;
 
-import modelo.*;
-import vista.*;
+import modelo.Campo;
+import modelo.Jugador;
+import modelo.Mazo;
+import vista.VistaDuelo;
 
 public class ControladorInicio {
     private VistaDuelo vista;
@@ -14,7 +16,6 @@ public class ControladorInicio {
 
     public void iniciarJuego(String nombre1, String nombre2) {
         Mazo mazoGeneral = new Mazo();
-        // Llenar mazo... (simplificado para el ejemplo)
 
         Jugador j1 = new Jugador(nombre1, mazoGeneral);
         Jugador j2 = new Jugador(nombre2, mazoGeneral);

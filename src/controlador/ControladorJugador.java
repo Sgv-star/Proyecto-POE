@@ -1,7 +1,7 @@
 package controlador;
 
-import modelo.Jugador;
 import modelo.Carta;
+import modelo.Jugador;
 import vista.VistaDuelo;
 
 public class ControladorJugador {
@@ -13,7 +13,7 @@ public class ControladorJugador {
         this.vista = vista;
     }
 
-    public void recibirDanio(int cantidad) {
+    public void recibirDaño(int cantidad) {
         short nuevosPuntos = (short) (modelo.getPuntosVida() - cantidad);
         if (nuevosPuntos < 0) nuevosPuntos = 0;
         modelo.setPuntosVida(nuevosPuntos);

@@ -1,0 +1,106 @@
+{
+  "partidas": [
+    {
+      "nombreGuardado": "Duelista 1 vs Duelista 2",
+      "fase": "Main 1",
+      "turno": 1,
+      "jugadorActual": 1,
+      "jugador1": {
+        "nombre": "Duelista 1",
+        "vida": 8000,
+        "mazo": [
+          "Jinete de Kaneka",
+          "Ciber Dragón",
+          "Cuchillo de Cazador",
+          "Insecto Come-Hombres",
+          "Fuerza de Espejo",
+          "Dragón Blanco de Ojos Azules",
+          "Sombreros Mágicos",
+          "Espadas de la Luz Reveladora",
+          "Marshmallon",
+          "Sangan",
+          "Entierro Insensato",
+          "Llamada de los Condenados",
+          "Agujero Negro",
+          "Soldado de la Lanza",
+          "Tributo Torrencial",
+          "Kuriboh",
+          "Unidad",
+          "Tomate Místico",
+          "Jinzo",
+          "Lobo de Guerra Negro Pechado"
+        ],
+        "mano": [
+          "Gilaaurus",
+          "Breaker el Guerrero Mágico",
+          "Raigeki",
+          "Drenaje de Habilidad",
+          "Elfo Gemelo"
+        ],
+        "cementerio": [],
+        "monstruos": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "magicasOTrampas": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "jugador2": {
+        "nombre": "Duelista 2",
+        "vida": 8000,
+        "mazo": [
+          "Golem de Engranaje Antiguo",
+          "Cráneo Convocado",
+          "Cilindro Mágico",
+          "Chica Maga Oscura",
+          "Muro de Espejo",
+          "Tifón del Espacio Místico",
+          "Polimerización",
+          "Gran Escudo Gardna",
+          "Waboku",
+          "Soldado del Brillo Negro",
+          "Mago de la Fe",
+          "Neo Alius, Héroe Elemental",
+          "Pared de Ilusión",
+          "Gearfried el Caballero de Hierro",
+          "Armadura de Sakuretsu",
+          "Caballero Comandante",
+          "Bebé Dragón",
+          "Represión",
+          "Lobo de Guerra Genético",
+          "Hombre de Frijol Natural"
+        ],
+        "mano": [
+          "Olla de la Codicia",
+          "Zaborg, el Monarca del Trueno",
+          "Pingüino Pesadilla",
+          "Monstruo Renacido",
+          "Mago Oscuro"
+        ],
+        "cementerio": [],
+        "monstruos": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "magicasOTrampas": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      }
+    }
+  ]
+}

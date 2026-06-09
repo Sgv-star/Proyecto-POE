@@ -1,7 +1,8 @@
 package controlador;
 
-import modelo.*;
-import vista.*;
+import modelo.Campo;
+import modelo.Carta;
+import vista.VistaDuelo;
 
 public class ControladorAcciones {
     private VistaDuelo vista;
@@ -13,7 +14,6 @@ public class ControladorAcciones {
     }
 
     public void atacar(int indiceAtacante, int indiceDefensor, byte turno) {
-        // Lógica de ataque simplificada
         vista.mostrarMensaje("Atacando...");
         vista.actualizarTablero();
     }
